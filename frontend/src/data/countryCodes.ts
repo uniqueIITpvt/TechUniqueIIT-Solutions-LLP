@@ -1,0 +1,86 @@
+export const countryCodes = [
+  {
+    code: 'IN',
+    dial_code: '+91',
+    name: 'India',
+    flag: '🇮🇳',
+  },
+  {
+    code: 'US',
+    dial_code: '+1',
+    name: 'United States',
+    flag: '🇺🇸',
+  },
+  {
+    code: 'GB',
+    dial_code: '+44',
+    name: 'United Kingdom',
+    flag: '🇬🇧',
+  },
+  {
+    code: 'CA',
+    dial_code: '+1',
+    name: 'Canada',
+    flag: '🇨🇦',
+  },
+  {
+    code: 'AU',
+    dial_code: '+61',
+    name: 'Australia',
+    flag: '🇦🇺',
+  },
+  {
+    code: 'JP',
+    dial_code: '+81',
+    name: 'Japan',
+    flag: '🇯🇵',
+  },
+  {
+    code: 'CN',
+    dial_code: '+86',
+    name: 'China',
+    flag: '🇨🇳',
+  },
+  {
+    code: 'DE',
+    dial_code: '+49',
+    name: 'Germany',
+    flag: '🇩🇪',
+  },
+  {
+    code: 'FR',
+    dial_code: '+33',
+    name: 'France',
+    flag: '🇫🇷',
+  },
+  {
+    code: 'BR',
+    dial_code: '+55',
+    name: 'Brazil',
+    flag: '🇧🇷',
+  },
+  {
+    code: 'KR',
+    dial_code: '+82',
+    name: 'South Korea',
+    flag: '🇰🇷',
+  },
+  {
+    code: 'IT',
+    dial_code: '+39',
+    name: 'Italy',
+    flag: '🇮🇹',
+  },
+  {
+    code: 'ES',
+    dial_code: '+34',
+    name: 'Spain',
+    flag: '🇪🇸',
+  },
+  {
+    code: 'MX',
+    dial_code: '+52',
+    name: 'Mexico',
+    flag: '🇲🇽',
+  },
+];

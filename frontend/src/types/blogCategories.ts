@@ -1,0 +1,17 @@
+export const categories = [
+  'Web Development',
+  'Programming',
+  'Backend Development',
+  'Frontend Development',
+  'DevOps',
+  'Database',
+  'Security',
+  'Mobile Development',
+  'UI/UX',
+  'CSS',
+  'JavaScript',
+  'React',
+  'Node.js',
+  'Python',
+  'Cloud Computing',
+];

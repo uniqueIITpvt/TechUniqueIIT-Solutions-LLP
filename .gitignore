@@ -1,0 +1,101 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/frontend/node_modules
+/backend/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+/frontend/coverage
+/backend/coverage
+
+# Next.js
+/frontend/.next/
+/frontend/out/
+.next/
+out/
+
+# Production
+/build
+/frontend/build
+/backend/build
+/frontend/.next
+/frontend/dist
+/backend/dist
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development
+/frontend/.env.production
+/backend/.env
+/backend/.env.local
+/backend/.env.development
+/backend/.env.production
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/backend/logs
+*.log
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+
+# Vercel
+.vercel
+.now
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+/frontend/*.tsbuildinfo
+/backend/*.tsbuildinfo
+
+# Cache directories
+.npm
+.eslintcache
+/frontend/.cache
+/backend/.cache
+
+# Temporary files
+/backend/tmp
+/frontend/tmp
+*.swp
+*.swo
+
+# Upload directories
+/backend/uploads/
+/frontend/public/uploads/
+
+# Build output
+/frontend/dist/
+/backend/dist/
+/frontend/.next/
+/frontend/out/
+/frontend/build/
+/backend/build/
+
+# Package files
+package-lock.json
+yarn.lock
+/frontend/package-lock.json
+/backend/package-lock.json
+
+# Optional
+.node_repl_history
+.yarn-integrity
+*.tgz
