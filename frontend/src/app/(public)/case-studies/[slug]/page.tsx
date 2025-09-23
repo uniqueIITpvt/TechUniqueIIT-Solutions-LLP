@@ -451,7 +451,7 @@ export default function CaseStudyDetail({
                 href='/case-studies'
                 className='inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors'
               >
-                View All Case Studies
+                View All Case Studie
               </Link>
             </div>
           </div>
