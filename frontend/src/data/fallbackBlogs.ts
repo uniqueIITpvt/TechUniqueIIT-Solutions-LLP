@@ -246,13 +246,13 @@ export const fallbackBlogs: FallbackBlog[] = [
     summary: 'Learn advanced techniques for creating fast, scalable APIs using Node.js and Express, including caching, optimization, and monitoring.',
     content: `
       <h2>API Performance Fundamentals</h2>
-      <p>Understanding the bottlenecks in API performance is crucial for building systems that can handle high traffic and provide excellent user experiences.</p>
+      <p>Understanding the bottlenecks in APIs performance is crucial for building systems that can handle high traffic and provide excellent user experiences.</p>
       
       <h2>Caching Strategies</h2>
       <p>Implementing Redis for caching, using CDNs for static content, and leveraging HTTP caching headers can dramatically improve API response times.</p>
       
       <h2>Database Optimization</h2>
-      <p>Proper indexing, query optimization, and connection pooling are essential for maintaining fast database operations as your application scales.</p>
+      <p>Proper indexing, Query Optimization, and connection pooling are essential for maintaining fast database operations as your application scales.</p>
       
       <h2>Monitoring and Observability</h2>
       <p>Tools like New Relic, DataDog, or custom monitoring solutions help identify performance issues before they impact users.</p>
