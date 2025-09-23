@@ -34,7 +34,7 @@ export default function HomePage() {
 
 // Add metadata for SEO
 export const metadata = {
-  title: 'Contact Us | TechUniqeit',
+  title: 'TechUniqueiit',
   description:
-    "Get in touch with TechUniqeit. We'd love to hear from you and discuss how we can help with your project.",
+    "Get in touch with TechUniqueiit. We'd love to hear from you and discuss how we can help with your project.",
 };
