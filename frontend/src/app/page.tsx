@@ -49,7 +49,7 @@ export default function HomePage() {
 
 // Add metadata for SEO
 export const metadata = {
-  title: 'TechUniqueiIIT',
+  title: 'TechUniqueIIT',
   description:
     "Get in touch with TechUniqueIIT. We'd love to hear from you and discuss how we can help with your project.",
 };
