@@ -59,8 +59,8 @@ export const fallbackCaseStudies: FallbackCaseStudy[] = [
       <h2>The Challenge</h2>
       <p>The existing platform had several critical issues:</p>
       <ul>
-        <li>Cart abandonment rate of 78%</li>
-        <li>Average page load time of 8+ seconds</li>
+        <li>Cart abandonment rate of 80%</li>
+        <li>Average page load time of 6+ seconds</li>
         <li>Poor mobile experience with only 15% mobile conversions</li>
         <li>Outdated design that didn't reflect the brand</li>
         <li>Limited payment options and complex checkout flow</li>
