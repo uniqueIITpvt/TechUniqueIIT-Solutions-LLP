@@ -4,18 +4,25 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/errorMiddleware');
+const path = require('path');
+const fs = require('fs');
 
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log('Created uploads directory');
+}
 
+// Create Express app
 const app = express();
 
 // Body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Enable CORS with more permissive options
 app.use(
@@ -27,74 +34,85 @@ app.use(
   })
 );
 
-// Add CORS headers to all responses
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, DELETE, OPTIONS, PATCH'
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  next();
-});
-
 // File upload
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: '/tmp/',
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    abortOnLimit: true,
   })
 );
 
-// Add request logging
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
-  console.log('Headers:', req.headers);
-  next();
-});
+// Serve uploaded files from the 'uploads' directory
+app.use('/uploads', express.static('uploads'));
 
 // Base route
 app.get('/', (req, res) => {
   res.json({ message: 'API is running' });
 });
 
-// Health check endpoint
-app.get('/api/health-check', (req, res) => {
-  console.log('Health check request received');
-  console.log('Headers:', req.headers);
-  res.status(200).json({
-    status: 'success',
-    message: 'API is running',
-    environment: process.env.NODE_ENV,
-    timestamp: new Date().toISOString(),
+// Connect to database
+let dbConnected = false;
+connectDB()
+  .then((connected) => {
+    dbConnected = connected;
+    console.log('Database connection result:', connected ? 'Connected' : 'Failed');
+    
+    if (connected) {
+      console.log('MongoDB connected successfully');
+      
+      // Auto-seed in development environment
+      if (process.env.NODE_ENV === 'development') {
+        const Blog = require('./models/blogModel');
+        Blog.countDocuments()
+          .then(count => {
+            if (count === 0) {
+              console.log('No blogs found in database. Running seed script...');
+              require('./seed');
+            } else {
+              console.log(`${count} blogs found in database. Skipping seed.`);
+              // Mount routes and start server
+              mountRoutesAndStartServer();
+            }
+          })
+          .catch(err => {
+            console.error('Error checking blog count:', err);
+            // Still mount routes and start server even if seed check fails
+            mountRoutesAndStartServer();
+          });
+      } else {
+        // In production, just mount routes and start server
+        mountRoutesAndStartServer();
+      }
+    } else {
+      // If DB connection failed, only mount upload routes
+      app.use('/api/upload', require('./routes/uploadRoutes'));
+      startServer();
+    }
+  })
+  .catch(err => {
+    console.error('Failed to connect to MongoDB.');
+    console.error('Server will continue without database connection.');
+    console.error('Error details:', err);
+    
+    // Mount only upload route even if DB connection fails
+    app.use('/api/upload', require('./routes/uploadRoutes'));
+    
+    // Start the server even if database connection failed
+    startServer();
   });
-});
 
-// Mount routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/blogs', require('./routes/blogRoutes'));
-app.use('/api/upload', require('./routes/uploadRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/case-studies', require('./routes/caseStudyRoutes'));
-
-// Add error logging middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({
-    success: false,
-    message: 'Server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
-  });
-});
+// Function to mount routes and start server
+function mountRoutesAndStartServer() {
+  // Mount routes
+  app.use('/api/auth', require('./routes/authRoutes'));
+  app.use('/api/upload', require('./routes/uploadRoutes'));
+  app.use('/api/blogs', require('./routes/blogRoutes'));
+  
+  // Start the server
+  startServer();
+}
 
 // Error handler
 app.use(errorHandler);
@@ -105,13 +123,17 @@ const startServer = () => {
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
-    console.log(`CORS: Allowing all origins`);
+    console.log(`Database: ${dbConnected ? 'Connected' : 'Not connected - some features will be unavailable'}`);
+    console.log(`Image Upload API available at: /api/upload`);
+    if (dbConnected) {
+      console.log(`Authentication API available at: /api/auth`);
+      console.log(`Blogs API available at: /api/blogs`);
+    }
   });
 
   // Handle unhandled promise rejections
   process.on('unhandledRejection', (err) => {
     console.log('Unhandled Rejection:', err.message);
-    // In production, we might want to handle this more gracefully
     if (process.env.NODE_ENV === 'development') {
       server.close(() => process.exit(1));
     }
@@ -119,21 +141,5 @@ const startServer = () => {
 
   return server;
 };
-
-// Handle the case where the port is already in use
-const server = startServer();
-
-server.on('error', (e) => {
-  if (e.code === 'EADDRINUSE') {
-    console.log(`Port ${PORT} is already in use. Trying port ${PORT + 1}...`);
-    setTimeout(() => {
-      server.close();
-      // Try the next port
-      app.listen(PORT + 1, () => {
-        console.log(`Server running on port ${PORT + 1}`);
-      });
-    }, 1000);
-  }
-});
 
 module.exports = app;

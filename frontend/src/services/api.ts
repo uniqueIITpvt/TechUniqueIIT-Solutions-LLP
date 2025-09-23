@@ -1,55 +1,32 @@
 import axios from 'axios';
-import type { AuthResponse, LoginCredentials } from '@/types/auth';
 import { toast } from 'react-hot-toast';
 
 // Get API URL from environment variables
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-// Use the API URL from environment variable even in development mode
-const isLocalDevelopment = process.env.NODE_ENV === 'development';
-const baseURL = apiUrl; // Use the configured API URL regardless of environment
+const baseURL = apiUrl;
 
-// Check if the backend server is running
-if (isLocalDevelopment) {
-  fetch(baseURL + '/api/health-check', { method: 'GET' })
-    .then((response) => {
-      if (!response.ok) {
-        console.warn(
-          '⚠️ Backend server returned an error. Status:',
-          response.status
-        );
-      }
-    })
-    .catch((error) => {
-      console.error('❌ Cannot connect to backend server at', baseURL);
-      console.error('Error details:', error.message);
-    });
-} else {
-  // In production, also check if the backend is reachable
-  fetch(baseURL + '/api/health-check', { method: 'GET' }).catch((error) => {
-    console.error('❌ Cannot connect to production backend server at', baseURL);
-    console.error('Error details:', error.message);
-  });
-}
+ 
 
 export const api = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 15000, // 15 seconds timeout (increased from 10)
   withCredentials: false,
 });
 
 // Auth API functions
 export const authApi = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  login: async (email: string, password: string) => {
     try {
-      const response = await api.post<AuthResponse>(
-        '/api/auth/login',
-        credentials
-      );
+      const response = await api.post('/api/auth/login', { email, password });
       if (response.data.success && response.data.token) {
         localStorage.setItem('token', response.data.token);
+        // Store user info including role
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
       }
       return response.data;
     } catch (error: any) {
@@ -59,19 +36,136 @@ export const authApi = {
     }
   },
 
-  register: async (data: { name: string; email: string; password: string }) => {
-    const response = await api.post('/api/auth/register', data);
-    return response.data;
+  register: async (name: string, email: string, password: string) => {
+    try {
+      const response = await api.post('/api/auth/register', { name, email, password });
+      if (response.data.success && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        // Store user info
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+      }
+      return response.data;
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || error.message || 'Failed to register'
+      );
+    }
   },
 
   logout: () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   },
+  
+  getCurrentUser: () => {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson) : null;
+  },
+  
+  // Get current authentication status
+  checkAuth: async () => {
+    try {
+      const response = await api.get('/api/auth/me');
+      // Update stored user data
+      if (response.data.success && response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      // Clear user data if auth check fails
+      localStorage.removeItem('user');
+      return { success: false };
+    }
+  }
 };
 
-// Add request interceptor with retry logic
+// Upload API functions
+export const uploadApi = {
+  uploadImage: async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await api.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error: any) {
+       
+      throw new Error(
+        error.response?.data?.message || error.message || 'Failed to upload image'
+      );
+    }
+  }
+};
+
+// Add Blog API functions
+export const blogApi = {
+  getBlogs: async (params?: { page?: number; limit?: number; category?: string }) => {
+    try {
+      const response = await api.get('/api/blogs', { params });
+    
+      return response.data;
+    } catch (error: any) {
+     
+      throw new Error(
+        error.response?.data?.message || error.message || 'Failed to fetch blogs'
+      );
+    }
+  },
+
+  getBlogBySlug: async (slug: string) => {
+    try {
+      const response = await api.get(`/api/blogs/slug/${slug}`);
+     
+      return response.data;
+    } catch (error: any) {
+    
+      throw new Error(
+        error.response?.data?.message || error.message || 'Failed to fetch blog'
+      );
+    }
+  },
+
+  getFeaturedBlogs: async () => {
+    try {
+      // Get featured blogs based on view count
+      const response = await api.get('/api/blogs', { 
+        params: { 
+          limit: 3,
+          sort: '-viewCount',
+          status: 'published'
+        } 
+      });
+      
+      return response.data;
+    } catch (error: any) {
+      
+      throw new Error(
+        error.response?.data?.message || error.message || 'Failed to fetch featured blogs'
+      );
+    }
+  }
+};
+
+// Add request interceptor
 api.interceptors.request.use(
   async (config) => {
+    // More detailed logging for all requests
+    console.log(`API Request:`, { 
+      url: config.url, 
+      method: config.method, 
+      baseURL: config.baseURL,
+      fullURL: `${config.baseURL}${config.url}`,
+      data: config.data,
+      params: config.params
+    });
+    
     // Add timestamp to prevent caching
     const timestamp = new Date().getTime();
     config.url = `${config.url}${
@@ -83,30 +177,40 @@ api.interceptors.request.use(
       config.headers['Content-Type'] = 'application/json';
     }
 
+    // Add auth token if available
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      // Check if this is a protected endpoint that requires authentication
-      if (config.url?.includes('/my-') || config.url?.includes('/admin/')) {
-        // Remove console.warn
-        // console.warn(
-        //   'Attempting to access a protected endpoint without authentication token'
-        // );
-      }
     }
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('API Request Error:', error);
+    return Promise.reject(error);
+  }
 );
 
 // Add response interceptor with retry logic
 api.interceptors.response.use(
   (response) => {
+    // Log responses for debugging
+    console.log(`API Response from ${response.config.url}`, { 
+      status: response.status,
+      success: response.data?.success,
+      data: response.data
+    });
     return response;
   },
   async (error) => {
+    // Log error for debugging
+    console.error('API Response Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+
     const originalRequest = error.config;
 
     // Initialize retryCount if it doesn't exist
@@ -114,153 +218,66 @@ api.interceptors.response.use(
       originalRequest.retryCount = 0;
     }
 
+    // Maximum number of retries
+    const maxRetries = 2;
+
+    // Check if we should retry the request
+    const shouldRetry = 
+      originalRequest.retryCount < maxRetries && 
+      (!error.response || error.response.status >= 500 || error.response.status === 0);
+
+    if (shouldRetry) {
+      originalRequest.retryCount += 1;
+      
+      // Delay retries using exponential backoff
+      const delay = Math.pow(2, originalRequest.retryCount) * 1000; // 2s, 4s
+      
+      // Return new promise to handle retrying
+      return new Promise(resolve => {
+        setTimeout(() => {
+        
+          resolve(axios(originalRequest));
+        }, delay);
+      });
+    }
+
     if (error.response) {
       // Handle authentication errors
       if (error.response.status === 401) {
-        // Prevent redirect loops
-        const isLoginPage =
-          typeof window !== 'undefined' &&
-          window.location.pathname.includes('/login');
-        const isDashboardPage =
-          typeof window !== 'undefined' &&
-          window.location.pathname.includes('/dashboard');
-
-        // Special handling for case-studies authentication errors
-        if (
-          originalRequest?.url?.includes('/api/case-studies/my-case-studies')
-        ) {
-          // If we're trying to access my-case-studies without authentication,
-          // redirect to the public case studies page instead of showing an error
-          if (
-            typeof window !== 'undefined' &&
-            window.location.pathname.includes('/case-studies')
-          ) {
-            window.location.href = '/case-studies';
-            return Promise.reject(error);
-          }
-        }
-
-        // Don't show error or redirect if we're already on login page
-        if (isLoginPage) {
-          return Promise.reject(error);
-        }
-
-        // For dashboard pages, only show the error once
-        if (isDashboardPage) {
-          const lastAuthError = localStorage.getItem('lastAuthError');
-          const now = Date.now();
-
-          if (!lastAuthError || now - parseInt(lastAuthError, 10) > 10000) {
-            // 10 seconds
-            localStorage.setItem('lastAuthError', now.toString());
-            toast.error('Your session has expired. Please log in again.', {
-              id: 'session-expired',
-            });
-          }
-
-          // Don't automatically redirect from dashboard pages
-          // Let the component handle it
-          return Promise.reject(error);
-        }
-
-        // For other pages, redirect to login
-        toast.error('Your session has expired. Please log in again.', {
-          id: 'session-expired',
-        });
-        localStorage.removeItem('token');
-        localStorage.removeItem('lastTokenValidation');
-
-        // Use a timeout to prevent immediate redirect
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 1500);
-
-        return Promise.reject(error);
-      } else if (error.response.status === 403) {
-        // Show toast for permission errors
-        if (!window.location.pathname.includes('/login')) {
-          // Use a unique ID for this toast to prevent duplicates
-          toast.error('You do not have permission to access this resource', {
-            id: 'permission-error',
+        const isLoginPage = typeof window !== 'undefined' && window.location.pathname.includes('/login');
+        
+        if (!isLoginPage) {
+          toast.error('Your session has expired. Please log in again.', {
+            id: 'session-expired',
           });
+          
+          // Clear auth data
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          // Redirect to login page after a short delay
+          setTimeout(() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/login';
+            }
+          }, 1500);
         }
       } else if (error.response.status >= 500) {
-        // Show toast for server errors with a unique ID
+        // Show toast for server errors
         toast.error('Server error. Please try again later.', {
           id: 'server-error',
         });
       }
     }
 
-    // If error is network error and hasn't been retried too many times
-    if (
-      (error.message === 'Network Error' ||
-        error.code === 'ERR_NETWORK' ||
-        error.message === 'timeout of 10000ms exceeded' ||
-        (error.response && error.response.status >= 500)) &&
-      originalRequest.retryCount < 3
-    ) {
-      originalRequest.retryCount += 1;
-
-      // Wait before retrying (exponential backoff)
-      const backoffTime = Math.pow(2, originalRequest.retryCount) * 1000;
-      await new Promise((resolve) => setTimeout(resolve, backoffTime));
-
-      // Show toast for retry with a unique ID
-      if (originalRequest.retryCount === 1) {
-        toast.loading('Connection issue. Retrying...', {
-          id: 'connection-retry',
-        });
-      }
-
-      return api(originalRequest);
-    }
-
-    // Show toast for network errors with a unique ID
-    if (error.message === 'Network Error') {
-      toast.error('Network error. Please check your internet connection.', {
-        id: 'network-error',
-      });
-    }
-
     return Promise.reject(error);
   }
 );
 
-type LoginData = {
-  email: string;
-  password: string;
-};
-
-type RegisterData = {
-  name: string;
-  email: string;
-  password: string;
-};
-
+// Simple method exports
 export const apiMethods = {
-  // Axios methods
   get: api.get,
   post: api.post,
   put: api.put,
   delete: api.delete,
-
-  // Custom auth methods
-  login: async (data: LoginData) => {
-    try {
-      const response = await api.post('/api/auth/login', data);
-      return response.data;
-    } catch (error) {
-      throw new Error('Invalid credentials');
-    }
-  },
-
-  register: async (data: RegisterData) => {
-    try {
-      const response = await api.post('/auth/register', data);
-      return response.data;
-    } catch (error) {
-      throw new Error('Registration failed');
-    }
-  },
 };

@@ -25,8 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'superadmin'],
-      default: 'admin',
+      default: 'user',
     },
     createdAt: {
       type: Date,
@@ -50,9 +49,16 @@ userSchema.pre('save', async function (next) {
 
 // Sign JWT and return
 userSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign(
+    { 
+      id: this._id,
+      role: this.role 
+    }, 
+    process.env.JWT_SECRET, 
+    {
+      expiresIn: process.env.JWT_EXPIRE || '30d',
+    }
+  );
 };
 
 // Match user entered password to hashed password in database
@@ -60,4 +66,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema); 

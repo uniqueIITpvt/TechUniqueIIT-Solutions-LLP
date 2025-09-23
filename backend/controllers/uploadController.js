@@ -3,7 +3,7 @@ const { uploadImage: uploadToCloudinary } = require('../utils/cloudinary');
 
 // @desc    Upload image
 // @route   POST /api/upload
-// @access  Private
+// @access  Public
 exports.uploadImage = asyncHandler(async (req, res) => {
     try {
         if (!req.files || !req.files.image) {

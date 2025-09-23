@@ -2,7 +2,8 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { api, authApi } from '@/services/api';
+import { authApi } from '@/services/api';
+import { toast } from 'react-hot-toast';
 
 interface AuthState {
   user: any | null;
@@ -13,11 +14,12 @@ interface AuthState {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  checkAuth: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -25,16 +27,15 @@ export const useAuth = create<AuthState>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authApi.login({ email, password });
+          const response = await authApi.login(email, password);
           if (response.success && response.token) {
-            localStorage.setItem('token', response.token);
             set({ 
               user: response.user, 
               isAuthenticated: true, 
               isLoading: false 
             });
           } else {
-            throw new Error('Invalid credentials');
+            throw new Error('Login failed');
           }
         } catch (error: any) {
           set({ error: error.message, isLoading: false });
@@ -44,9 +45,8 @@ export const useAuth = create<AuthState>()(
       register: async (name: string, email: string, password: string) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authApi.register({ name, email, password });
+          const response = await authApi.register(name, email, password);
           if (response.success && response.token) {
-            localStorage.setItem('token', response.token);
             set({ 
               user: response.user, 
               isAuthenticated: true, 
@@ -61,10 +61,23 @@ export const useAuth = create<AuthState>()(
         }
       },
       logout: () => {
-        localStorage.removeItem('token');
+        authApi.logout();
         set({ user: null, isAuthenticated: false });
+        toast.success('You have been logged out successfully');
       },
-      clearError: () => set({ error: null })
+      clearError: () => set({ error: null }),
+      checkAuth: async () => {
+        try {
+          const response = await authApi.checkAuth();
+          if (response.success && response.user) {
+            set({ user: response.user, isAuthenticated: true });
+          } else {
+            set({ user: null, isAuthenticated: false });
+          }
+        } catch (error) {
+          set({ user: null, isAuthenticated: false });
+        }
+      }
     }),
     {
       name: 'auth-storage',

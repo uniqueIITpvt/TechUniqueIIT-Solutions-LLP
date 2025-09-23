@@ -4,15 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { api } from '@/services/api';
-
-// Default categories if API fails
-const defaultCategories = [
-  'All',
-  'Web Development',
-  'Mobile Apps',
-  'UI/UX Design',
-  'Cloud Solutions',
-];
+import { caseStudyCategories } from '@/data/fallbackCaseStudies';
 
 interface CaseStudy {
   category: string;
@@ -23,7 +15,7 @@ export const CaseStudiesFilter = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const [categories, setCategories] = useState(defaultCategories);
+  const [categories, setCategories] = useState(caseStudyCategories);
   const [activeCategory, setActiveCategory] = useState(
     searchParams.get('category') || 'All'
   );
@@ -62,7 +54,7 @@ export const CaseStudiesFilter = () => {
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
-        // Keep default categories on error
+        // Keep fallback categories on error
       } finally {
         setIsLoading(false);
       }
@@ -98,7 +90,7 @@ export const CaseStudiesFilter = () => {
     <section className='py-8 bg-white border-b'>
       <div className='container mx-auto px-4'>
         <div className='flex flex-wrap gap-4 justify-center'>
-          {categories.map((category) => (
+          {categories.map((category: string) => (
             <motion.button
               key={category}
               whileHover={{ scale: 1.05 }}

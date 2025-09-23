@@ -1,32 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const {
-    createBlog,
-    getBlogs,
-    getBlog,
-    updateBlog,
-    deleteBlog,
-    toggleLike,
-    getBlogStats,
-    getMyBlogs
+const { 
+  createBlog, 
+  getBlogs, 
+  getBlog, 
+  updateBlog, 
+  deleteBlog, 
+  getUserBlogs,
+  getBlogBySlug
 } = require('../controllers/blogController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Place specific routes before parameterized routes
-router.get('/my-blogs', protect, getMyBlogs);
-router.get('/stats', protect, getBlogStats);
+// Public routes
+router.get('/', getBlogs);
+router.get('/slug/:slug', getBlogBySlug);
 
-router
-    .route('/')
-    .get(getBlogs)
-    .post(protect, authorize('admin', 'user'), createBlog);
+// Protected routes
+router.use(protect); // Apply protection for all routes below
+router.post('/', authorize('admin'), createBlog);
+router.put('/:id', updateBlog);
+router.delete('/:id', deleteBlog);
+router.get('/user/:userId', getUserBlogs);
 
-router
-    .route('/:id')
-    .get(getBlog)
-    .put(protect, authorize('admin', 'user'), updateBlog)
-    .delete(protect, authorize('admin', 'user'), deleteBlog);
-
-router.put('/:id/like', protect, toggleLike);
+// This route needs to be after specific routes to avoid conflicts
+router.get('/:id', getBlog);
 
 module.exports = router; 

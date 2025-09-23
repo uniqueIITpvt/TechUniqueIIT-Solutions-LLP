@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "safe-dev": "node killPort.js && nodemon server.js",
-    "kill-port": "node killPort.js"
+    "kill-port": "node killPort.js",
+    "seed": "node seed.js"
   },
   "keywords": [],
   "author": "",

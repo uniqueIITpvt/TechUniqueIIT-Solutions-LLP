@@ -7,13 +7,13 @@ import { FiHash, FiFilter, FiChevronDown, FiX } from 'react-icons/fi';
 // Static categories data matching your list
 const staticCategories = [
   { _id: 'technology', name: 'Technology', count: 0 },
-  { _id: 'programming', name: 'Programming', count: 0 },
   { _id: 'web-development', name: 'Web Development', count: 0 },
   { _id: 'mobile-development', name: 'Mobile Development', count: 0 },
-  { _id: 'ai-ml', name: 'AI & ML', count: 0 },
-  { _id: 'cybersecurity', name: 'Cybersecurity', count: 0 },
+  { _id: 'ai-ml', name: 'AI/ML', count: 0 },
   { _id: 'cloud-computing', name: 'Cloud Computing', count: 0 },
-  { _id: 'devops', name: 'DevOps', count: 0 },
+  { _id: 'ui-ux', name: 'UI/UX', count: 0 },
+  { _id: 'digital-marketing', name: 'Digital Marketing', count: 0 },
+  { _id: 'cyber-security', name: 'Cyber Security', count: 0 },
   { _id: 'other', name: 'Other', count: 0 },
 ];
 
@@ -39,12 +39,20 @@ export function BlogCategories({
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Calculate counts for each category
-  const categoriesWithCounts = staticCategories.map((category) => ({
-    ...category,
-    count: blogs.filter(
-      (blog) => blog.category.toLowerCase() === category.name.toLowerCase()
-    ).length,
-  }));
+  const categoriesWithCounts = staticCategories.map((category) => {
+    // Handle case differences and variations in names
+    const normalizedName = category.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const count = blogs.filter((blog) => {
+      if (!blog.category) return false;
+      const blogCategory = blog.category.toLowerCase().replace(/[^a-z0-9]/g, '');
+      return blogCategory === normalizedName || blogCategory.includes(normalizedName);
+    }).length;
+    
+    return {
+      ...category,
+      count,
+    };
+  });
 
   // Close modal when clicking outside
   useEffect(() => {

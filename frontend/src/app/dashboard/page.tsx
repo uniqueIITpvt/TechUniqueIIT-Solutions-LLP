@@ -42,6 +42,8 @@ import { api } from '@/services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface DashboardStats {
   totalBlogs: number;
@@ -240,20 +242,48 @@ export default function DashboardPage() {
   const [recentBlogs, setRecentBlogs] = useState<RecentBlog[]>([]);
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [analyticsData, setAnalyticsData] =
     useState<AnalyticsData>(initialAnalyticsData);
   const [analyticsTimePeriod, setAnalyticsTimePeriod] = useState('30days');
   const [isAnalyticsLoading, setIsAnalyticsLoading] = useState(false);
+  const [showReadyMessage, setShowReadyMessage] = useState(false);
+
+  const { user } = useAuth();
+  const router = useRouter();
+  
+  // Check if user is admin
+  const isAdmin = user?.role === 'admin';
+
+  // Redirect non-admin users trying to access blog creation features
+  useEffect(() => {
+    if (user && !isAdmin) {
+      toast.error('Only admin users can create blog posts');
+    }
+  }, [user, isAdmin]);
 
   // Define quick actions
   const quickActions: QuickAction[] = [
     {
-      name: 'New Blog',
+      name: 'My Blogs',
       icon: FaBlog,
-      color: 'bg-blue-600',
+      color: 'text-purple-600',
+      href: '/dashboard/my-blogs',
+    },
+    {
+      name: 'Create Blog',
+      icon: FaRegNewspaper,
+      color: 'text-emerald-600',
       href: '/dashboard/blogs/create',
+      onClick: () => {
+        // Only allow admins to create blogs
+        if (!isAdmin) {
+          toast.error('Only admin users can create blog posts');
+          return false; // Prevent navigation
+        }
+        return true; // Allow navigation
+      }
     },
     {
       name: 'New Case Study',
@@ -276,59 +306,96 @@ export default function DashboardPage() {
   ];
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        // Use Promise.allSettled instead of Promise.all to handle partial failures
-        const results = await Promise.allSettled([
-          api.get('/api/blogs'),
-          api.get('/api/blogs/stats'),
-          api.get('/api/case-studies'),
-        ]);
-
-        // Process blogs response
-        if (results[0].status === 'fulfilled') {
-          const blogsResponse = results[0].value;
-          const blogs = blogsResponse.data.data.data || [];
-          setRecentBlogs(blogs.slice(0, 5));
-        } else {
-          // Handle error silently
-        }
-
-        // Process stats response
-        if (results[1].status === 'fulfilled') {
-          const statsResponse = results[1].value;
-          setStats(statsResponse.data.data);
-        } else {
-          // Handle error silently
-        }
-
-        // Process case studies response
-        if (results[2].status === 'fulfilled') {
-          const caseStudiesResponse = results[2].value;
-
-          // Handle different response structures
-          if (caseStudiesResponse.data.data.data) {
-            const caseStudies = caseStudiesResponse.data.data.data || [];
-            setCaseStudies(caseStudies.slice(0, 3));
-          } else if (Array.isArray(caseStudiesResponse.data.data)) {
-            const caseStudies = caseStudiesResponse.data.data || [];
-            setCaseStudies(caseStudies.slice(0, 3));
-          }
-        } else {
-          // Handle error silently
-        }
-      } catch (error) {
-        setError('Failed to load dashboard data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
+    // Display a notification about backend status when the page loads
+    toast.error('Backend APIs have been disabled in this version. Only image upload functionality is available.', {
+      id: 'api-disabled',
+      duration: 5000,
+    });
+    
     fetchDashboardData();
-  }, []);
+    fetchAnalyticsData(analyticsTimePeriod);
+    
+    // Show the ready message after a short delay
+    const timer = setTimeout(() => {
+      setShowReadyMessage(true);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, [analyticsTimePeriod]);
+
+  const fetchDashboardData = async () => {
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      // Instead of making API calls, just use mock data
+      setTimeout(() => {
+        setStats({
+          totalBlogs: 42,
+          publishedBlogs: 36,
+          draftBlogs: 6,
+          totalViews: 15320,
+          totalLikes: 8432,
+        });
+        
+        setRecentBlogs([
+          {
+            _id: '1',
+            title: 'Getting Started with React',
+            views: 1234,
+            likes: 89,
+            status: 'published',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            _id: '2',
+            title: 'Advanced TypeScript Patterns',
+            views: 987,
+            likes: 76,
+            status: 'published',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            _id: '3',
+            title: 'Building with Next.js',
+            views: 765,
+            likes: 54,
+            status: 'published',
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        
+        setCaseStudies([
+          {
+            _id: '1',
+            title: 'E-commerce Redesign',
+            slug: 'ecommerce-redesign',
+            category: 'Web Development',
+            description: 'Complete redesign of an e-commerce platform',
+            image: '/placeholder.jpg',
+            client: 'ABC Retail',
+            duration: '3 months',
+            year: '2023',
+            stats: [
+              { label: 'Conversion Rate', value: '+45%' },
+              { label: 'Page Load Time', value: '-60%' },
+            ],
+            tags: ['React', 'Node.js', 'MongoDB'],
+            featured: true,
+            status: 'published',
+            views: 1200,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        
+        setIsLoading(false);
+      }, 1000);
+    } catch (error) {
+      setError('Failed to load dashboard data');
+      setIsLoading(false);
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
 
   // Fetch analytics data when time period changes
   useEffect(() => {
@@ -1230,6 +1297,11 @@ export default function DashboardPage() {
         <h2 className='text-lg font-bold text-gray-900 mb-4'>Quick Actions</h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
           {quickActions.map((action: QuickAction, index: number) => {
+            // Skip Create Blog action for non-admin users
+            if (action.name === 'Create Blog' && !isAdmin) {
+              return null;
+            }
+            
             const handleClick = (e: React.MouseEvent) => {
               if (action.onClick) {
                 e.preventDefault();

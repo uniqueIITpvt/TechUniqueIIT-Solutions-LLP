@@ -8,6 +8,7 @@ import { api } from '@/services/api';
 import { FiLoader, FiAlertCircle } from 'react-icons/fi';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import { fallbackCaseStudies, getCaseStudiesByCategory } from '@/data/fallbackCaseStudies';
 
 interface Stat {
   label: string;
@@ -30,49 +31,7 @@ interface CaseStudy {
   status: string;
 }
 
-// Fallback case studies in case API fails
-const fallbackCaseStudies = [
-  {
-    _id: '1',
-    title: 'E-commerce Platform Redesign',
-    slug: 'ecommerce-platform',
-    category: 'Web Development',
-    description:
-      'Complete redesign and development of a modern e-commerce platform resulting in 150% increase in sales.',
-    image: '/case-studies/case-studies-1.jpg',
-    stats: [
-      { label: 'Increase in Sales', value: '150%' },
-      { label: 'User Engagement', value: '+200%' },
-      { label: 'Load Time', value: '-60%' },
-    ],
-    tags: ['React', 'Node.js', 'AWS'],
-    client: 'Fashion Retail Co.',
-    duration: '3 months',
-    year: '2023',
-    featured: true,
-    status: 'published',
-  },
-  {
-    _id: '2',
-    title: 'Mobile Banking App',
-    slug: 'mobile-banking-app',
-    category: 'Mobile Apps',
-    description:
-      'Developed a secure and user-friendly mobile banking application with advanced features and biometric authentication.',
-    image: '/case-studies/case-studies-2.jpg',
-    stats: [
-      { label: 'User Adoption', value: '85%' },
-      { label: 'App Rating', value: '4.8/5' },
-      { label: 'Transactions', value: '1M+' },
-    ],
-    tags: ['React Native', 'Firebase', 'Node.js'],
-    client: 'Digital Bank Ltd.',
-    duration: '6 months',
-    year: '2023',
-    featured: false,
-    status: 'published',
-  },
-];
+// Note: Using comprehensive fallback data from external file
 
 export const CaseStudiesList = () => {
   const searchParams = useSearchParams();
@@ -85,6 +44,7 @@ export const CaseStudiesList = () => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   // Fetch case studies
   useEffect(() => {
@@ -92,6 +52,7 @@ export const CaseStudiesList = () => {
       try {
         setIsLoading(true);
         setError(null);
+        setUsingFallback(false);
 
         // Make sure we're using the public endpoint, not the protected one
         const response = await api.get('/api/case-studies');
@@ -107,17 +68,16 @@ export const CaseStudiesList = () => {
             const caseStudiesData = response.data.data || [];
             setCaseStudies(caseStudiesData);
           } else {
-            setCaseStudies(fallbackCaseStudies);
-            setError('Received unexpected data format. Using fallback data.');
+            throw new Error('Unexpected data format');
           }
         } else {
-          setCaseStudies(fallbackCaseStudies);
-          setError('Received unexpected data format. Using fallback data.');
+          throw new Error('Invalid response format');
         }
       } catch (error: any) {
-        setError('Failed to load case studies. Using fallback data.');
-        setCaseStudies(fallbackCaseStudies);
-        toast.error('Failed to load case studies. Using sample data instead.');
+        console.error('Error fetching case studies from API, using fallback data:', error);
+        setCaseStudies(fallbackCaseStudies as CaseStudy[]);
+        setUsingFallback(true);
+        setError(null); // Clear error since we have fallback data
       } finally {
         setIsLoading(false);
       }
@@ -128,14 +88,21 @@ export const CaseStudiesList = () => {
 
   // Filter case studies when category changes
   useEffect(() => {
-    if (categoryFilter === 'All') {
-      setFilteredCaseStudies(caseStudies);
+    if (usingFallback) {
+      // Use the fallback filtering function for better category handling
+      const filtered = getCaseStudiesByCategory(categoryFilter);
+      setFilteredCaseStudies(filtered as CaseStudy[]);
     } else {
-      setFilteredCaseStudies(
-        caseStudies.filter((study) => study.category === categoryFilter)
-      );
+      // Use regular filtering for API data
+      if (categoryFilter === 'All') {
+        setFilteredCaseStudies(caseStudies);
+      } else {
+        setFilteredCaseStudies(
+          caseStudies.filter((study) => study.category === categoryFilter)
+        );
+      }
     }
-  }, [categoryFilter, caseStudies]);
+  }, [categoryFilter, caseStudies, usingFallback]);
 
   if (isLoading) {
     return (

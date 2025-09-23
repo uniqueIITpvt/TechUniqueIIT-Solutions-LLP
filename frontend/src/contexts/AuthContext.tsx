@@ -59,12 +59,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(true);
       }
 
-      const response = await api.get('/api/users/me');
+      const response = await api.get('/api/auth/me');
 
       if (!isMounted) return;
 
-      if (response.data && response.data.data) {
-        setUser(response.data.data);
+      if (response.data && response.data.user) {
+        setUser({
+          _id: response.data.user.id,
+          name: response.data.user.name,
+          email: response.data.user.email,
+          role: response.data.user.role
+        });
       }
     } catch (error) {
       if (!isMounted) return;
@@ -90,26 +95,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return false;
       }
 
-      // Add a timestamp check to prevent excessive validation
+      // Check if token was previously validated successfully
       const lastValidated = localStorage.getItem('lastTokenValidation');
-      const now = Date.now();
-
-      if (lastValidated) {
-        const lastValidationTime = parseInt(lastValidated, 10);
-        // Only validate if it's been more than 5 minutes since last validation
-        if (now - lastValidationTime < 5 * 60 * 1000) {
-          return true;
-        }
+      if (lastValidated === 'valid') {
+        return true;
       }
 
       // Try to validate the token by making a request to the server
-      const response = await api.get('/api/users/me');
+      const response = await api.get('/api/auth/me');
 
       // Update user data if validation is successful
-      if (response.status === 200 && response.data && response.data.data) {
-        setUser(response.data.data);
-        // Store the validation timestamp
-        localStorage.setItem('lastTokenValidation', now.toString());
+      if (response.status === 200 && response.data && response.data.user) {
+        setUser({
+          _id: response.data.user.id,
+          name: response.data.user.name,
+          email: response.data.user.email,
+          role: response.data.user.role
+        });
+        // Store the validation flag
+        localStorage.setItem('lastTokenValidation', 'valid');
         return true;
       }
 

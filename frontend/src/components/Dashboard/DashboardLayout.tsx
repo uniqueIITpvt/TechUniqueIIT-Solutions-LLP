@@ -24,11 +24,11 @@ const menuItems = [
   },
   {
     title: 'Create Post',
-    path: '/dashboard/post-blog',
+    path: '/dashboard/blogs/create',
     icon: <MdCreate size={20} />,
   },
   {
-    title: 'My Blogs',
+    title: 'Blogs',
     path: '/dashboard/my-blogs',
     icon: <FaBlog size={20} />,
   },
@@ -41,11 +41,6 @@ const menuItems = [
     title: 'Analytics',
     path: '/dashboard/analytics',
     icon: <FaChartLine size={20} />,
-  },
-  {
-    title: 'Users',
-    path: '/dashboard/users',
-    icon: <FaUsers size={20} />,
   },
 ];
 
@@ -64,47 +59,24 @@ export default function DashboardLayout({
   // Validate token on mount
   useEffect(() => {
     let isMounted = true;
-    let retryCount = 0;
-    const maxRetries = 3;
 
     const checkToken = async () => {
       if (!isMounted) return;
-
-      // Prevent excessive validation attempts
-      if (retryCount >= maxRetries) {
-        setIsValidatingToken(false);
-        toast.error(
-          'Authentication failed after multiple attempts. Please log in again.',
-          {
-            id: 'auth-retry-exceeded',
-          }
-        );
-        logout();
-        return;
-      }
-
-      retryCount++;
+      
       setIsValidatingToken(true);
 
       try {
+        // Simply check if the user is authenticated
         const isValid = await validateToken();
+        
         if (!isMounted) return;
 
         if (!isValid) {
-          toast.error('Your session has expired. Please log in again.', {
-            id: 'session-expired-dashboard',
-          });
+          // Only redirect to login page if not valid, without error
           logout();
-        } else {
-          // Successfully validated, no need to retry
-          retryCount = maxRetries;
         }
       } catch (error) {
         if (!isMounted) return;
-
-        toast.error('Authentication error. Please log in again.', {
-          id: 'auth-error-dashboard',
-        });
         logout();
       } finally {
         if (isMounted) {
@@ -277,7 +249,7 @@ export default function DashboardLayout({
             {/* Header Actions */}
             <div className='flex items-center space-x-4'>
               <Link
-                href='/dashboard/post-blog'
+                href='/dashboard/blogs/create'
                 className='hidden md:flex items-center px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors'
               >
                 <MdCreate className='mr-2' size={18} />

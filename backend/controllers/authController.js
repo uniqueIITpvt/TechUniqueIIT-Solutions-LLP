@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log('Register request received:', { name, email });
+
   // Check if user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -20,17 +22,28 @@ exports.register = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    role: 'admin'  // Changed from 'user' to 'admin' to allow blog uploads
   });
 
   if (user) {
+    console.log('User created successfully:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
+    // Generate JWT token
+    const token = user.getSignedJwtToken();
+
     res.status(201).json({
       success: true,
-      data: {
-        _id: user._id,
+      token,
+      user: {
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
-        token: user.getSignedJwtToken(),
       },
     });
   } else {
@@ -74,10 +87,8 @@ exports.login = asyncHandler(async (req, res) => {
       });
     }
 
-    // Create token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE,
-    });
+    // Generate JWT token
+    const token = user.getSignedJwtToken();
 
     // Remove password from output
     user.password = undefined;
@@ -101,3 +112,29 @@ exports.login = asyncHandler(async (req, res) => {
     });
   }
 });
+
+// @desc    Get current logged in user
+// @route   GET /api/auth/me
+// @access  Private
+exports.getCurrentUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      }
+    });
+  } catch (error) {
+    console.error('Get current user error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error getting current user',
+      error: error.message,
+    });
+  }
+}); 

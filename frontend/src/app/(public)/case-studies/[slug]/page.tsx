@@ -18,6 +18,7 @@ import {
   FiAlertCircle,
 } from 'react-icons/fi';
 import { api } from '@/services/api';
+import { getCaseStudyBySlug } from '@/data/fallbackCaseStudies';
 
 interface Stat {
   label: string;
@@ -60,12 +61,14 @@ export default function CaseStudyDetail({
   const [error, setError] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchCaseStudy = async () => {
       try {
         setIsLoading(true);
         setError(null);
+        setUsingFallback(false);
 
         // Use the correct API endpoint for slug
         const response = await api.get(`/api/case-studies/slug/${params.slug}`);
@@ -79,10 +82,20 @@ export default function CaseStudyDetail({
             setActiveImage(response.data.data.gallery[0]);
           }
         } else {
-          setError('Failed to fetch case study');
+          throw new Error('Case study not found');
         }
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch case study');
+        console.error('Error fetching case study from API, trying fallback data:', err);
+        
+        // Try fallback data
+        const fallbackCaseStudy = getCaseStudyBySlug(params.slug);
+        if (fallbackCaseStudy) {
+          setCaseStudy(fallbackCaseStudy as CaseStudy);
+          setUsingFallback(true);
+          setError(null);
+        } else {
+          setError('Case study not found');
+        }
       } finally {
         setIsLoading(false);
       }

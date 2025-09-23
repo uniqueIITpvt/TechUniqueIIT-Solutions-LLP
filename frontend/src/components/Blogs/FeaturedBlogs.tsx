@@ -1,46 +1,58 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { api } from '@/services/api';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiEye, FiClock, FiTrendingUp } from 'react-icons/fi';
+import { FaCalendarAlt, FaClock } from 'react-icons/fa';
+import { blogApi } from '@/services/api';
+import LoadingSpinner from '../LoadingSpinner';
+import { getImageUrl } from '@/utils/imageHelper';
+import { featuredBlogs as fallbackFeaturedBlogs, FallbackBlog } from '@/data/fallbackBlogs';
 
 interface Blog {
   _id: string;
   title: string;
-  excerpt: string;
-  thumbnail: string;
-  views: number;
+  slug: string;
+  summary: string;
+  featuredImage: string;
   readTime: number;
-  category: string;
+  createdAt: string;
 }
 
-interface BlogResponse {
-  success: boolean;
-  data: {
-    data: Blog[];
-  };
-}
-
-export function FeaturedBlogs() {
+const FeaturedBlogs = () => {
   const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchFeaturedBlogs = async () => {
       try {
-        const response = await api.get<BlogResponse>(
-          '/api/blogs?sort=-views&limit=3'
-        );
-        if (response.data.success) {
-          // Ensure we only take the top 3 blogs
-          const topThreeBlogs = response.data.data.data.slice(0, 3);
-          setFeaturedBlogs(topThreeBlogs);
+        setIsLoading(true);
+        setError('');
+        setUsingFallback(false);
+        
+        const response = await blogApi.getFeaturedBlogs();
+        
+        // Handle different possible response formats
+        if (response.success && Array.isArray(response.data)) {
+          setFeaturedBlogs(response.data);
+        } else if (Array.isArray(response)) {
+          // If the API directly returns an array
+          setFeaturedBlogs(response);
+        } else if (response && Array.isArray(response.blogs)) {
+          // Another possible format
+          setFeaturedBlogs(response.blogs);
+        } else {
+          throw new Error('Unexpected response format');
         }
-      } catch (error) {
-        console.error('Error fetching featured blogs:', error);
+      } catch (err) {
+        console.error('Error fetching featured blogs from API, using fallback data:', err);
+        
+        // Use fallback data when API fails
+        setFeaturedBlogs(fallbackFeaturedBlogs as Blog[]);
+        setUsingFallback(true);
+        setError('');
       } finally {
         setIsLoading(false);
       }
@@ -51,8 +63,16 @@ export function FeaturedBlogs() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center h-[400px]'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500'></div>
+      <div className="py-10 text-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
@@ -61,84 +81,74 @@ export function FeaturedBlogs() {
     return null;
   }
 
-  const badges = ['#1 Most Read', '#2 Top Pick', '#3 Popular'];
-
   return (
-    <section className='py-16 bg-gradient-to-b from-gray-50 to-white'>
-      <div className='container mx-auto px-4'>
-        <div className='text-center mb-12'>
-          <span className='inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 mb-4'>
-            <FiTrendingUp className='mr-2' />
-            Most Popular
-          </span>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-            Trending Articles
-          </h2>
-          <p className='text-gray-600 max-w-2xl mx-auto'>
-            Discover our most-read articles and see what's capturing our
-            readers' attention
-          </p>
+    <section className="py-12 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center mb-8">
+          <h2 className="text-3xl font-bold text-center">Featured Articles</h2>
+          {/* {usingFallback && (
+            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm ml-4">
+              Demo Content
+            </div>
+          )} */}
         </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-          {featuredBlogs.slice(0, 3).map((blog, index) => (
-            <motion.div
-              key={blog._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/blogs/${blog._id}`}>
-                <article className='group relative bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300'>
-                  <div className='relative h-64'>
-                    <Image
-                      src={blog.thumbnail || 'https://placehold.co/600x400'}
-                      alt={blog.title}
-                      fill
-                      className='object-cover group-hover:scale-105 transition-transform duration-300'
-                    />
-                    <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 group-hover:via-black/40 group-hover:to-black/80 transition-colors duration-300' />
-
-                    {/* Top Badge */}
-                    <div className='absolute top-4 left-4 flex items-center gap-2'>
-                      <span className='px-3 py-1 bg-indigo-600 text-white text-sm rounded-full'>
-                        {blog.category}
-                      </span>
-                      <span
-                        className={`px-3 py-1 text-white text-sm rounded-full flex items-center ${
-                          index === 0
-                            ? 'bg-yellow-500'
-                            : index === 1
-                            ? 'bg-indigo-500'
-                            : 'bg-green-500'
-                        }`}
-                      >
-                        <FiTrendingUp className='mr-1' /> {badges[index]}
-                      </span>
-                    </div>
-
-                    <div className='absolute bottom-4 left-4 right-4'>
-                      <h3 className='text-xl font-bold text-white mb-2 line-clamp-2 group-hover:line-clamp-none transition-all duration-300'>
-                        {blog.title}
-                      </h3>
-                      <div className='flex items-center text-sm text-gray-200 space-x-4'>
-                        <span className='flex items-center'>
-                          <FiEye className='mr-2' />
-                          {blog.views.toLocaleString()} views
-                        </span>
-                        <span className='flex items-center'>
-                          <FiClock className='mr-2' />
-                          {blog.readTime || 5} min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featuredBlogs.map((blog) => (
+            <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
+              <Link href={`/blogs/${blog.slug}`}>
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={getImageUrl(blog.featuredImage)}
+                    alt={blog.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </Link>
-            </motion.div>
+              
+              <div className="p-6">
+                <div className="flex items-center text-sm text-gray-500 mb-3">
+                  <span className="inline-flex items-center mr-3">
+                    <FaCalendarAlt className="mr-1" />
+                    {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
+                  <span className="inline-flex items-center">
+                    <FaClock className="mr-1" />
+                    {blog.readTime} min read
+                  </span>
+                </div>
+                
+                <Link href={`/blogs/${blog.slug}`}>
+                  <h3 className="text-xl font-semibold mb-3 hover:text-blue-600 transition-colors">
+                    {blog.title}
+                  </h3>
+                </Link>
+                
+                <p className="text-gray-600 mb-4 line-clamp-3">
+                  {blog.summary}
+                </p>
+                
+                <Link 
+                  href={`/blogs/${blog.slug}`}
+                  className="text-blue-600 font-medium hover:underline inline-flex items-center"
+                >
+                  Read More
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default FeaturedBlogs;

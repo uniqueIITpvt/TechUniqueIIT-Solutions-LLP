@@ -1,218 +1,282 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { api } from '@/services/api';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {
-  FiCalendar,
-  FiUser,
-  FiEye,
-  FiClock,
-  FiArrowRight,
-} from 'react-icons/fi';
 import Image from 'next/image';
-import { BlogCategories } from './BlogCategories';
+import { FaCalendarAlt, FaClock, FaTag } from 'react-icons/fa';
+import { blogApi } from '@/services/api';
+import LoadingSpinner from '../LoadingSpinner';
+import { getImageUrl } from '@/utils/imageHelper';
+import { getPaginatedBlogs, FallbackBlog } from '@/data/fallbackBlogs';
 
 interface Blog {
   _id: string;
   title: string;
-  excerpt: string;
-  thumbnail: string;
-  author: {
-    name: string;
-  };
+  slug: string;
+  summary: string;
+  content: string;
+  featuredImage: string;
   category: string;
-  views: number;
+  tags: string[];
   readTime: number;
   createdAt: string;
+  updatedAt: string;
+  viewCount: number;
+  author: any;
 }
 
-function truncateText(text: string, maxLength: number) {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-}
-
-export function BlogList() {
+const BlogList = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [usingFallback, setUsingFallback] = useState(false);
+  
+  const categoriesList = [
+    'All',
+    'Technology',
+    'Web Development',
+    'Mobile Development',
+    'AI/ML',
+    'Cloud Computing',
+    'UI/UX',
+    'Digital Marketing',
+    'Cyber Security',
+  ];
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBlogs = async () => {
       try {
         setIsLoading(true);
-
-        const response = await api.get('/api/blogs');
-
-        if (response.data.success) {
-          const blogsData = response.data.data.data || [];
-          setBlogs(blogsData);
-          setFilteredBlogs(blogsData);
-        } else {
-          setError('Failed to fetch blogs');
+        setError('');
+        setUsingFallback(false);
+        
+        const params: any = { 
+          page: currentPage,
+          limit: 6
+        };
+        
+        if (selectedCategory && selectedCategory !== 'All') {
+          params.category = selectedCategory;
         }
-      } catch (error) {
-        setError('Failed to fetch blogs');
+        
+        const response = await blogApi.getBlogs(params);
+        
+        // Handle different possible response formats
+        if (response.success && Array.isArray(response.data)) {
+          setBlogs(response.data);
+          if (response.pagination) {
+            setTotalPages(response.pagination.totalPages || 1);
+          } else {
+            setTotalPages(Math.ceil(response.count / 6) || 1);
+          }
+        } else if (Array.isArray(response)) {
+          setBlogs(response);
+          setTotalPages(1);
+        } else if (response && Array.isArray(response.blogs)) {
+          setBlogs(response.blogs);
+          const totalItems = response.totalCount || response.blogs.length;
+          setTotalPages(Math.ceil(totalItems / 6) || 1);
+        } else {
+          throw new Error('Unexpected response format');
+        }
+      } catch (err) {
+        console.error('Error fetching blogs from API, using fallback data:', err);
+        
+        // Use fallback data when API fails
+        const fallbackData = getPaginatedBlogs(
+          currentPage, 
+          6, 
+          selectedCategory && selectedCategory !== 'All' ? selectedCategory : undefined
+        );
+        
+        setBlogs(fallbackData.blogs as Blog[]);
+        setTotalPages(fallbackData.totalPages);
+        setUsingFallback(true);
+        setError('');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchBlogs();
+  }, [currentPage, selectedCategory]);
 
-  useEffect(() => {
-    if (selectedCategory === 'all') {
-      setFilteredBlogs(blogs);
-    } else {
-      const filtered = blogs.filter(
-        (blog) => blog.category.toLowerCase() === selectedCategory.toLowerCase()
-      );
-      setFilteredBlogs(filtered);
-    }
-  }, [selectedCategory, blogs]);
-
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategory(categoryId);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category === 'All' ? '' : category);
+    setCurrentPage(1); // Reset to first page when changing category
   };
 
-  if (isLoading) {
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when changing page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (isLoading && currentPage === 1) {
     return (
-      <div className='flex justify-center items-center min-h-[400px]'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500'></div>
+      <div className="py-10 text-center">
+        <LoadingSpinner />
       </div>
     );
   }
-
+  
   if (error) {
     return (
-      <div className='text-center py-12'>
-        <p className='text-red-500'>{error}</p>
-      </div>
-    );
-  }
-
-  if (!Array.isArray(blogs) || blogs.length === 0) {
-    return (
-      <div className='text-center py-12'>
-        <p className='text-gray-500'>No blogs found</p>
+      <div className="py-10 text-center">
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <section className='py-16 bg-gradient-to-b from-gray-50 to-white'>
-      <div className='container mx-auto px-4'>
-        <div className='text-center mb-12'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-            {selectedCategory === 'all'
-              ? 'Latest Articles'
-              : `${selectedCategory.replace(/-/g, ' ')} Articles`}
-          </h2>
-          <p className='text-gray-600 max-w-2xl mx-auto'>
-            {filteredBlogs.length} articles found
-          </p>
+    <section className="py-12 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold">Our Blog Posts</h2>
+          {/* {usingFallback && (
+            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+              Demo Content
+            </div>
+          )} */}
         </div>
-
-        <BlogCategories
-          onCategoryChange={handleCategoryChange}
-          selectedCategory={selectedCategory}
-          blogs={blogs}
-        />
-
-        {filteredBlogs.length === 0 ? (
-          <div className='text-center py-12'>
-            <p className='text-gray-500'>No articles found in this category</p>
-          </div>
-        ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-            {filteredBlogs.map((blog, index) => (
-              <motion.div
-                key={blog._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className='h-full'
+        
+        {/* Categories Filter */}
+        <div className="mb-8 overflow-x-auto pb-2">
+          <div className="flex space-x-2 min-w-max">
+            {categoriesList.map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryChange(category)}
+                className={`px-4 py-2 rounded-full transition-colors ${
+                  (category === 'All' && !selectedCategory) || selectedCategory === category
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                }`}
               >
-                <Link href={`/blogs/${blog._id}`}>
-                  <article className='group h-full bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300'>
-                    <div className='relative h-56 sm:h-64'>
-                      <Image
-                        src={blog.thumbnail || 'https://placehold.co/600x400'}
-                        alt={blog.title}
-                        fill
-                        className='object-cover group-hover:scale-105 transition-transform duration-300'
-                      />
-                      <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 group-hover:via-black/40 group-hover:to-black/80 transition-colors duration-300' />
-                      <div className='absolute top-4 left-4 flex flex-wrap gap-2'>
-                        <span className='px-3 py-1 bg-indigo-600 text-white text-sm rounded-full'>
-                          {blog.category}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='p-6 flex flex-col h-[calc(100%-16rem)]'>
-                      <h3
-                        className='text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:line-clamp-none transition-all duration-300'
-                        title={blog.title}
-                      >
-                        {truncateText(blog.title, 60)}
-                      </h3>
-                      <p className='text-gray-600 mb-4 line-clamp-2 group-hover:line-clamp-3 flex-grow'>
-                        {truncateText(blog.excerpt, 120)}
-                      </p>
-
-                      <div className='border-t pt-4 mt-auto'>
-                        <div className='flex items-center justify-between mb-3'>
-                          <div className='flex items-center'>
-                            <div className='w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center'>
-                              <FiUser className='text-indigo-600' />
-                            </div>
-                            <span className='ml-2 text-sm text-gray-700'>
-                              {blog.author?.name || 'Anonymous'}
-                            </span>
-                          </div>
-                          <span className='flex items-center text-sm text-gray-500'>
-                            <FiEye className='mr-1' />
-                            {blog.views}
-                          </span>
-                        </div>
-
-                        <div className='flex items-center justify-between text-sm text-gray-500'>
-                          <span className='flex items-center'>
-                            <FiCalendar className='mr-1' />
-                            {new Date(blog.createdAt).toLocaleDateString()}
-                          </span>
-                          <span className='flex items-center'>
-                            <FiClock className='mr-1' />
-                            {blog.readTime || 5} min read
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className='mt-4 flex items-center justify-end text-indigo-600 group-hover:text-indigo-700 transition-colors'>
-                        <span className='text-sm font-medium'>Read More</span>
-                        <FiArrowRight className='ml-2 transform group-hover:translate-x-1 transition-transform' />
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              </motion.div>
+                {category}
+              </button>
             ))}
           </div>
-        )}
-
-        {filteredBlogs.length >= 9 && (
-          <div className='text-center mt-12'>
-            <button className='inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors'>
-              Load More Articles
-              <FiArrowRight className='ml-2' />
-            </button>
+        </div>
+        
+        {blogs.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-gray-500">No blogs found in this category.</p>
           </div>
+        ) : (
+          <>
+            {/* Blog Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogs.map((blog) => (
+                <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <Link href={`/blogs/${blog.slug}`}>
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={getImageUrl(blog.featuredImage)}
+                        alt={blog.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </Link>
+                  
+                  <div className="p-6">
+                    <div className="flex items-center text-sm text-gray-500 mb-3">
+                      <span className="inline-flex items-center mr-3">
+                        <FaCalendarAlt className="mr-1" />
+                        {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
+                      <span className="inline-flex items-center">
+                        <FaClock className="mr-1" />
+                        {blog.readTime} min read
+                      </span>
+                    </div>
+                    
+                    <Link href={`/blogs/${blog.slug}`}>
+                      <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
+                        {blog.title}
+                      </h3>
+                    </Link>
+                    
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {blog.summary}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                        <FaTag className="mr-1" /> {blog.category}
+                      </span>
+                      {blog.tags && blog.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <Link 
+                      href={`/blogs/${blog.slug}`}
+                      className="text-blue-600 font-medium hover:underline inline-flex items-center"
+                    >
+                      Read More
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-12">
+                <div className="flex space-x-1">
+                  <button
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded ${
+                      currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    Previous
+                  </button>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 rounded ${
+                        currentPage === page ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  
+                  <button
+                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded ${
+                      currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
   );
-}
+};
+
+export default BlogList;

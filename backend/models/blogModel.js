@@ -1,91 +1,86 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
 
-const BlogSchema = new mongoose.Schema({
+const blogSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: [true, 'Please add a title'],
-        trim: true,
-        maxlength: [100, 'Title cannot be more than 100 characters']
+      type: String,
+      required: [true, 'Please add a title'],
+      trim: true,
+      maxlength: [200, 'Title cannot be more than 200 characters']
     },
     slug: {
-        type: String,
-        unique: true
-    },
-    excerpt: {
-        type: String,
-        required: [true, 'Please add an excerpt'],
-        maxlength: [500, 'Excerpt cannot be more than 500 characters']
+      type: String,
+      unique: true
     },
     content: {
-        type: String,
-        required: [true, 'Please add content']
+      type: String,
+      required: [true, 'Please add content']
     },
-    category: {
-        type: String,
-        required: [true, 'Please add a category'],
-        enum: [
-            'Technology',
-            'Programming',
-            'Web Development',
-            'Mobile Development',
-            'AI & ML',
-            'Cybersecurity',
-            'Cloud Computing',
-            'DevOps',
-            'Other'
-        ]
+    summary: {
+      type: String,
+      required: [true, 'Please add a summary'],
+      maxlength: [500, 'Summary cannot be more than 500 characters']
     },
-    tags: [{
-        type: String,
-        trim: true
-    }],
-    featured: {
-        type: Boolean,
-        default: false
-    },
-    thumbnail: {
-        type: String,
-        default: null
-    },
-    readTime: {
-        type: Number,
-        default: 1
+    featuredImage: {
+      type: String,
+      default: 'default-blog.jpg'
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    tags: [String],
+    category: {
+      type: String,
+      required: [true, 'Please add a category'],
+      enum: ['Technology', 'Web Development', 'Mobile Development', 'AI/ML', 
+             'Cloud Computing', 'UI/UX', 'Digital Marketing', 'Cyber Security', 'Other']
     },
     status: {
-        type: String,
-        enum: ['draft', 'published'],
-        default: 'draft'
+      type: String,
+      enum: ['draft', 'published'],
+      default: 'draft'
     },
-    views: {
-        type: Number,
-        default: 0
+    viewCount: {
+      type: Number,
+      default: 0
     },
-    likes: {
-        type: Number,
-        default: 0
+    readTime: {
+      type: Number,  // in minutes
+      default: 5
     }
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
 
-// Create slug from title before saving
-BlogSchema.pre('save', function(next) {
-    if (this.isModified('title')) {
-        this.slug = slugify(this.title, { lower: true });
-    }
-
-    // Ensure tags is always an array
-    if (this.tags && !Array.isArray(this.tags)) {
-        this.tags = [this.tags];
-    }
-
+// Create blog slug from the title
+blogSchema.pre('save', function(next) {
+  this.slug = this.title
+    .toLowerCase()
+    .replace(/[^\w ]+/g, '')
+    .replace(/ +/g, '-');
+  
+  // Add a random suffix to ensure uniqueness
+  if (!this.isNew) {
     next();
+    return;
+  }
+  
+  this.slug = `${this.slug}-${Math.floor(Math.random() * 1000)}`;
+  next();
 });
 
-module.exports = mongoose.model('Blog', BlogSchema); 
+// Calculate read time based on content length
+blogSchema.pre('save', function(next) {
+  const wordsPerMinute = 200; // Average reading speed
+  const wordCount = this.content.split(/\s+/).length;
+  this.readTime = Math.ceil(wordCount / wordsPerMinute);
+  next();
+});
+
+module.exports = mongoose.model('Blog', blogSchema); 
