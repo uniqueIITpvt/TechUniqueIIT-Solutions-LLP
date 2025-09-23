@@ -50,9 +50,14 @@ const FeaturedBlogs = () => {
         console.error('Error fetching featured blogs from API, using fallback data:', err);
         
         // Use fallback data when API fails
-        setFeaturedBlogs(fallbackFeaturedBlogs as Blog[]);
-        setUsingFallback(true);
-        setError('');
+        if (Array.isArray(fallbackFeaturedBlogs)) {
+          setFeaturedBlogs(fallbackFeaturedBlogs as Blog[]);
+          setUsingFallback(true);
+          setError('');
+        } else {
+          setFeaturedBlogs([]);
+          setError('Failed to load featured blogs');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -77,7 +82,7 @@ const FeaturedBlogs = () => {
     );
   }
 
-  if (featuredBlogs.length === 0) {
+  if (!featuredBlogs || !Array.isArray(featuredBlogs) || featuredBlogs.length === 0) {
     return null;
   }
 
@@ -94,13 +99,13 @@ const FeaturedBlogs = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredBlogs.map((blog) => (
+          {featuredBlogs.filter(blog => blog && blog._id).map((blog) => (
             <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
               <Link href={`/blogs/${blog.slug}`}>
                 <div className="relative h-48 w-full">
                   <Image
-                    src={getImageUrl(blog.featuredImage)}
-                    alt={blog.title}
+                    src={getImageUrl(blog.featuredImage || '')}
+                    alt={blog.title || 'Blog post'}
                     fill
                     className="object-cover"
                   />
@@ -111,30 +116,30 @@ const FeaturedBlogs = () => {
                 <div className="flex items-center text-sm text-gray-500 mb-3">
                   <span className="inline-flex items-center mr-3">
                     <FaCalendarAlt className="mr-1" />
-                    {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                    {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric'
-                    })}
+                    }) : 'No date'}
                   </span>
                   <span className="inline-flex items-center">
                     <FaClock className="mr-1" />
-                    {blog.readTime} min read
+                    {blog.readTime || 5} min read
                   </span>
                 </div>
                 
-                <Link href={`/blogs/${blog.slug}`}>
+                <Link href={`/blogs/${blog.slug || '#'}`}>
                   <h3 className="text-xl font-semibold mb-3 hover:text-blue-600 transition-colors">
-                    {blog.title}
+                    {blog.title || 'Untitled'}
                   </h3>
                 </Link>
                 
                 <p className="text-gray-600 mb-4 line-clamp-3">
-                  {blog.summary}
+                  {blog.summary || 'No summary available'}
                 </p>
                 
                 <Link 
-                  href={`/blogs/${blog.slug}`}
+                  href={`/blogs/${blog.slug || '#'}`}
                   className="text-blue-600 font-medium hover:underline inline-flex items-center"
                 >
                   Read More

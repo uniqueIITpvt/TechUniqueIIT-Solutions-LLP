@@ -92,10 +92,17 @@ const BlogList = () => {
           selectedCategory && selectedCategory !== 'All' ? selectedCategory : undefined
         );
         
-        setBlogs(fallbackData.blogs as Blog[]);
-        setTotalPages(fallbackData.totalPages);
-        setUsingFallback(true);
-        setError('');
+        // Ensure fallback data is valid
+        if (fallbackData && Array.isArray(fallbackData.blogs)) {
+          setBlogs(fallbackData.blogs as Blog[]);
+          setTotalPages(fallbackData.totalPages || 1);
+          setUsingFallback(true);
+          setError('');
+        } else {
+          setBlogs([]);
+          setTotalPages(1);
+          setError('Failed to load blogs');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -162,7 +169,7 @@ const BlogList = () => {
           </div>
         </div>
         
-        {blogs.length === 0 ? (
+        {!Array.isArray(blogs) || blogs.length === 0 ? (
           <div className="text-center py-10">
             <p className="text-gray-500">No blogs found in this category.</p>
           </div>
@@ -170,13 +177,13 @@ const BlogList = () => {
           <>
             {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogs.map((blog) => (
+              {blogs.filter(blog => blog && blog._id).map((blog) => (
                 <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden">
                   <Link href={`/blogs/${blog.slug}`}>
                     <div className="relative h-48 w-full">
                       <Image
-                        src={getImageUrl(blog.featuredImage)}
-                        alt={blog.title}
+                        src={getImageUrl(blog.featuredImage || '')}
+                        alt={blog.title || 'Blog post'}
                         fill
                         className="object-cover"
                       />
@@ -187,33 +194,33 @@ const BlogList = () => {
                     <div className="flex items-center text-sm text-gray-500 mb-3">
                       <span className="inline-flex items-center mr-3">
                         <FaCalendarAlt className="mr-1" />
-                        {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                        {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric'
-                        })}
+                        }) : 'No date'}
                       </span>
                       <span className="inline-flex items-center">
                         <FaClock className="mr-1" />
-                        {blog.readTime} min read
+                        {blog.readTime || 5} min read
                       </span>
                     </div>
                     
-                    <Link href={`/blogs/${blog.slug}`}>
+                    <Link href={`/blogs/${blog.slug || '#'}`}>
                       <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
-                        {blog.title}
+                        {blog.title || 'Untitled'}
                       </h3>
                     </Link>
                     
                     <p className="text-gray-600 mb-4 line-clamp-3">
-                      {blog.summary}
+                      {blog.summary || 'No summary available'}
                     </p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                        <FaTag className="mr-1" /> {blog.category}
+                        <FaTag className="mr-1" /> {blog.category || 'Uncategorized'}
                       </span>
-                      {blog.tags && blog.tags.slice(0, 2).map((tag) => (
+                      {blog.tags && Array.isArray(blog.tags) && blog.tags.slice(0, 2).map((tag) => (
                         <span key={tag} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
                           {tag}
                         </span>
@@ -221,7 +228,7 @@ const BlogList = () => {
                     </div>
                     
                     <Link 
-                      href={`/blogs/${blog.slug}`}
+                      href={`/blogs/${blog.slug || '#'}`}
                       className="text-blue-600 font-medium hover:underline inline-flex items-center"
                     >
                       Read More
