@@ -31,7 +31,7 @@ export const MobileContactForm = ({
     try {
       const result = await sendContactEmail(form);
 
-      if (result.adminNotification.status === 200) {
+      if (result.success) {
         setSubmitStatus({
           type: 'success',
           message: "Message sent successfully! We'll get back to you soon.",
@@ -209,3 +209,4 @@ export const MobileContactForm = ({
     </AnimatePresence>
   );
 };
+

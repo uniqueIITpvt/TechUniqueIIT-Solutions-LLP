@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { FaArrowLeft, FaImage } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { api } from '@/services/api';
+import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
 
 // Import rich text editor dynamically to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -318,7 +319,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
                       alt="Preview" 
                       className="mx-auto h-32 w-auto object-cover rounded-md" 
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=Blog';
+                        applyBlogImageFallback(e.currentTarget);
                       }}
                     />
                     <p className="mt-2 text-xs text-gray-500">

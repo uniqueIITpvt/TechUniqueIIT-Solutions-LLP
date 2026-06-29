@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { FaEdit, FaTrash, FaEye, FaPlus } from 'react-icons/fa';
 import { api } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
+import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
 
 // Blog type definition
 type Blog = {
@@ -203,13 +204,11 @@ export default function MyBlogsPage() {
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0 mr-3 bg-gray-200 rounded-md overflow-hidden hidden sm:block">
                         <img 
-                          src={blog.featuredImage.startsWith('http') 
-                            ? blog.featuredImage 
-                            : `${process.env.NEXT_PUBLIC_API_URL}/uploads/${blog.featuredImage}`} 
+                          src={getImageUrl(blog.featuredImage)}
                           alt={blog.title}
                           className="h-full w-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=Blog';
+                            applyBlogImageFallback(e.currentTarget);
                           }}
                         />
                       </div>
@@ -270,3 +269,4 @@ export default function MyBlogsPage() {
     </div>
   );
 } 
+

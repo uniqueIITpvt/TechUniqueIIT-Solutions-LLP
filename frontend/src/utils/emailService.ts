@@ -1,40 +1,33 @@
-import emailjs from '@emailjs/browser';
+type ContactEmailResponse = {
+  success: boolean;
+  message: string;
+};
 
 export const sendContactEmail = async (form: HTMLFormElement) => {
-  try {
-    // Send notification email to admin
-    const adminNotification = await emailjs.sendForm(
-      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-      form,
-      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-    );
+  const formData = new FormData(form);
+  const payload = {
+    firstName: String(formData.get('firstName') || ''),
+    lastName: String(formData.get('lastName') || ''),
+    email: String(formData.get('email') || ''),
+    countryCode: String(formData.get('countryCode') || ''),
+    phone: String(formData.get('phone') || ''),
+    message: String(formData.get('message') || ''),
+  };
 
-    // Only send auto-reply if admin notification was successful
-    if (adminNotification.status === 200) {
-      const formData = new FormData(form);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const response = await fetch(`${apiUrl}/api/contact`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
-      // Send auto-reply to user
-      const autoReply = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID!,
-        {
-          firstName: formData.get('firstName'),
-          lastName: formData.get('lastName'),
-          email: formData.get('email'),
-          countryCode: formData.get('countryCode'),
-          phone: formData.get('phone'),
-          message: formData.get('message'),
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      );
+  const data = (await response.json()) as ContactEmailResponse;
 
-      return { adminNotification, autoReply };
-    }
-
-    return { adminNotification };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to send message');
   }
+
+  return data;
 };
