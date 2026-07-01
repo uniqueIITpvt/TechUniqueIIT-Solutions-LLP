@@ -1,24 +1,27 @@
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const fallbackBlogImage = '/blogs/blogs-1.jpg';
 
 /**
- * Formats image URLs to ensure they have the correct base URL
- * Handles relative paths from the backend, placeholder images, and absolute URLs
+ * Formats image URLs to ensure they have the correct base URL.
+ * Falls back to a local image when the backend/default image is missing.
  */
 export const getImageUrl = (imagePath: string | undefined): string => {
-  if (!imagePath) {
-    return '/images/placeholder-blog.jpg';
+  if (!imagePath || imagePath === 'default-blog.jpg') {
+    return fallbackBlogImage;
   }
 
-  // If the image is already an absolute URL, return it as is
   if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
     return imagePath;
   }
 
-  // If it's a local image from the public folder
   if (imagePath.startsWith('/')) {
     return imagePath;
   }
 
-  // Otherwise, it's a backend image path, prepend the API URL
   return `${apiUrl}/uploads/${imagePath}`;
-}; 
+};
+
+export const applyBlogImageFallback = (image: HTMLImageElement) => {
+  image.onerror = null;
+  image.src = fallbackBlogImage;
+};

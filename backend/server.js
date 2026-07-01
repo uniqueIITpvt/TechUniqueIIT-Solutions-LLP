@@ -86,7 +86,8 @@ connectDB()
         mountRoutesAndStartServer();
       }
     } else {
-      // If DB connection failed, only mount upload routes
+      // If DB connection failed, mount routes that do not require the database
+      app.use('/api/contact', require('./routes/contactRoutes'));
       app.use('/api/upload', require('./routes/uploadRoutes'));
       startServer();
     }
@@ -107,6 +108,7 @@ connectDB()
 function mountRoutesAndStartServer() {
   // Mount routes
   app.use('/api/auth', require('./routes/authRoutes'));
+  app.use('/api/contact', require('./routes/contactRoutes'));
   app.use('/api/upload', require('./routes/uploadRoutes'));
   app.use('/api/blogs', require('./routes/blogRoutes'));
   
@@ -143,3 +145,5 @@ const startServer = () => {
 };
 
 module.exports = app;
+
+

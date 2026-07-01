@@ -7,22 +7,21 @@ const jwt = require('jsonwebtoken');
 // @access  Public
 exports.register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const normalizedEmail = email?.trim().toLowerCase();
 
-  console.log('Register request received:', { name, email });
+  console.log('Register request received:', { name, email: normalizedEmail });
 
-  // Check if user exists
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email: normalizedEmail });
   if (userExists) {
     res.status(400);
     throw new Error('User already exists');
   }
 
-  // Create user
   const user = await User.create({
     name,
-    email,
+    email: normalizedEmail,
     password,
-    role: 'admin'  // Changed from 'user' to 'admin' to allow blog uploads
+    role: 'admin'
   });
 
   if (user) {
@@ -33,7 +32,6 @@ exports.register = asyncHandler(async (req, res) => {
       role: user.role,
     });
 
-    // Generate JWT token
     const token = user.getSignedJwtToken();
 
     res.status(201).json({
@@ -58,17 +56,16 @@ exports.register = asyncHandler(async (req, res) => {
 exports.login = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = email?.trim().toLowerCase();
 
-    // Validate email & password
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: 'Please provide email and password',
       });
     }
 
-    // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
 
     if (!user) {
       return res.status(401).json({
@@ -77,7 +74,6 @@ exports.login = asyncHandler(async (req, res) => {
       });
     }
 
-    // Check if password matches
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
@@ -87,10 +83,7 @@ exports.login = asyncHandler(async (req, res) => {
       });
     }
 
-    // Generate JWT token
     const token = user.getSignedJwtToken();
-
-    // Remove password from output
     user.password = undefined;
 
     res.status(200).json({
@@ -137,4 +130,4 @@ exports.getCurrentUser = asyncHandler(async (req, res) => {
       error: error.message,
     });
   }
-}); 
+});

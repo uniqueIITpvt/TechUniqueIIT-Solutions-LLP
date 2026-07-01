@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Blog = require('./models/blogModel');
 const User = require('./models/userModel');
 const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
 
 // Load environment variables
 dotenv.config();
@@ -18,22 +17,24 @@ const seedDatabase = async () => {
     await Blog.deleteMany({});
     console.log('Blogs cleared');
 
-    // Create admin user if it doesn't exist
-    let adminUser = await User.findOne({ email: 'admin@techuniqueIIT.com' });
-    
+    // Create or reset admin user
+    const adminEmail = 'admin@techuniqueiit.com';
+    const adminPassword = 'password123';
+    let adminUser = await User.findOne({ email: adminEmail });
+
     if (!adminUser) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('password123', salt);
-      
       adminUser = await User.create({
         name: 'Admin User',
-        email: 'admin@techuniqueIIT.com',
-        password: hashedPassword,
+        email: adminEmail,
+        password: adminPassword,
         role: 'admin'
       });
       console.log('Admin user created');
     } else {
-      console.log('Admin user already exists');
+      adminUser.password = adminPassword;
+      adminUser.role = 'admin';
+      await adminUser.save();
+      console.log('Admin user already exists, password reset');
     }
 
     // Sample blog posts
@@ -79,132 +80,81 @@ const seedDatabase = async () => {
             <li>Insecure data storage</li>
             <li>Weak server-side controls</li>
             <li>Insufficient transport layer protection</li>
-            <li>Client-side injection</li>
+            <li>Poor authentication and authorization</li>
           </ul>
           
-          <h2>Best Practices</h2>
-          <p>Follow these best practices to ensure your mobile applications remain secure:</p>
-          <ol>
-            <li>Implement proper authentication</li>
-            <li>Encrypt sensitive data</li>
-            <li>Use secure communication</li>
-            <li>Validate input</li>
-            <li>Keep dependencies updated</li>
-          </ol>
-          
-          <h2>Conclusion</h2>
-          <p>Security should never be an afterthought. By implementing these practices from the beginning, you can build mobile applications that users can trust.</p>
+          <h2>Best Practices for Secure Mobile Development</h2>
+          <p>To build secure mobile applications, developers should implement strong encryption, secure authentication, regular security testing, and keep third-party dependencies updated.</p>
         `,
-        summary: 'Learn the essential security practices for developing mobile applications that protect user data and privacy.',
+        summary: 'Learn essential security practices for developing mobile applications that protect user data and resist common attacks.',
         featuredImage: 'default-blog.jpg',
         author: adminUser._id,
         tags: ['Mobile Development', 'Security', 'Best Practices'],
         category: 'Mobile Development',
         status: 'published',
-        readTime: 8,
+        readTime: 6,
+        viewCount: 95
+      },
+      {
+        title: 'Cloud Computing Solutions for Modern Businesses',
+        slug: 'cloud-computing-solutions-modern-businesses',
+        content: `
+          <h2>Introduction to Cloud Computing</h2>
+          <p>Cloud computing has transformed how businesses operate by providing scalable, flexible, and cost-effective IT resources over the internet.</p>
+          
+          <h2>Types of Cloud Services</h2>
+          <p>Businesses can choose from various cloud service models:</p>
+          <ul>
+            <li>Infrastructure as a Service (IaaS)</li>
+            <li>Platform as a Service (PaaS)</li>
+            <li>Software as a Service (SaaS)</li>
+          </ul>
+          
+          <h2>Benefits for Businesses</h2>
+          <p>Cloud solutions offer numerous advantages including reduced capital expenditure, improved collaboration, enhanced disaster recovery, and the ability to scale resources based on demand.</p>
+        `,
+        summary: 'Explore how cloud computing solutions can help modern businesses improve efficiency, reduce costs, and scale operations.',
+        featuredImage: 'default-blog.jpg',
+        author: adminUser._id,
+        tags: ['Cloud Computing', 'Business', 'Technology'],
+        category: 'Cloud Computing',
+        status: 'published',
+        readTime: 7,
         viewCount: 85
       },
       {
-        title: 'Getting Started with Cloud Computing',
-        slug: 'getting-started-with-cloud-computing',
+        title: 'The Importance of UI/UX Design in Digital Products',
+        slug: 'importance-ui-ux-design-digital-products',
         content: `
-          <h2>Introduction to Cloud Computing</h2>
-          <p>Cloud computing has transformed how businesses operate, allowing them to scale resources on demand without massive upfront investments.</p>
+          <h2>First Impressions Matter</h2>
+          <p>User interface and user experience design are crucial factors in determining the success of digital products. A well-designed interface can significantly impact user satisfaction and conversion rates.</p>
           
-          <h2>Types of Cloud Services</h2>
-          <h3>Infrastructure as a Service (IaaS)</h3>
-          <p>IaaS provides virtualized computing resources over the internet. Examples include AWS EC2, Google Compute Engine, and Azure VMs.</p>
+          <h2>Key Elements of Effective UI/UX Design</h2>
+          <p>Successful UI/UX design encompasses intuitive navigation, responsive layouts, accessible design, consistent branding, and thoughtful interaction patterns.</p>
           
-          <h3>Platform as a Service (PaaS)</h3>
-          <p>PaaS provides a platform allowing customers to develop, run, and manage applications without dealing with infrastructure complexity. Examples include Heroku, Google App Engine, and Azure App Service.</p>
-          
-          <h3>Software as a Service (SaaS)</h3>
-          <p>SaaS delivers software applications over the internet, on a subscription basis. Examples include Salesforce, Google Workspace, and Microsoft 365.</p>
-          
-          <h2>Getting Started</h2>
-          <p>To begin your cloud journey:</p>
-          <ol>
-            <li>Identify your business needs</li>
-            <li>Compare cloud providers</li>
-            <li>Start with a small project</li>
-            <li>Monitor costs closely</li>
-            <li>Implement proper security practices</li>
-          </ol>
-          
-          <h2>Conclusion</h2>
-          <p>Cloud computing offers tremendous opportunities for businesses of all sizes. By understanding the basics, you can make informed decisions about how to leverage cloud services effectively.</p>
+          <h2>Business Impact</h2>
+          <p>Investing in quality UI/UX design can lead to higher user engagement, lower bounce rates, increased customer loyalty, and ultimately better business outcomes.</p>
         `,
-        summary: 'An introduction to cloud computing concepts and how businesses can leverage cloud technologies effectively.',
+        summary: 'Understand why investing in quality UI/UX design is essential for creating successful digital products that users love.',
         featuredImage: 'default-blog.jpg',
         author: adminUser._id,
-        tags: ['Cloud Computing', 'AWS', 'Azure', 'GCP'],
-        category: 'Cloud Computing',
+        tags: ['UI/UX Design', 'Digital Products', 'User Experience'],
+        category: 'UI/UX',
         status: 'published',
-        readTime: 10,
-        viewCount: 150
-      },
-      {
-        title: 'Introduction to Artificial Intelligence and Machine Learning',
-        slug: 'introduction-to-ai-and-machine-learning',
-        content: `
-          <h2>What is Artificial Intelligence?</h2>
-          <p>Artificial Intelligence (AI) refers to systems or machines that mimic human intelligence to perform tasks and can iteratively improve themselves based on the information they collect.</p>
-          
-          <h2>Machine Learning: A Subset of AI</h2>
-          <p>Machine Learning (ML) is a subset of AI that focuses on the development of algorithms that allow computers to learn from and make decisions or predictions based on data.</p>
-          
-          <h3>Types of Machine Learning</h3>
-          <ul>
-            <li><strong>Supervised Learning</strong>: Training a model on labeled data</li>
-            <li><strong>Unsupervised Learning</strong>: Finding patterns in unlabeled data</li>
-            <li><strong>Reinforcement Learning</strong>: Learning through trial and error</li>
-          </ul>
-          
-          <h2>Applications of AI/ML</h2>
-          <p>AI and ML are transforming various industries:</p>
-          <ul>
-            <li>Healthcare: Disease diagnosis and drug discovery</li>
-            <li>Finance: Fraud detection and algorithmic trading</li>
-            <li>Retail: Personalized recommendations</li>
-            <li>Manufacturing: Predictive maintenance</li>
-            <li>Transportation: Autonomous vehicles</li>
-          </ul>
-          
-          <h2>Getting Started with ML</h2>
-          <p>To begin your ML journey:</p>
-          <ol>
-            <li>Learn programming (Python is recommended)</li>
-            <li>Study statistics and linear algebra</li>
-            <li>Explore ML frameworks like TensorFlow or PyTorch</li>
-            <li>Practice with open datasets</li>
-            <li>Join ML communities</li>
-          </ol>
-          
-          <h2>Conclusion</h2>
-          <p>AI and ML are no longer futuristic concepts but practical tools that can solve real-world problems. As these technologies continue to evolve, they will create new opportunities for innovation across industries.</p>
-        `,
-        summary: 'Learn the fundamentals of AI and machine learning and how these technologies are transforming industries.',
-        featuredImage: 'default-blog.jpg',
-        author: adminUser._id,
-        tags: ['AI', 'Machine Learning', 'Data Science'],
-        category: 'AI/ML',
-        status: 'published',
-        readTime: 12,
-        viewCount: 200
+        readTime: 4,
+        viewCount: 110
       }
     ];
 
-    // Insert sample blog posts
     await Blog.insertMany(blogs);
     console.log(`${blogs.length} blog posts seeded`);
-    
     console.log('Database seeding completed successfully');
-    process.exit(0);
+    process.exit();
   } catch (error) {
     console.error('Error seeding database:', error);
     process.exit(1);
   }
 };
 
-// Run the seeding
-seedDatabase(); 
+seedDatabase();
+

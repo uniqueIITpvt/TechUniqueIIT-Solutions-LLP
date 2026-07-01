@@ -58,7 +58,7 @@ export const PageContactSection = () => {
     try {
       const result = await sendContactEmail(form);
 
-      if (result.adminNotification.status === 200) {
+      if (result.success) {
         setSubmitStatus({
           type: 'success',
           message: "Message sent successfully! We'll get back to you soon.",
@@ -166,6 +166,11 @@ export const PageContactSection = () => {
 
                 <div className='relative group'>
                   <div className='flex flex-col sm:flex-row gap-4 sm:gap-0'>
+                    <input
+                      type='hidden'
+                      name='countryCode'
+                      value={selectedCountry.dial_code}
+                    />
                     <div
                       className='relative w-full sm:w-auto'
                       ref={dropdownRef}
@@ -307,3 +312,4 @@ export const PageContactSection = () => {
     </section>
   );
 };
+

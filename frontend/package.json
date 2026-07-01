@@ -10,7 +10,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@lexical/clipboard": "^0.25.0",
     "@lexical/code": "^0.25.0",
     "@lexical/file": "^0.25.0",
@@ -53,3 +52,4 @@
     "typescript": "^5"
   }
 }
+

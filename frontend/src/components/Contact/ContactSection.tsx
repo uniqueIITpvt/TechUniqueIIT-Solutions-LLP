@@ -123,7 +123,7 @@ export const ContactSection = () => {
     try {
       const result = await sendContactEmail(formRef.current);
 
-      if (result.adminNotification.text === 'OK') {
+      if (result.success) {
         setSubmitStatus({
           type: 'success',
           message: "Message sent successfully! We'll get back to you soon.",
@@ -263,6 +263,11 @@ export const ContactSection = () => {
                   {/* Phone field with integrated country code */}
                   <div className='relative'>
                     <div className='relative'>
+                      <input
+                        type='hidden'
+                        name='countryCode'
+                        value={selectedCountry.dial_code}
+                      />
                       <input
                         type='tel'
                         name='phone'
@@ -464,3 +469,4 @@ export const ContactSection = () => {
     </section>
   );
 };
+
