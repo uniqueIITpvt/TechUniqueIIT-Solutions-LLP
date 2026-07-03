@@ -28,6 +28,13 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const isAdminRoute = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return window.location.pathname.startsWith('/dashboard');
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,13 +81,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       if (!isMounted) return;
 
-      // If token is invalid, logout
+      // If token is invalid, clear auth state silently on public pages.
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('lastTokenValidation');
       setIsAuthenticated(false);
       setUser(null);
-      toast.error('Your session has expired. Please log in again.', {
-        id: 'session-expired-auth',
-      });
+
+      if (isAdminRoute()) {
+        toast.error('Admin session expired. Please log in again.', {
+          id: 'session-expired-auth',
+        });
+      }
     } finally {
       if (isMounted) {
         setLoading(false);
@@ -159,3 +171,6 @@ export function useAuth() {
   }
   return context;
 }
+
+
+

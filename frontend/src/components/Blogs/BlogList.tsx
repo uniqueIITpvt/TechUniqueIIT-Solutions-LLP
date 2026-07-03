@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCalendarAlt, FaClock, FaTag } from 'react-icons/fa';
-import { blogApi } from '@/services/api';
 import LoadingSpinner from '../LoadingSpinner';
 import { getImageUrl } from '@/utils/imageHelper';
-import { getPaginatedBlogs, FallbackBlog } from '@/data/fallbackBlogs';
+import { getPaginatedBlogs } from '@/data/fallbackBlogs';
 
 interface Blog {
   _id: string;
@@ -25,111 +24,114 @@ interface Blog {
   author: any;
 }
 
+const BLOGS_PER_PAGE = 6;
+const ALL_CATEGORY = 'All';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+const normalizeBlogsResponse = (response: any): Blog[] => {
+  const possibleBlogs =
+    response?.data?.data ??
+    response?.data?.blogs ??
+    response?.data ??
+    response?.blogs ??
+    response;
+
+  return Array.isArray(possibleBlogs)
+    ? possibleBlogs.filter((blog: Blog) => blog && blog._id)
+    : [];
+};
+
 const BlogList = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [usingFallback, setUsingFallback] = useState(false);
-  
-  const categoriesList = [
-    'All',
-    'Technology',
-    'Web Development',
-    'Mobile Development',
-    'AI/ML',
-    'Cloud Computing',
-    'UI/UX',
-    'Digital Marketing',
-    'Cyber Security',
-  ];
+  const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORY);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
         setError('');
-        setUsingFallback(false);
-        
-        const params: any = { 
-          page: currentPage,
-          limit: 6
-        };
-        
-        if (selectedCategory && selectedCategory !== 'All') {
-          params.category = selectedCategory;
+
+        const response = await fetch(`${API_BASE_URL}/api/blogs?page=1&limit=100`, {
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch blogs: ${response.status}`);
         }
-        
-        const response = await blogApi.getBlogs(params);
-        
-        // Handle different possible response formats
-        if (response.success && Array.isArray(response.data)) {
-          setBlogs(response.data);
-          if (response.pagination) {
-            setTotalPages(response.pagination.totalPages || 1);
-          } else {
-            setTotalPages(Math.ceil(response.count / 6) || 1);
-          }
-        } else if (Array.isArray(response)) {
-          setBlogs(response);
-          setTotalPages(1);
-        } else if (response && Array.isArray(response.blogs)) {
-          setBlogs(response.blogs);
-          const totalItems = response.totalCount || response.blogs.length;
-          setTotalPages(Math.ceil(totalItems / 6) || 1);
-        } else {
-          throw new Error('Unexpected response format');
-        }
+
+        const data = await response.json();
+        setAllBlogs(normalizeBlogsResponse(data));
       } catch (err) {
         console.error('Error fetching blogs from API, using fallback data:', err);
-        
-        // Use fallback data when API fails
-        const fallbackData = getPaginatedBlogs(
-          currentPage, 
-          6, 
-          selectedCategory && selectedCategory !== 'All' ? selectedCategory : undefined
-        );
-        
-        // Ensure fallback data is valid
+
+        const fallbackData = getPaginatedBlogs(1, 100);
         if (fallbackData && Array.isArray(fallbackData.blogs)) {
-          setBlogs(fallbackData.blogs as Blog[]);
-          setTotalPages(fallbackData.totalPages || 1);
-          setUsingFallback(true);
+          setAllBlogs(fallbackData.blogs as Blog[]);
           setError('');
-        } else {
-          setBlogs([]);
-          setTotalPages(1);
-          setError('Failed to load blogs');
+          return;
         }
+
+        setAllBlogs([]);
+        setError('Failed to load blogs');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchBlogs();
-  }, [currentPage, selectedCategory]);
+  }, []);
+
+  const categoriesList = useMemo(() => {
+    const dynamicCategories = Array.from(
+      new Set(
+        allBlogs
+          .map((blog) => blog.category)
+          .filter((category): category is string => Boolean(category))
+      )
+    );
+
+    return [ALL_CATEGORY, ...dynamicCategories];
+  }, [allBlogs]);
+
+  const filteredBlogs = useMemo(() => {
+    if (selectedCategory === ALL_CATEGORY) {
+      return allBlogs;
+    }
+
+    return allBlogs.filter((blog) => blog.category === selectedCategory);
+  }, [allBlogs, selectedCategory]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredBlogs.length / BLOGS_PER_PAGE));
+
+  const paginatedBlogs = useMemo(() => {
+    const startIndex = (currentPage - 1) * BLOGS_PER_PAGE;
+    return filteredBlogs.slice(startIndex, startIndex + BLOGS_PER_PAGE);
+  }, [filteredBlogs, currentPage]);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category === 'All' ? '' : category);
-    setCurrentPage(1); // Reset to first page when changing category
+    setSelectedCategory(category);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Scroll to top when changing page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (isLoading && currentPage === 1) {
+  if (isLoading) {
     return (
       <div className="py-10 text-center">
         <LoadingSpinner />
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="py-10 text-center">
@@ -141,46 +143,56 @@ const BlogList = () => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">Our Blog Posts</h2>
-          {/* {usingFallback && (
-            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-              Demo Content
-            </div>
-          )} */}
-        </div>
-        
-        {/* Categories Filter */}
-        <div className="mb-8 overflow-x-auto pb-2">
-          <div className="flex space-x-2 min-w-max">
-            {categoriesList.map((category) => (
-              <button
-                key={category}
-                onClick={() => handleCategoryChange(category)}
-                className={`px-4 py-2 rounded-full transition-colors ${
-                  (category === 'All' && !selectedCategory) || selectedCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+        <div className="flex flex-col gap-3 mb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">Our Blog Posts</h2>
+            <p className="mt-2 text-gray-500">
+              {selectedCategory === ALL_CATEGORY
+                ? `${filteredBlogs.length} published blog${filteredBlogs.length === 1 ? '' : 's'} available`
+                : `${filteredBlogs.length} blog${filteredBlogs.length === 1 ? '' : 's'} in ${selectedCategory}`}
+            </p>
           </div>
         </div>
-        
-        {!Array.isArray(blogs) || blogs.length === 0 ? (
+
+        <div className="mb-8 overflow-x-auto pb-2">
+          <div className="flex space-x-2 min-w-max">
+            {categoriesList.map((category) => {
+              const count =
+                category === ALL_CATEGORY
+                  ? allBlogs.length
+                  : allBlogs.filter((blog) => blog.category === category).length;
+
+              return (
+                <button
+                  key={category}
+                  onClick={() => handleCategoryChange(category)}
+                  className={`px-4 py-2 rounded-full transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {category} ({count})
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {paginatedBlogs.length === 0 ? (
           <div className="text-center py-10">
             <p className="text-gray-500">No blogs found in this category.</p>
           </div>
         ) : (
           <>
-            {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogs.filter(blog => blog && blog._id).map((blog) => (
-                <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              {paginatedBlogs.map((blog) => (
+                <article
+                  key={blog._id}
+                  className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-gray-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
+                >
                   <Link href={`/blogs/${blog.slug}`}>
-                    <div className="relative h-48 w-full">
+                    <div className="relative h-52 w-full bg-gray-100">
                       <Image
                         src={getImageUrl(blog.featuredImage || '')}
                         alt={blog.title || 'Blog post'}
@@ -189,89 +201,99 @@ const BlogList = () => {
                       />
                     </div>
                   </Link>
-                  
+
                   <div className="p-6">
-                    <div className="flex items-center text-sm text-gray-500 mb-3">
-                      <span className="inline-flex items-center mr-3">
+                    <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                      <span className="inline-flex items-center">
                         <FaCalendarAlt className="mr-1" />
-                        {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        }) : 'No date'}
+                        {blog.createdAt
+                          ? new Date(blog.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
+                          : 'No date'}
                       </span>
                       <span className="inline-flex items-center">
                         <FaClock className="mr-1" />
                         {blog.readTime || 5} min read
                       </span>
                     </div>
-                    
-                    <Link href={`/blogs/${blog.slug || '#'}`}>
-                      <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors">
+
+                    <Link href={`/blogs/${blog.slug}`}>
+                      <h3 className="mb-3 text-xl font-semibold text-gray-900 transition-colors hover:text-blue-600 line-clamp-2">
                         {blog.title || 'Untitled'}
                       </h3>
                     </Link>
-                    
-                    <p className="text-gray-600 mb-4 line-clamp-3">
+
+                    <p className="mb-4 line-clamp-3 text-gray-600">
                       {blog.summary || 'No summary available'}
                     </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+
+                    <div className="mb-5 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
                         <FaTag className="mr-1" /> {blog.category || 'Uncategorized'}
                       </span>
-                      {blog.tags && Array.isArray(blog.tags) && blog.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                      {blog.tags?.slice(0, 2).map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                        >
                           {tag}
                         </span>
                       ))}
                     </div>
-                    
-                    <Link 
-                      href={`/blogs/${blog.slug || '#'}`}
-                      className="text-blue-600 font-medium hover:underline inline-flex items-center"
+
+                    <Link
+                      href={`/blogs/${blog.slug}`}
+                      className="inline-flex items-center font-medium text-blue-600 hover:underline"
                     >
                       Read More
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </Link>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-            
-            {/* Pagination */}
+
             {totalPages > 1 && (
-              <div className="flex justify-center mt-12">
+              <div className="mt-12 flex justify-center">
                 <div className="flex space-x-1">
                   <button
                     onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded ${
-                      currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    className={`rounded px-4 py-2 ${
+                      currentPage === 1
+                        ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     Previous
                   </button>
-                  
+
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+                      className={`rounded px-4 py-2 ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-50'
                       }`}
                     >
                       {page}
                     </button>
                   ))}
-                  
+
                   <button
                     onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded ${
-                      currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                    className={`rounded px-4 py-2 ${
+                      currentPage === totalPages
+                        ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     Next

@@ -38,7 +38,7 @@ export default function CreateBlogPage() {
   const [category, setCategory] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
-  const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [status, setStatus] = useState<'draft' | 'published'>('published');
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -285,6 +285,8 @@ export default function CreateBlogPage() {
             {/* Publish Options */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <h3 className="font-medium text-gray-700 mb-4">Publish</h3>
+              <p className="mb-4 text-sm text-gray-500">Only published blogs appear on the public blogs page.</p>
+              <div className="mb-4 inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">Current status: {status === 'published' ? 'Published' : 'Draft'}</div>
               <div className="flex gap-2 mb-4">
                 <button
                   type="button"
@@ -483,3 +485,4 @@ export default function CreateBlogPage() {
     </div>
   );
 } 
+

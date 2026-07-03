@@ -109,6 +109,7 @@ export const Header = () => {
               </div>
 
               <button
+                suppressHydrationWarning
                 className='md:hidden p-2 rounded-lg transition-colors duration-200 bg-gray-100 hover:bg-gray-200'
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label='Open menu'
@@ -235,4 +236,6 @@ const ActionLink = ({
     </motion.div>
   );
 };
+
+
 

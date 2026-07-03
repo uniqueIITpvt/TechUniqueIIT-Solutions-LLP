@@ -106,6 +106,7 @@ export const Testimonials = () => {
           <div className='absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 md:block'>
             <button
               onClick={prevTestimonial}
+              suppressHydrationWarning
               className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
               aria-label='Previous testimonials'
             >
@@ -128,6 +129,7 @@ export const Testimonials = () => {
           <div className='absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 md:block'>
             <button
               onClick={nextTestimonial}
+              suppressHydrationWarning
               className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
               aria-label='Next testimonials'
             >
@@ -204,6 +206,7 @@ export const Testimonials = () => {
           <div className='mt-6 flex items-center justify-center gap-3 md:hidden'>
             <button
               onClick={prevTestimonial}
+              suppressHydrationWarning
               className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
               aria-label='Previous testimonials'
             >
@@ -226,6 +229,7 @@ export const Testimonials = () => {
               {groups.map((_, idx) => (
                 <button
                   key={idx}
+                  suppressHydrationWarning
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     currentIndex === idx
@@ -239,6 +243,7 @@ export const Testimonials = () => {
 
             <button
               onClick={nextTestimonial}
+              suppressHydrationWarning
               className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
               aria-label='Next testimonials'
             >
@@ -262,6 +267,7 @@ export const Testimonials = () => {
             {groups.map((_, idx) => (
               <button
                 key={idx}
+                suppressHydrationWarning
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentIndex === idx

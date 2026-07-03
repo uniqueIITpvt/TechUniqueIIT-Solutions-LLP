@@ -237,7 +237,7 @@ export default function MyBlogsPage() {
                   <td className="py-4 px-4 text-right">
                     <div className="flex justify-end items-center space-x-3">
                       <Link 
-                        href={`/blog/${blog.slug}`} 
+                        href={`/blogs/${blog.slug}`} 
                         target="_blank" 
                         className="text-gray-400 hover:text-gray-600" 
                         title="View"
@@ -269,4 +269,5 @@ export default function MyBlogsPage() {
     </div>
   );
 } 
+
 
