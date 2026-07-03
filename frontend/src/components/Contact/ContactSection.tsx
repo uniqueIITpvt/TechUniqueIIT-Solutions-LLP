@@ -85,20 +85,18 @@ export const ContactSection = () => {
     code: 'IN',
     dial_code: '+91',
     name: 'India',
-    flag: '🇮🇳',
+    flag: 'India',
   });
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Filter countries based on search query
   const filteredCountries = countryCodes.filter(
     (country) =>
       country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (country.dial_code && country.dial_code.includes(searchQuery))
   );
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -115,7 +113,7 @@ export const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formRef.current || isSubmitting) return; // Prevent multiple submissions
+    if (!formRef.current || isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
@@ -144,49 +142,48 @@ export const ContactSection = () => {
   };
 
   return (
-    <section className='relative py-4 sm:py-8 lg:py-12 overflow-hidden'>
-      {/* Enhanced Background Elements */}
+    <section
+      id='contact-section'
+      className='relative overflow-hidden scroll-mt-28 py-4 sm:py-8 lg:py-12'
+    >
       <div className='absolute inset-0'>
         <div className='absolute inset-0 bg-gradient-to-br from-white via-indigo-50/30 to-violet-50/30'></div>
         <div className='absolute inset-0 bg-[linear-gradient(to_right,#f1f5f91a_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f91a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-70'></div>
-        <div className='absolute top-0 left-0 w-full h-full overflow-hidden'>
-          <div className='absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-indigo-100/40 to-violet-100/40 rounded-full blur-3xl'></div>
-          <div className='absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-br from-violet-100/40 to-indigo-100/40 rounded-full blur-3xl'></div>
+        <div className='absolute top-0 left-0 h-full w-full overflow-hidden'>
+          <div className='absolute -left-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-br from-indigo-100/40 to-violet-100/40 blur-3xl'></div>
+          <div className='absolute -bottom-1/4 -right-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-br from-violet-100/40 to-indigo-100/40 blur-3xl'></div>
         </div>
       </div>
 
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
-        <div className='max-w-7xl mx-auto'>
-          {/* Section Header - Improved mobile spacing */}
+      <div className='container relative mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='mx-auto max-w-7xl'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className='text-center mb-8 sm:mb-12 lg:mb-16'
+            className='mb-8 text-center sm:mb-12 lg:mb-16'
           >
-            <span className='inline-flex items-center px-3 py-1.5 rounded-full bg-white shadow-md shadow-indigo-100 border border-indigo-50 text-xs sm:text-sm text-indigo-600 font-medium mb-3 sm:mb-4'>
-              <span className='flex h-2 w-2 rounded-full bg-indigo-600 mr-2'></span>
+            <span className='mb-3 inline-flex items-center rounded-full border border-indigo-50 bg-white px-3 py-1.5 text-xs font-medium text-indigo-600 shadow-md shadow-indigo-100 sm:mb-4 sm:text-sm'>
+              <span className='mr-2 flex h-2 w-2 rounded-full bg-indigo-600'></span>
               Get in Touch
             </span>
-            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4'>
+            <h2 className='mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl lg:text-4xl'>
               Let&apos;s Build Something{' '}
               <span className='relative'>
-                <span className='relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600'>
+                <span className='relative z-10 bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent'>
                   Amazing Together
                 </span>
-                <span className='absolute inset-x-0 bottom-0 h-3 bg-indigo-100/50 z-0'></span>
+                <span className='absolute inset-x-0 bottom-0 z-0 h-3 bg-indigo-100/50'></span>
               </span>
             </h2>
-            <p className='text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto'>
+            <p className='mx-auto max-w-2xl text-sm text-gray-600 sm:text-base lg:text-lg'>
               Have a project in mind? We&apos;d love to hear about it.
               Let&apos;s chat and see how we can help you achieve your goals.
             </p>
           </motion.div>
 
-          {/* Grid Layout - Improved mobile layout */}
-          <div className='grid lg:grid-cols-2 gap-8 lg:gap-12 items-start'>
-            {/* Enhanced Contact Form */}
+          <div className='grid items-start gap-8 lg:grid-cols-2 lg:gap-12'>
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -194,25 +191,23 @@ export const ContactSection = () => {
               transition={{ duration: 0.5 }}
               className='relative'
             >
-              {/* Glowing border effect */}
-              <div className='absolute -inset-1 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200'></div>
+              <div className='absolute -inset-1 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 opacity-20 blur transition duration-1000 group-hover:opacity-30 group-hover:duration-200'></div>
 
-              <div className='relative bg-white/90 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-xl border border-white/20'>
-                <div className='absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-violet-500/5 rounded-2xl'></div>
+              <div className='relative rounded-2xl border border-white/20 bg-white/90 p-6 shadow-xl backdrop-blur-xl sm:p-8'>
+                <div className='absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-violet-500/5'></div>
 
                 <form
                   ref={formRef}
                   onSubmit={handleSubmit}
                   className='space-y-6'
                 >
-                  {/* Name fields */}
-                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+                  <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
                     <div className='relative'>
                       <input
                         type='text'
                         name='firstName'
                         required
-                        className='peer w-full px-4 py-3 bg-gray-50/50 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 placeholder-transparent'
+                        className='peer w-full rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3 placeholder-transparent transition-all duration-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'
                         placeholder='First Name'
                         id='firstName'
                       />
@@ -229,7 +224,7 @@ export const ContactSection = () => {
                         type='text'
                         name='lastName'
                         required
-                        className='peer w-full px-4 py-3 bg-gray-50/50 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 placeholder-transparent'
+                        className='peer w-full rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3 placeholder-transparent transition-all duration-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'
                         placeholder='Last Name'
                         id='lastName'
                       />
@@ -242,13 +237,12 @@ export const ContactSection = () => {
                     </div>
                   </div>
 
-                  {/* Email field */}
                   <div className='relative'>
                     <input
                       type='email'
                       name='email'
                       required
-                      className='peer w-full px-4 py-3 bg-gray-50/50 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 placeholder-transparent'
+                      className='peer w-full rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3 placeholder-transparent transition-all duration-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'
                       placeholder='Email'
                       id='email'
                     />
@@ -260,7 +254,6 @@ export const ContactSection = () => {
                     </label>
                   </div>
 
-                  {/* Phone field with integrated country code */}
                   <div className='relative'>
                     <div className='relative'>
                       <input
@@ -272,7 +265,7 @@ export const ContactSection = () => {
                         type='tel'
                         name='phone'
                         required
-                        className='peer w-full pl-[120px] pr-4 py-3 bg-gray-50/50 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 placeholder-transparent'
+                        className='peer w-full rounded-lg border border-gray-200 bg-gray-50/50 py-3 pl-[120px] pr-4 placeholder-transparent transition-all duration-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'
                         placeholder='Phone Number'
                         id='phone'
                       />
@@ -287,7 +280,7 @@ export const ContactSection = () => {
                           <button
                             type='button'
                             onClick={() => setIsOpen(!isOpen)}
-                            className='h-full px-4 flex items-center gap-2 border-r border-gray-200 text-gray-600 hover:text-gray-800 transition-colors'
+                            className='flex h-full items-center gap-2 border-r border-gray-200 px-4 text-gray-600 transition-colors hover:text-gray-800'
                           >
                             <span className='text-xl'>
                               {selectedCountry.flag}
@@ -296,7 +289,7 @@ export const ContactSection = () => {
                               {selectedCountry.dial_code}
                             </span>
                             <svg
-                              className={`w-4 h-4 transition-transform ${
+                              className={`h-4 w-4 transition-transform ${
                                 isOpen ? 'rotate-180' : ''
                               }`}
                               fill='none'
@@ -312,10 +305,9 @@ export const ContactSection = () => {
                             </svg>
                           </button>
 
-                          {/* Country dropdown */}
                           {isOpen && (
-                            <div className='absolute z-50 mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-100 max-h-60 overflow-auto'>
-                              <div className='p-2 border-b sticky top-0 bg-white'>
+                            <div className='absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-lg border border-gray-100 bg-white shadow-lg'>
+                              <div className='sticky top-0 border-b bg-white p-2'>
                                 <input
                                   type='text'
                                   placeholder='Search country or code...'
@@ -323,7 +315,7 @@ export const ContactSection = () => {
                                   onChange={(e) =>
                                     setSearchQuery(e.target.value)
                                   }
-                                  className='w-full px-3 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 text-sm'
+                                  className='w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50'
                                 />
                               </div>
                               <div className='py-2'>
@@ -334,13 +326,13 @@ export const ContactSection = () => {
                                       setSelectedCountry(country);
                                       setIsOpen(false);
                                     }}
-                                    className='w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3'
+                                    className='flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-gray-50'
                                   >
                                     <span className='text-xl'>
                                       {country.flag}
                                     </span>
                                     <div>
-                                      <div className='font-medium text-sm'>
+                                      <div className='text-sm font-medium'>
                                         {country.name}
                                       </div>
                                       <div className='text-xs text-gray-500'>
@@ -357,13 +349,12 @@ export const ContactSection = () => {
                     </div>
                   </div>
 
-                  {/* Message field */}
                   <div className='relative'>
                     <textarea
                       name='message'
                       required
                       rows={4}
-                      className='peer w-full px-4 py-3 bg-gray-50/50 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 placeholder-transparent resize-none'
+                      className='peer w-full resize-none rounded-lg border border-gray-200 bg-gray-50/50 px-4 py-3 placeholder-transparent transition-all duration-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'
                       placeholder='Message'
                       id='message'
                     ></textarea>
@@ -375,17 +366,16 @@ export const ContactSection = () => {
                     </label>
                   </div>
 
-                  {/* Submit button */}
                   <button
                     type='submit'
                     disabled={isSubmitting}
-                    className='group relative w-full bg-indigo-600 text-white font-medium px-8 py-4 rounded-xl overflow-hidden transition-all duration-300 hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed'
+                    className='group relative w-full overflow-hidden rounded-xl bg-indigo-600 px-8 py-4 font-medium text-white transition-all duration-300 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70'
                   >
                     <span className='relative flex items-center justify-center gap-2'>
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                       {!isSubmitting && (
                         <svg
-                          className='w-5 h-5 transform group-hover:translate-x-1 transition-transform'
+                          className='h-5 w-5 transform transition-transform group-hover:translate-x-1'
                           fill='none'
                           stroke='currentColor'
                           viewBox='0 0 24 24'
@@ -403,7 +393,7 @@ export const ContactSection = () => {
 
                   {submitStatus.type && (
                     <div
-                      className={`p-4 rounded-lg ${
+                      className={`rounded-lg p-4 ${
                         submitStatus.type === 'success'
                           ? 'bg-green-50 text-green-800'
                           : 'bg-red-50 text-red-800'
@@ -416,7 +406,6 @@ export const ContactSection = () => {
               </div>
             </motion.div>
 
-            {/* Contact Information - Improved mobile layout */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -424,8 +413,8 @@ export const ContactSection = () => {
               transition={{ duration: 0.5 }}
               className='lg:pl-6'
             >
-              <div className='bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border border-white/20'>
-                <h3 className='text-lg sm:text-xl font-semibold text-gray-900 mb-6 sm:mb-8'>
+              <div className='rounded-xl border border-white/20 bg-white/80 p-4 shadow-xl backdrop-blur-sm sm:rounded-2xl sm:p-6 lg:p-8'>
+                <h3 className='mb-6 text-lg font-semibold text-gray-900 sm:mb-8 sm:text-xl'>
                   Contact Information
                 </h3>
                 <div className='space-y-4 sm:space-y-6'>
@@ -438,22 +427,22 @@ export const ContactSection = () => {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className='flex items-start space-x-3 sm:space-x-4'
                     >
-                      <div className='flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600'>
+                      <div className='flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 sm:h-10 sm:w-10 lg:h-12 lg:w-12'>
                         {info.icon}
                       </div>
                       <div>
-                        <h4 className='text-sm sm:text-base lg:text-lg font-medium text-gray-900 mb-0.5 sm:mb-1'>
+                        <h4 className='mb-0.5 text-sm font-medium text-gray-900 sm:mb-1 sm:text-base lg:text-lg'>
                           {info.title}
                         </h4>
                         {info.href ? (
                           <a
                             href={info.href}
-                            className='text-xs sm:text-sm lg:text-base text-gray-600 hover:text-indigo-600 transition-colors duration-300'
+                            className='text-xs text-gray-600 transition-colors duration-300 hover:text-indigo-600 sm:text-sm lg:text-base'
                           >
                             {info.content}
                           </a>
                         ) : (
-                          <p className='text-xs sm:text-sm lg:text-base text-gray-600'>
+                          <p className='text-xs text-gray-600 sm:text-sm lg:text-base'>
                             {info.content}
                           </p>
                         )}
@@ -469,4 +458,3 @@ export const ContactSection = () => {
     </section>
   );
 };
-

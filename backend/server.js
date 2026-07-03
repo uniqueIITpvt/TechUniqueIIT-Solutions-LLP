@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Enable CORS with more permissive options
 app.use(
   cors({
-    origin: true, // Reflects the request origin
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -39,7 +39,7 @@ app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: '/tmp/',
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 5 * 1024 * 1024 },
     abortOnLimit: true,
   })
 );
@@ -52,72 +52,73 @@ app.get('/', (req, res) => {
   res.json({ message: 'API is running' });
 });
 
-// Connect to database
 let dbConnected = false;
+let errorHandlerRegistered = false;
+
+const registerErrorHandler = () => {
+  if (!errorHandlerRegistered) {
+    app.use(errorHandler);
+    errorHandlerRegistered = true;
+  }
+};
+
+// Connect to database
 connectDB()
   .then((connected) => {
     dbConnected = connected;
-    console.log('Database connection result:', connected ? 'Connected' : 'Failed');
-    
+    console.log(
+      'Database connection result:',
+      connected ? 'Connected' : 'Failed'
+    );
+
     if (connected) {
       console.log('MongoDB connected successfully');
-      
-      // Auto-seed in development environment
+
       if (process.env.NODE_ENV === 'development') {
         const Blog = require('./models/blogModel');
         Blog.countDocuments()
-          .then(count => {
+          .then((count) => {
             if (count === 0) {
               console.log('No blogs found in database. Running seed script...');
               require('./seed');
             } else {
               console.log(`${count} blogs found in database. Skipping seed.`);
-              // Mount routes and start server
               mountRoutesAndStartServer();
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.error('Error checking blog count:', err);
-            // Still mount routes and start server even if seed check fails
             mountRoutesAndStartServer();
           });
       } else {
-        // In production, just mount routes and start server
         mountRoutesAndStartServer();
       }
     } else {
-      // If DB connection failed, mount routes that do not require the database
       app.use('/api/contact', require('./routes/contactRoutes'));
       app.use('/api/upload', require('./routes/uploadRoutes'));
+      registerErrorHandler();
       startServer();
     }
   })
-  .catch(err => {
+  .catch((err) => {
     console.error('Failed to connect to MongoDB.');
     console.error('Server will continue without database connection.');
     console.error('Error details:', err);
-    
-    // Mount only upload route even if DB connection fails
+
+    app.use('/api/contact', require('./routes/contactRoutes'));
     app.use('/api/upload', require('./routes/uploadRoutes'));
-    
-    // Start the server even if database connection failed
+    registerErrorHandler();
     startServer();
   });
 
-// Function to mount routes and start server
 function mountRoutesAndStartServer() {
-  // Mount routes
   app.use('/api/auth', require('./routes/authRoutes'));
   app.use('/api/contact', require('./routes/contactRoutes'));
   app.use('/api/upload', require('./routes/uploadRoutes'));
   app.use('/api/blogs', require('./routes/blogRoutes'));
-  
-  // Start the server
+  registerErrorHandler();
   startServer();
 }
-
-// Error handler
-app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
@@ -125,17 +126,19 @@ const startServer = () => {
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
-    console.log(`Database: ${dbConnected ? 'Connected' : 'Not connected - some features will be unavailable'}`);
-    console.log(`Image Upload API available at: /api/upload`);
+    console.log(
+      `Database: ${dbConnected ? 'Connected' : 'Not connected - some features will be unavailable'}`
+    );
+    console.log('Image Upload API available at: /api/upload');
+    console.log('Contact API available at: /api/contact');
     if (dbConnected) {
-      console.log(`Authentication API available at: /api/auth`);
-      console.log(`Blogs API available at: /api/blogs`);
+      console.log('Authentication API available at: /api/auth');
+      console.log('Blogs API available at: /api/blogs');
     }
   });
 
-  // Handle unhandled promise rejections
-  process.on('unhandledRejection', (err) => {
-    console.log('Unhandled Rejection:', err.message);
+  process.on('unhandledRejection', (unhandledError) => {
+    console.log('Unhandled Rejection:', unhandledError.message);
     if (process.env.NODE_ENV === 'development') {
       server.close(() => process.exit(1));
     }
@@ -145,5 +148,3 @@ const startServer = () => {
 };
 
 module.exports = app;
-
-

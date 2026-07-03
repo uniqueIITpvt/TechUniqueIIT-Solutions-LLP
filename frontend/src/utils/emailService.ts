@@ -3,7 +3,41 @@ type ContactEmailResponse = {
   message: string;
 };
 
-export const sendContactEmail = async (form: HTMLFormElement) => {
+const EMAILJS_API_URL = 'https://api.emailjs.com/api/v1.0/email/send';
+
+const sendEmailJsTemplate = async (
+  templateId: string,
+  templateParams: Record<string, string>
+) => {
+  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+  if (!serviceId || !publicKey) {
+    throw new Error('Email service public configuration is missing');
+  }
+
+  const response = await fetch(EMAILJS_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      service_id: serviceId,
+      template_id: templateId,
+      user_id: publicKey,
+      template_params: templateParams,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`EmailJS request failed: ${response.status} ${errorText}`);
+  }
+};
+
+export const sendContactEmail = async (
+  form: HTMLFormElement
+): Promise<ContactEmailResponse> => {
   const formData = new FormData(form);
   const payload = {
     firstName: String(formData.get('firstName') || ''),
@@ -14,20 +48,22 @@ export const sendContactEmail = async (form: HTMLFormElement) => {
     message: String(formData.get('message') || ''),
   };
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const response = await fetch(`${apiUrl}/api/contact`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = (await response.json()) as ContactEmailResponse;
-
-  if (!response.ok) {
-    throw new Error(data.message || 'Failed to send message');
+  if (!payload.firstName || !payload.email || !payload.phone || !payload.message) {
+    throw new Error('firstName, email, phone, and message are required');
   }
 
-  return data;
+  const contactTemplateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+  const autoReplyTemplateId = process.env.NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID;
+
+  if (!contactTemplateId || !autoReplyTemplateId) {
+    throw new Error('Email templates are not configured for the frontend');
+  }
+
+  await sendEmailJsTemplate(contactTemplateId, payload);
+  await sendEmailJsTemplate(autoReplyTemplateId, payload);
+
+  return {
+    success: true,
+    message: 'Message sent successfully',
+  };
 };

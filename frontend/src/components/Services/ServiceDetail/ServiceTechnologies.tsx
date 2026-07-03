@@ -18,13 +18,13 @@ export const ServiceTechnologies = ({
         <div className='absolute bottom-0 left-1/4 w-96 h-96 bg-violet-100 rounded-full mix-blend-multiply filter blur-[80px] opacity-30 animate-blob' />
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='text-center max-w-3xl mx-auto mb-16'
+          className='mx-auto mb-12 max-w-3xl text-center sm:mb-16'
         >
           {/* Section Badge */}
           <motion.div
@@ -53,8 +53,8 @@ export const ServiceTechnologies = ({
         </motion.div>
 
         {/* Technologies Grid */}
-        <div className='max-w-6xl mx-auto'>
-          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6'>
+        <div className='mx-auto max-w-6xl'>
+          <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 md:gap-6 lg:grid-cols-5'>
             {technologies.map((tech, index) => (
               <motion.div
                 key={tech}
@@ -65,7 +65,7 @@ export const ServiceTechnologies = ({
                 className='group relative'
               >
                 {/* Card */}
-                <div className='relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100'>
+                <div className='relative rounded-2xl border border-gray-100 bg-white p-4 shadow-lg transition-all duration-300 hover:shadow-xl sm:p-6'>
                   {/* Gradient Border on Hover */}
                   <div className='absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm' />
 
@@ -137,3 +137,4 @@ export const ServiceTechnologies = ({
     </section>
   );
 };
+

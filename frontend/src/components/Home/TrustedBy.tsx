@@ -141,7 +141,7 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: index * 0.1 }}
-        className='text-xl font-semibold text-gray-900 mb-6 pl-4 border-l-4 border-indigo-500'
+        className='text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6 pl-4 border-l-4 border-indigo-500'
       >
         {tech.category}
       </motion.h3>
@@ -162,7 +162,7 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
         >
           <motion.div
             animate={controls}
-            className='flex space-x-6 min-w-max px-0.5'
+            className='flex space-x-4 sm:space-x-6 min-w-max px-0.5'
           >
             {/* First set of logos for continuous loop effect */}
             {tech.logos.map((item: Logo, logoIndex: number) => (
@@ -175,9 +175,9 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
                   delay: index * 0.1 + logoIndex * 0.1,
                 }}
                 whileHover={{ scale: 1.05 }}
-                className='flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 w-24 flex-shrink-0'
+                className='flex flex-col items-center justify-center p-3 sm:p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 w-20 sm:w-24 flex-shrink-0'
               >
-                <div className='relative w-16 h-16 mb-3'>
+                <div className='relative w-12 h-12 sm:w-16 sm:h-16 mb-2 sm:mb-3'>
                   <Image
                     src={item.logo}
                     alt={item.name}
@@ -185,7 +185,7 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
                     className='object-contain transition-all duration-300'
                   />
                 </div>
-                <span className='text-sm text-gray-600 text-center font-medium'>
+                <span className='text-xs sm:text-sm text-gray-600 text-center font-medium'>
                   {item.name}
                 </span>
               </motion.div>
@@ -202,9 +202,9 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
                   delay: index * 0.1 + logoIndex * 0.1,
                 }}
                 whileHover={{ scale: 1.05 }}
-                className='flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 w-24 flex-shrink-0'
+                className='flex flex-col items-center justify-center p-3 sm:p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 w-20 sm:w-24 flex-shrink-0'
               >
-                <div className='relative w-16 h-16 mb-3'>
+                <div className='relative w-12 h-12 sm:w-16 sm:h-16 mb-2 sm:mb-3'>
                   <Image
                     src={item.logo}
                     alt={item.name}
@@ -212,7 +212,7 @@ const TechCategory = ({ tech, index }: TechCategoryProps) => {
                     className='object-contain transition-all duration-300'
                   />
                 </div>
-                <span className='text-sm text-gray-600 text-center font-medium'>
+                <span className='text-xs sm:text-sm text-gray-600 text-center font-medium'>
                   {item.name}
                 </span>
               </motion.div>
@@ -233,12 +233,12 @@ export const TrustedBy = () => {
         <div className='absolute bottom-0 -right-32 w-96 h-96 rounded-full bg-violet-100/50'></div>
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className='text-center mb-12'
+          className='text-center max-w-2xl mx-auto mb-12 sm:mb-16'
         >
           <span className='inline-flex items-center px-4 py-2 rounded-full bg-white shadow-md shadow-indigo-100 border border-indigo-50 text-sm text-indigo-600 font-medium mb-6'>
             <span className='flex h-2 w-2 rounded-full bg-indigo-600 mr-2'></span>
@@ -253,7 +253,7 @@ export const TrustedBy = () => {
               <span className='absolute inset-x-0 bottom-0 h-3 bg-indigo-100/50 z-0'></span>
             </span>
           </h2>
-          <p className='text-lg text-gray-600'>
+          <p className='text-base sm:text-lg text-gray-600'>
             We leverage cutting-edge technologies to deliver exceptional
             solutions
           </p>
@@ -268,3 +268,4 @@ export const TrustedBy = () => {
     </section>
   );
 };
+

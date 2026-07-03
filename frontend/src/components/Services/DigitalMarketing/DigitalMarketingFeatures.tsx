@@ -88,8 +88,8 @@ const features = [
 export const DigitalMarketingFeatures = () => {
   return (
     <section id='features' className='py-16 bg-white/80 backdrop-blur-sm'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='text-center mb-12'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        <div className='mx-auto mb-12 max-w-2xl text-center'>
           <span className='inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-4'>
             Our Services
           </span>
@@ -101,7 +101,7 @@ export const DigitalMarketingFeatures = () => {
             business grow and succeed in the digital landscape
           </p>
         </div>
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8'>
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -125,3 +125,4 @@ export const DigitalMarketingFeatures = () => {
     </section>
   );
 };
+

@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MobileMenu } from './MobileMenu';
-import { SignInModal } from '../Auth/SignInModal';
-import Image from 'next/image';
 import { Logo } from './Logo';
 
-// Add type for dropdown items
 interface DropdownItem {
   label: string;
   href: string;
@@ -53,11 +50,8 @@ const navItems: NavItem[] = [
 export const Header = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -66,16 +60,6 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSignIn = () => {
-    setIsSignUp(false);
-    setIsSignInModalOpen(true);
-  };
-
-  const handleGetStarted = () => {
-    setIsSignUp(true);
-    setIsSignInModalOpen(true);
-  };
-
   return (
     <>
       <header
@@ -83,9 +67,8 @@ export const Header = () => {
           isScrolled ? 'bg-white shadow-lg' : 'bg-white'
         }`}
       >
-        <div className='container mx-auto px-4 py-4'>
+        <div className='mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between'>
-            {/* Logo */}
             <Link
               href='/'
               className='relative group flex items-center space-x-2'
@@ -100,7 +83,6 @@ export const Header = () => {
               </motion.div>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className='hidden md:flex items-center space-x-1 lg:space-x-2'>
               <NavLink href='/' label='Home' />
               {navItems.map((item) => (
@@ -113,39 +95,19 @@ export const Header = () => {
               ))}
             </nav>
 
-            {/* Auth Buttons */}
             <div className='flex items-center space-x-2 sm:space-x-3 lg:space-x-4'>
-              {/* Desktop Auth Buttons */}
-              <div className='hidden md:flex items-center space-x-2 sm:space-x-3'>
-                <AuthButton
-                  onClick={handleSignIn}
-                  variant='ghost'
-                  label='Sign In'
-                />
-                <AuthButton
-                  onClick={handleGetStarted}
-                  variant='primary'
-                  label='Get Started'
-                />
+              <div className='hidden md:flex items-center'>
+                <ActionLink href='/#contact-section' label='Contact Us' />
               </div>
 
-              {/* Mobile Auth Buttons */}
-              <div className='md:hidden flex items-center space-x-2'>
-                <AuthButton
-                  onClick={handleSignIn}
-                  variant='ghost'
-                  label='Sign in'
-                  size='small'
-                />
-                <AuthButton
-                  onClick={handleGetStarted}
-                  variant='primary'
-                  label='Start'
+              <div className='md:hidden flex items-center'>
+                <ActionLink
+                  href='/#contact-section'
+                  label='Contact'
                   size='small'
                 />
               </div>
 
-              {/* Mobile Menu Button */}
               <button
                 className='md:hidden p-2 rounded-lg transition-colors duration-200 bg-gray-100 hover:bg-gray-200'
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -170,25 +132,15 @@ export const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Menu & Sign In Modal */}
       <MobileMenu
         navItems={navItems}
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
-      <SignInModal
-        isOpen={isSignInModalOpen}
-        onClose={() => {
-          setIsSignInModalOpen(false);
-          setIsSignUp(false);
-        }}
-        defaultMode={isSignUp ? 'signup' : 'signin'}
-      />
     </>
   );
 };
 
-// NavLink Component
 const NavLink = ({ href, label }: { href: string; label: string }) => (
   <Link
     href={href}
@@ -199,7 +151,6 @@ const NavLink = ({ href, label }: { href: string; label: string }) => (
   </Link>
 );
 
-// NavItem Component
 const NavItem = ({
   item,
   isHovered,
@@ -260,15 +211,12 @@ const NavItem = ({
   </div>
 );
 
-// AuthButton Component
-const AuthButton = ({
-  onClick,
-  variant,
+const ActionLink = ({
+  href,
   label,
   size = 'default',
 }: {
-  onClick: () => void;
-  variant: 'ghost' | 'primary';
+  href: string;
   label: string;
   size?: 'default' | 'small';
 }) => {
@@ -276,21 +224,15 @@ const AuthButton = ({
   const sizeStyles =
     size === 'small' ? 'text-sm px-3 py-1.5' : 'text-base px-5 py-2.5';
 
-  const variants = {
-    ghost:
-      'text-gray-700 hover:text-indigo-600 border border-gray-200 hover:border-indigo-200 hover:bg-indigo-50',
-    primary:
-      'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg',
-  };
-
   return (
-    <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      className={`${baseStyles} ${sizeStyles} ${variants[variant]}`}
-    >
-      {label}
-    </motion.button>
+    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+      <Link
+        href={href}
+        className={`${baseStyles} ${sizeStyles} block bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg`}
+      >
+        {label}
+      </Link>
+    </motion.div>
   );
 };
+

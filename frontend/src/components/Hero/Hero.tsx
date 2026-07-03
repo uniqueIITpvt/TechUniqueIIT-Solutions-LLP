@@ -39,8 +39,8 @@ export const Hero = () => {
           <div className='absolute -bottom-40 -left-32 w-96 h-96 rounded-full bg-violet-100/50'></div>
         </div>
 
-        <div className='relative container mx-auto px-4'>
-          <div className='max-w-7xl mx-auto'>
+        <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+          <div>
             <div className='grid lg:grid-cols-2 gap-12 lg:gap-16 items-center'>
               {/* Content */}
               <motion.div
@@ -197,3 +197,4 @@ export const Hero = () => {
     </>
   );
 };
+
