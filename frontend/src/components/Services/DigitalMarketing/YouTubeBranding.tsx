@@ -90,8 +90,8 @@ export const YouTubeBranding = () => {
 
   return (
     <section className='py-16 bg-gradient-to-br from-red-50 to-white'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex flex-col lg:flex-row items-center gap-12 mb-16'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        <div className='mb-16 flex flex-col items-center gap-10 lg:flex-row lg:gap-12'>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -186,7 +186,7 @@ export const YouTubeBranding = () => {
           </motion.div>
         </div>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8'>
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -212,7 +212,7 @@ export const YouTubeBranding = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='mt-16 bg-white p-8 rounded-2xl shadow-xl'
+          className='mt-16 rounded-2xl bg-white p-6 shadow-xl sm:p-8'
         >
           <div className='flex flex-col md:flex-row items-center justify-between gap-8'>
             <div className='md:w-2/3'>
@@ -248,3 +248,4 @@ export const YouTubeBranding = () => {
     </section>
   );
 };
+

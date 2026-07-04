@@ -22,14 +22,14 @@ export const ServiceFeatures = ({ features }: ServiceFeaturesProps) => {
         <div className='absolute inset-0 bg-[linear-gradient(to_right,#f1f5f91a_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f91a_1px,transparent_1px)] bg-[size:14px_24px]' />
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='text-center max-w-3xl mx-auto mb-20'
+          className='mx-auto mb-14 max-w-3xl text-center sm:mb-20'
         >
           <motion.div
             initial={{ scale: 0 }}
@@ -55,7 +55,7 @@ export const ServiceFeatures = ({ features }: ServiceFeaturesProps) => {
         </motion.div>
 
         {/* Features Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto'>
+        <div className='mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8'>
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -67,7 +67,7 @@ export const ServiceFeatures = ({ features }: ServiceFeaturesProps) => {
               {/* Feature Card */}
               <div className='group relative'>
                 {/* Card Content */}
-                <div className='relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100'>
+                <div className='relative rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl sm:p-8'>
                   {/* Icon */}
                   <div className='mb-6 relative'>
                     <div className='w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 p-[2px] group-hover:scale-110 transition-transform duration-300'>
@@ -127,3 +127,4 @@ export const ServiceFeatures = ({ features }: ServiceFeaturesProps) => {
     </section>
   );
 };
+

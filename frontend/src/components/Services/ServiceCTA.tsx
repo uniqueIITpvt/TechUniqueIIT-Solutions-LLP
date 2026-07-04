@@ -26,13 +26,13 @@ export const ServiceCTA = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='relative backdrop-blur-sm bg-white/5 rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl'
+          className='relative rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-sm sm:p-10 lg:p-12'
         >
           <div className='max-w-3xl mx-auto text-center'>
             {/* Decorative elements */}
@@ -109,3 +109,4 @@ export const ServiceCTA = () => {
     </section>
   );
 };
+

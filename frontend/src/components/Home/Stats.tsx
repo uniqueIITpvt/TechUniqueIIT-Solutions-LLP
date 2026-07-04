@@ -93,20 +93,20 @@ export const Stats = () => {
   });
 
   return (
-    <section className='py-10 bg-gradient-to-b from-indigo-50/50 to-white relative overflow-hidden'>
+    <section className='py-12 sm:py-16 bg-gradient-to-b from-indigo-50/50 to-white relative overflow-hidden'>
       {/* Background Decorations */}
       <div className='absolute inset-0 overflow-hidden'>
         <div className='absolute top-1/2 -left-32 w-96 h-96 rounded-full bg-indigo-100/50'></div>
         <div className='absolute bottom-0 -right-32 w-96 h-96 rounded-full bg-violet-100/50'></div>
       </div>
 
-      <div className='relative container mx-auto px-4'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='text-center max-w-2xl mx-auto mb-16'
+          className='text-center max-w-2xl mx-auto mb-12 sm:mb-16'
         >
           <span className='inline-flex items-center px-4 py-2 rounded-full bg-white shadow-md shadow-indigo-100 border border-indigo-50 text-sm text-indigo-600 font-medium mb-6'>
             <span className='flex h-2 w-2 rounded-full bg-indigo-600 mr-2'></span>
@@ -121,7 +121,7 @@ export const Stats = () => {
               <span className='absolute inset-x-0 bottom-0 h-3 bg-indigo-100/50 z-0'></span>
             </span>
           </h2>
-          <p className='text-lg text-gray-600'>
+          <p className='text-base sm:text-lg text-gray-600'>
             Our track record speaks for itself. Here&apos;s what we&apos;ve
             achieved for our clients.
           </p>
@@ -129,7 +129,7 @@ export const Stats = () => {
 
         <div
           ref={ref}
-          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'
+          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8'
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -139,7 +139,7 @@ export const Stats = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className='group'
             >
-              <div className='relative bg-white rounded-2xl p-6 sm:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgba(99,102,241,0.12)] transition-all duration-300'>
+              <div className='relative h-full bg-white rounded-2xl p-5 sm:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgba(99,102,241,0.12)] transition-all duration-300'>
                 {/* Gradient Background Effect */}
                 <div className='absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-violet-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
 
@@ -158,10 +158,10 @@ export const Stats = () => {
                   <div className='text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-transparent bg-clip-text mb-2'>
                     {stat.value}
                   </div>
-                  <div className='text-lg font-semibold text-gray-900 mb-2'>
+                  <div className='text-base sm:text-lg font-semibold text-gray-900 mb-2'>
                     {stat.label}
                   </div>
-                  <p className='text-gray-600'>{stat.description}</p>
+                  <p className='text-sm sm:text-base text-gray-600'>{stat.description}</p>
                 </div>
 
                 {/* Decorative Corner Accents */}
@@ -175,3 +175,4 @@ export const Stats = () => {
     </section>
   );
 };
+

@@ -99,7 +99,7 @@ export const Features = () => {
         <div className='absolute top-1/2 right-0 w-72 h-72 bg-violet-100/30 rounded-full mix-blend-multiply filter blur-xl' />
       </div>
 
-      <div className='relative container mx-auto px-4'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -193,3 +193,4 @@ export const Features = () => {
     </section>
   );
 };
+

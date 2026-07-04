@@ -12,7 +12,7 @@ export const ServiceDetailHero = ({
   description,
 }: ServiceDetailHeroProps) => {
   return (
-    <section className='relative pt-24 pb-32 overflow-hidden'>
+    <section className='relative overflow-hidden pt-24 pb-24 sm:pb-28 lg:pb-32'>
       {/* Background Elements */}
       <div className='absolute inset-0 bg-gradient-to-b from-indigo-50 via-white to-transparent'>
         <motion.div
@@ -27,7 +27,7 @@ export const ServiceDetailHero = ({
         </motion.div>
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='max-w-4xl mx-auto'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -66,7 +66,7 @@ export const ServiceDetailHero = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className='text-xl text-gray-600 mb-12 max-w-3xl mx-auto'
+              className='mx-auto mb-10 max-w-3xl text-lg text-gray-600 sm:mb-12 sm:text-xl'
             >
               {description}
             </motion.p>
@@ -76,7 +76,7 @@ export const ServiceDetailHero = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className='grid grid-cols-2 md:grid-cols-4 gap-8'
+              className='grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4 lg:gap-8'
             >
               {[
                 { number: '100+', label: 'Projects Completed' },
@@ -91,8 +91,8 @@ export const ServiceDetailHero = ({
                   transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
                   className='group'
                 >
-                  <div className='bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300'>
-                    <div className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300'>
+                  <div className='rounded-2xl bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl sm:p-6'>
+                    <div className='bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-2xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110 sm:text-3xl'>
                       {stat.number}
                     </div>
                     <div className='text-sm text-gray-600 mt-2'>
@@ -123,3 +123,4 @@ export const ServiceDetailHero = ({
     </section>
   );
 };
+

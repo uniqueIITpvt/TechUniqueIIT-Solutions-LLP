@@ -7,8 +7,8 @@ import Link from 'next/link';
 export const DigitalMarketingHero = () => {
   return (
     <section className='relative overflow-hidden'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16'>
-        <div className='grid lg:grid-cols-2 gap-12 items-center'>
+      <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16'>
+        <div className='grid items-center gap-10 lg:grid-cols-2 lg:gap-12'>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -63,3 +63,4 @@ export const DigitalMarketingHero = () => {
     </section>
   );
 };
+

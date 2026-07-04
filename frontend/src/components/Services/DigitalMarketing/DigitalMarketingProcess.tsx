@@ -33,8 +33,8 @@ export const DigitalMarketingProcess = () => {
   return (
     <section className='py-16 relative overflow-hidden'>
       <div className='absolute inset-0 bg-gradient-to-br from-indigo-50 to-violet-50 opacity-50'></div>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
-        <div className='text-center mb-12'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        <div className='mx-auto mb-12 max-w-2xl text-center'>
           <span className='inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-4'>
             How We Work
           </span>
@@ -47,7 +47,7 @@ export const DigitalMarketingProcess = () => {
           </p>
         </div>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8'>
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
@@ -76,3 +76,4 @@ export const DigitalMarketingProcess = () => {
     </section>
   );
 };
+

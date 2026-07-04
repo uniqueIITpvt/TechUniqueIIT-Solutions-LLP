@@ -78,11 +78,11 @@ export const Footer = () => {
           ></div>
         </div>
 
-        <div className='container mx-auto px-4 relative'>
+        <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           {/* Main Footer Content */}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-16'>
+          <div className='grid grid-cols-1 gap-10 pb-16 md:grid-cols-2 lg:grid-cols-6 lg:gap-12'>
             {/* Brand Section - Spans 2 columns */}
-            <div className='lg:col-span-2 space-y-8'>
+            <div className='space-y-6 lg:col-span-2 lg:space-y-8'>
               <Link href='/' className='flex items-center space-x-3'>
                 <Image
                   src='/uniqiit-logo.svg'
@@ -104,7 +104,7 @@ export const Footer = () => {
                 Empowering businesses with innovative technology solutions. We
                 transform ideas into exceptional digital experiences.
               </p>
-              <div className='flex items-center gap-6'>
+              <div className='flex flex-wrap items-center gap-4 sm:gap-6'>
                 {footerLinks.social.map((item) => (
                   <Link
                     key={item.name}
@@ -168,7 +168,7 @@ export const Footer = () => {
                 &copy; {new Date().getFullYear()} TechUniqueIIT. All rights
                 reserved.
               </p>
-              <div className='flex items-center gap-6'>
+              <div className='flex flex-wrap items-center gap-4 sm:gap-6'>
                 <Link
                   href='/privacy'
                   className='text-sm text-gray-600 hover:text-indigo-600 transition-colors duration-200'
@@ -189,3 +189,4 @@ export const Footer = () => {
     </footer>
   );
 };
+

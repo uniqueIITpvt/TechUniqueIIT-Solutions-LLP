@@ -5,6 +5,13 @@ import { toast } from 'react-hot-toast';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const baseURL = apiUrl;
 
+const isAdminRoute = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return window.location.pathname.startsWith('/dashboard');
+};
  
 
 export const api = axios.create({
@@ -244,18 +251,18 @@ api.interceptors.response.use(
     if (error.response) {
       // Handle authentication errors
       if (error.response.status === 401) {
-        const isLoginPage = typeof window !== 'undefined' && window.location.pathname.includes('/login');
-        
-        if (!isLoginPage) {
-          toast.error('Your session has expired. Please log in again.', {
+        const isLoginPage =
+          typeof window !== 'undefined' && window.location.pathname.includes('/login');
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('lastTokenValidation');
+
+        if (isAdminRoute() && !isLoginPage) {
+          toast.error('Admin session expired. Please log in again.', {
             id: 'session-expired',
           });
-          
-          // Clear auth data
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          
-          // Redirect to login page after a short delay
+
           setTimeout(() => {
             if (typeof window !== 'undefined') {
               window.location.href = '/login';
@@ -281,3 +288,6 @@ export const apiMethods = {
   put: api.put,
   delete: api.delete,
 };
+
+
+
