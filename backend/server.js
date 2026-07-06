@@ -53,7 +53,9 @@ app.get('/', (req, res) => {
 });
 
 let dbConnected = false;
+let routesMounted = false;
 let errorHandlerRegistered = false;
+let initializationPromise = null;
 
 const registerErrorHandler = () => {
   if (!errorHandlerRegistered) {
@@ -62,67 +64,88 @@ const registerErrorHandler = () => {
   }
 };
 
-// Connect to database
-connectDB()
-  .then((connected) => {
-    dbConnected = connected;
-    console.log(
-      'Database connection result:',
-      connected ? 'Connected' : 'Failed'
-    );
+const mountLimitedRoutes = () => {
+  app.use('/api/contact', require('./routes/contactRoutes'));
+  app.use('/api/upload', require('./routes/uploadRoutes'));
+};
 
-    if (connected) {
-      console.log('MongoDB connected successfully');
+const mountAllRoutes = () => {
+  app.use('/api/auth', require('./routes/authRoutes'));
+  app.use('/api/contact', require('./routes/contactRoutes'));
+  app.use('/api/upload', require('./routes/uploadRoutes'));
+  app.use('/api/blogs', require('./routes/blogRoutes'));
+};
 
-      if (process.env.NODE_ENV === 'development') {
-        const Blog = require('./models/blogModel');
-        Blog.countDocuments()
-          .then((count) => {
+const initializeApp = async () => {
+  if (routesMounted) {
+    return;
+  }
+
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = connectDB()
+    .then(async (connected) => {
+      dbConnected = connected;
+      console.log(
+        'Database connection result:',
+        connected ? 'Connected' : 'Failed'
+      );
+
+      if (connected) {
+        console.log('MongoDB connected successfully');
+
+        if (process.env.NODE_ENV === 'development') {
+          const Blog = require('./models/blogModel');
+          try {
+            const count = await Blog.countDocuments();
             if (count === 0) {
               console.log('No blogs found in database. Running seed script...');
               require('./seed');
             } else {
               console.log(`${count} blogs found in database. Skipping seed.`);
-              mountRoutesAndStartServer();
             }
-          })
-          .catch((err) => {
+          } catch (err) {
             console.error('Error checking blog count:', err);
-            mountRoutesAndStartServer();
-          });
+          }
+        }
+
+        mountAllRoutes();
       } else {
-        mountRoutesAndStartServer();
+        mountLimitedRoutes();
       }
-    } else {
-      app.use('/api/contact', require('./routes/contactRoutes'));
-      app.use('/api/upload', require('./routes/uploadRoutes'));
+
+      routesMounted = true;
       registerErrorHandler();
-      startServer();
-    }
-  })
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB.');
-    console.error('Server will continue without database connection.');
-    console.error('Error details:', err);
+    })
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB.');
+      console.error('Server will continue without database connection.');
+      console.error('Error details:', err);
 
-    app.use('/api/contact', require('./routes/contactRoutes'));
-    app.use('/api/upload', require('./routes/uploadRoutes'));
-    registerErrorHandler();
-    startServer();
-  });
+      mountLimitedRoutes();
+      routesMounted = true;
+      registerErrorHandler();
+    });
 
-function mountRoutesAndStartServer() {
-  app.use('/api/auth', require('./routes/authRoutes'));
-  app.use('/api/contact', require('./routes/contactRoutes'));
-  app.use('/api/upload', require('./routes/uploadRoutes'));
-  app.use('/api/blogs', require('./routes/blogRoutes'));
-  registerErrorHandler();
-  startServer();
-}
+  return initializationPromise;
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await initializeApp();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 
-const startServer = () => {
+const startServer = async () => {
+  await initializeApp();
+
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
@@ -147,4 +170,9 @@ const startServer = () => {
   return server;
 };
 
+if (require.main === module) {
+  startServer();
+}
+
 module.exports = app;
+module.exports.initializeApp = initializeApp;
