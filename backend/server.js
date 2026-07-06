@@ -139,14 +139,6 @@ const initializeApp = async () => {
   return initializationPromise;
 };
 
-app.use(async (req, res, next) => {
-  try {
-    await initializeApp();
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
 
 const PORT = process.env.PORT || 5000;
 
