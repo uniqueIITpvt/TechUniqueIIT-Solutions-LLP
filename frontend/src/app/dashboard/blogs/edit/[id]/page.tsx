@@ -3,6 +3,7 @@
 import { useState, useRef, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { FaArrowLeft, FaImage } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
@@ -314,10 +315,13 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
               >
                 {imagePreview ? (
                   <div className="text-center">
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      className="mx-auto h-32 w-auto object-cover rounded-md" 
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={256}
+                      height={128}
+                      unoptimized
+                      className="mx-auto h-32 w-auto rounded-md object-cover"
                       onError={(e) => {
                         applyBlogImageFallback(e.currentTarget);
                       }}

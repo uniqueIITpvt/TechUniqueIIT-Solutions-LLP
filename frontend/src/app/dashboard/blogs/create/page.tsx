@@ -3,6 +3,7 @@
 import { useState, useRef, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { FaImage, FaPen, FaPlus, FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
@@ -424,7 +425,7 @@ export default function CreateBlogPage() {
                           onClick={() => toggleTag(tag)}
                           className="ml-1 text-indigo-600 hover:text-indigo-800"
                         >
-                          ×
+                          ??
                         </button>
                       </span>
                     ))}
@@ -454,10 +455,13 @@ export default function CreateBlogPage() {
               >
                 {imagePreview ? (
                   <div>
-                    <img 
-                      src={imagePreview} 
-                      alt="Thumbnail preview" 
-                      className="mx-auto max-h-48 rounded-lg" 
+                    <Image
+                      src={imagePreview}
+                      alt="Thumbnail preview"
+                      width={384}
+                      height={192}
+                      unoptimized
+                      className="mx-auto max-h-48 w-auto rounded-lg object-contain"
                     />
                     <p className="mt-2 text-sm text-gray-600">Click to upload thumbnail</p>
                   </div>

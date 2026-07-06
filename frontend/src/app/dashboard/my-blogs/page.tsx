@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { FaEdit, FaTrash, FaEye, FaPlus } from 'react-icons/fa';
 import { api } from '@/services/api';
@@ -202,11 +203,14 @@ export default function MyBlogsPage() {
                 <tr key={blog._id} className="hover:bg-gray-50">
                   <td className="py-4 px-4">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0 mr-3 bg-gray-200 rounded-md overflow-hidden hidden sm:block">
-                        <img 
+                      <div className="relative h-10 w-10 flex-shrink-0 mr-3 bg-gray-200 rounded-md overflow-hidden hidden sm:block">
+                        <Image
                           src={getImageUrl(blog.featuredImage)}
                           alt={blog.title}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="40px"
+                          unoptimized
+                          className="object-cover"
                           onError={(e) => {
                             applyBlogImageFallback(e.currentTarget);
                           }}
