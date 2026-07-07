@@ -7,8 +7,6 @@ import { FiUpload, FiX, FiPlus, FiTrash, FiLoader } from 'react-icons/fi';
 import { api } from '@/services/api';
 import Image from 'next/image';
 
-// Remove or comment out this line as we'll use the api service instead
-// const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const categories = [
   'Web Development',

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-// Get API URL from environment variables
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const baseURL = apiUrl;
+// Empty default keeps requests on the same Vercel domain and lets /api rewrites reach the backend function.
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+const baseURL = apiUrl.replace(/\/$/, '');
 
 const isAdminRoute = () => {
   if (typeof window === 'undefined') {
@@ -288,6 +288,7 @@ export const apiMethods = {
   put: api.put,
   delete: api.delete,
 };
+
 
 
 

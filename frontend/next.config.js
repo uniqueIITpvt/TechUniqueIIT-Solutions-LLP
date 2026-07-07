@@ -55,7 +55,12 @@ const nextConfig = {
     return config;
   },
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+
+    if (!apiUrl) {
+      return [];
+    }
+
     return [
       {
         source: '/api/:path*',

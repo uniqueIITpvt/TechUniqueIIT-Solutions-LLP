@@ -7,8 +7,6 @@ import { FiUpload, FiX, FiPlus, FiTrash, FiAlertCircle } from 'react-icons/fi';
 import { api } from '@/services/api';
 import Image from 'next/image';
 
-// Remove or comment out this line as we'll use the api service instead
-// const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const categories = [
   'Web Development',
@@ -294,10 +292,8 @@ export default function CreateCaseStudy() {
           </div>
           <p className='mt-1'>{apiError}</p>
           <p className='mt-2 text-sm'>
-            Please check that your API server is running at{' '}
-            <code className='bg-red-100 px-1 py-0.5 rounded'>
-              http://localhost:5000
-            </code>
+            Please check that the deployed API route is available at{' '}
+            <code className='bg-red-100 px-1 py-0.5 rounded'>/api</code>
           </p>
         </div>
       )}

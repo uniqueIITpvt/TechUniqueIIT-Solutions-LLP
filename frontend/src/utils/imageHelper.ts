@@ -1,4 +1,4 @@
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
 const fallbackBlogImage = '/blogs/blogs-1.jpg';
 
 /**
@@ -25,3 +25,4 @@ export const applyBlogImageFallback = (image: HTMLImageElement) => {
   image.onerror = null;
   image.src = fallbackBlogImage;
 };
+

@@ -59,6 +59,14 @@ app.get('/', (req, res) => {
   res.json({ message: 'API is running' });
 });
 
+app.get('/api', (req, res) => {
+  res.json({ message: 'API is running' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ success: true, message: 'API is healthy' });
+});
+
 let dbConnected = false;
 let routesMounted = false;
 let errorHandlerRegistered = false;

@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // Get API URL from environment variables
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || request.nextUrl.origin;
 
   // Add CORS headers
   response.headers.set('Access-Control-Allow-Origin', apiUrl);
@@ -27,3 +27,4 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: '/api/:path*',
 };
+

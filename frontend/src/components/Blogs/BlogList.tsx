@@ -26,7 +26,7 @@ interface Blog {
 
 const BLOGS_PER_PAGE = 6;
 const ALL_CATEGORY = 'All';
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
 
 const normalizeBlogsResponse = (response: any): Blog[] => {
   const possibleBlogs =
@@ -309,3 +309,4 @@ const BlogList = () => {
 };
 
 export default BlogList;
+

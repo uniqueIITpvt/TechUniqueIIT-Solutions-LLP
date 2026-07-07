@@ -80,7 +80,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
             setImagePreview(
               blogData.featuredImage.startsWith('http')
                 ? blogData.featuredImage
-                : `${process.env.NEXT_PUBLIC_API_URL}/uploads/${blogData.featuredImage}`
+                : getImageUrl(blogData.featuredImage)
             );
           }
         } else {
@@ -446,3 +446,4 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
     </div>
   );
 } 
+
