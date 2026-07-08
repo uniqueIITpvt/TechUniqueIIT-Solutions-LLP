@@ -1,9 +1,39 @@
 const Blog = require('../models/blogModel');
-const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
-const path = require('path');
-const fs = require('fs');
 const mongoose = require('mongoose');
+const { uploadImage, deleteImage } = require('../utils/cloudinary');
+
+const parseTags = (tags) => {
+  if (typeof tags === 'string') {
+    return tags.split(',').map((tag) => tag.trim()).filter(Boolean);
+  }
+
+  return Array.isArray(tags) ? tags : [];
+};
+
+const validateImageFile = (file, res) => {
+  if (!file.mimetype.startsWith('image')) {
+    res.status(400).json({
+      success: false,
+      message: 'Please upload an image file',
+    });
+    return false;
+  }
+
+  return true;
+};
+
+const deleteStoredImage = async (blog) => {
+  if (!blog.featuredImagePublicId) {
+    return;
+  }
+
+  try {
+    await deleteImage(blog.featuredImagePublicId);
+  } catch (error) {
+    console.warn('Previous blog image could not be deleted:', error.message);
+  }
+};
 
 // @desc    Create new blog post
 // @route   POST /api/blogs
@@ -11,58 +41,39 @@ const mongoose = require('mongoose');
 exports.createBlog = asyncHandler(async (req, res) => {
   try {
     const { title, content, summary, category, tags, status } = req.body;
-    
-    // Create blog post
-    const blog = await Blog.create({
+    const blogData = {
       title,
       content,
       summary,
       category,
-      tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+      tags: parseTags(tags),
       status: status || 'draft',
       author: req.user._id,
-    });
+    };
 
-    // Handle featured image if uploaded
     if (req.files && req.files.featuredImage) {
       const file = req.files.featuredImage;
-      
-      // Make sure the image is a photo
-      if (!file.mimetype.startsWith('image')) {
-        return res.status(400).json({
-          success: false,
-          message: 'Please upload an image file'
-        });
+
+      if (!validateImageFile(file, res)) {
+        return;
       }
 
-      // Create custom filename
-      const filename = `blog_${blog._id}${path.parse(file.name).ext}`;
-      
-      // Move file to upload folder
-      file.mv(`./uploads/${filename}`, async (err) => {
-        if (err) {
-           
-          return res.status(500).json({
-            success: false,
-            message: 'Problem with file upload'
-          });
-        }
-
-        // Update database
-        await Blog.findByIdAndUpdate(blog._id, { featuredImage: filename });
-      });
+      const uploadedImage = await uploadImage(file);
+      blogData.featuredImage = uploadedImage.url;
+      blogData.featuredImagePublicId = uploadedImage.public_id || '';
     }
+
+    const blog = await Blog.create(blogData);
 
     res.status(201).json({
       success: true,
-      data: blog
+      data: blog,
     });
   } catch (error) {
-     
     res.status(500).json({
       success: false,
       message: 'Error creating blog post',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -315,67 +326,41 @@ exports.updateBlog = asyncHandler(async (req, res) => {
     
     // Handle tags
     if (req.body.tags && typeof req.body.tags === 'string') {
-      req.body.tags = req.body.tags.split(',').map(tag => tag.trim());
+      req.body.tags = parseTags(req.body.tags);
     }
     
+    let shouldDeletePreviousImage = false;
+
     // Handle featured image if uploaded
     if (req.files && req.files.featuredImage) {
       const file = req.files.featuredImage;
       
       // Make sure the image is a photo
-      if (!file.mimetype.startsWith('image')) {
-        return res.status(400).json({
-          success: false,
-          message: 'Please upload an image file'
-        });
+      if (!validateImageFile(file, res)) {
+        return;
       }
-      
-      // Delete old image if it's not the default
-      if (blog.featuredImage !== 'default-blog.jpg') {
-        const filePath = path.join(__dirname, '../uploads', blog.featuredImage);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      }
-      
-      // Create custom filename
-      const filename = `blog_${blog._id}${path.parse(file.name).ext}`;
-      
-      // Move file to upload folder
-      file.mv(`./uploads/${filename}`, async (err) => {
-        if (err) {
-          
-          return res.status(500).json({
-            success: false,
-            message: 'Problem with file upload'
-          });
-        }
 
-        req.body.featuredImage = filename;
-        
-        // Update blog
-        blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-          new: true,
-          runValidators: true
-        });
-        
-        res.status(200).json({
-          success: true,
-          data: blog
-        });
-      });
-    } else {
-      // Update blog without changing image
-      blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-      });
-      
-      res.status(200).json({
-        success: true,
-        data: blog
-      });
+      const uploadedImage = await uploadImage(file);
+      req.body.featuredImage = uploadedImage.url;
+      req.body.featuredImagePublicId = uploadedImage.public_id || '';
+      shouldDeletePreviousImage = Boolean(blog.featuredImagePublicId);
     }
+
+    const previousBlog = blog;
+
+    blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (shouldDeletePreviousImage) {
+      await deleteStoredImage(previousBlog);
+    }
+
+    res.status(200).json({
+      success: true,
+      data: blog
+    });
   } catch (error) {
     
     res.status(500).json({
@@ -408,14 +393,7 @@ exports.deleteBlog = asyncHandler(async (req, res) => {
       });
     }
     
-    // Delete image if it's not the default
-    if (blog.featuredImage !== 'default-blog.jpg') {
-      const filePath = path.join(__dirname, '../uploads', blog.featuredImage);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    }
-    
+    await deleteStoredImage(blog);
     await blog.deleteOne();
     
     res.status(200).json({
@@ -471,4 +449,4 @@ exports.getUserBlogs = asyncHandler(async (req, res) => {
       error: error.message
     });
   }
-}); 
+});

@@ -25,6 +25,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       default: 'default-blog.jpg'
     },
+    featuredImagePublicId: {
+      type: String,
+      default: ''
+    },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -83,4 +87,4 @@ blogSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('Blog', blogSchema); 
+module.exports = mongoose.model('Blog', blogSchema);

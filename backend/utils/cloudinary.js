@@ -56,6 +56,25 @@ const uploadToLocal = async (file) => {
     }
 };
 
+const uploadFilePathToCloudinary = async (filePath, originalName) => {
+    if (!isCloudinaryConfigured()) {
+        throw new Error('Cloudinary is not configured');
+    }
+
+    const fileName = `${Date.now()}-${originalName.replace(/\s+/g, '-')}`;
+    const result = await cloudinary.uploader.upload(filePath, {
+        use_filename: true,
+        unique_filename: false,
+        folder: 'blog-images',
+        filename_override: fileName,
+    });
+
+    return {
+        url: result.secure_url,
+        public_id: result.public_id,
+    };
+};
+
 // Upload image
 const uploadImage = async (file) => {
     if (!file) {
@@ -65,25 +84,15 @@ const uploadImage = async (file) => {
     try {
         // Check if Cloudinary is configured
         if (!isCloudinaryConfigured()) {
+            if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+                throw new Error('Cloudinary is required for image uploads in production');
+            }
+
             console.warn('Cloudinary not configured, using local storage fallback');
             return await uploadToLocal(file);
         }
 
-        // Create custom filename
-        const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-
-        // Upload to cloudinary using temp file path
-        const result = await cloudinary.uploader.upload(file.tempFilePath, {
-            use_filename: true,
-            unique_filename: false,
-            folder: 'blog-images',
-            filename_override: fileName
-        });
-
-        return {
-            url: result.secure_url,
-            public_id: result.public_id
-        };
+        return await uploadFilePathToCloudinary(file.tempFilePath, file.name);
     } catch (error) {
         console.error('Image upload error:', error);
         throw new Error(`Error uploading image: ${error.message}`);
@@ -114,4 +123,9 @@ const deleteImage = async (public_id) => {
     }
 };
 
-module.exports = { uploadImage, deleteImage, isCloudinaryConfigured }; 
+module.exports = {
+    uploadImage,
+    uploadFilePathToCloudinary,
+    deleteImage,
+    isCloudinaryConfigured,
+};
