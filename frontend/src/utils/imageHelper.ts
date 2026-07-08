@@ -1,5 +1,14 @@
 const apiUrl = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
 const fallbackBlogImage = '/blogs/blogs-1.jpg';
+const productionBackendHost = 'tech-unique-iit-solutions-llp-updat.vercel.app';
+
+const normalizeImageUrl = (url: string): string => {
+  if (url.startsWith(`http://${productionBackendHost}`)) {
+    return url.replace('http://', 'https://');
+  }
+
+  return url;
+};
 
 /**
  * Formats image URLs to ensure they have the correct base URL.
@@ -11,7 +20,7 @@ export const getImageUrl = (imagePath: string | undefined): string => {
   }
 
   if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-    return imagePath;
+    return normalizeImageUrl(imagePath);
   }
 
   if (imagePath.startsWith('/')) {
@@ -25,4 +34,3 @@ export const applyBlogImageFallback = (image: HTMLImageElement) => {
   image.onerror = null;
   image.src = fallbackBlogImage;
 };
-

@@ -21,6 +21,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'tech-unique-iit-solutions-llp-updat.vercel.app',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
