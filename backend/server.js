@@ -4,25 +4,9 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/errorMiddleware');
-const path = require('path');
-const os = require('os');
-const fs = require('fs');
 
 // Load env vars
 dotenv.config();
-
-// Serverless functions can only write to the OS temp directory.
-const uploadsDir = process.env.VERCEL
-  ? path.join(os.tmpdir(), 'uploads')
-  : path.join(__dirname, 'uploads');
-try {
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log('Created uploads directory');
-  }
-} catch (error) {
-  console.warn('Uploads directory could not be prepared:', error.message);
-}
 
 // Create Express app
 const app = express();
@@ -44,15 +28,13 @@ app.use(
 // File upload
 app.use(
   fileUpload({
-    useTempFiles: true,
-    tempFileDir: os.tmpdir(),
+    useTempFiles: false,
     limits: { fileSize: 5 * 1024 * 1024 },
     abortOnLimit: true,
+    safeFileNames: true,
+    preserveExtension: true,
   })
 );
-
-// Serve uploaded files from the 'uploads' directory
-app.use('/uploads', express.static(uploadsDir));
 
 // Base route
 app.get('/', (req, res) => {

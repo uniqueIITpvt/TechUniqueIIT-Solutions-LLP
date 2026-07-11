@@ -27,6 +27,9 @@ const BLOG_CATEGORIES = [
   'Other'
 ];
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
 type Blog = {
   _id: string;
   title: string;
@@ -105,6 +108,18 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        toast.error('Thumbnail must be a PNG, JPG, or WEBP image');
+        e.target.value = '';
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        toast.error('Thumbnail must be smaller than 5MB');
+        e.target.value = '';
+        return;
+      }
+
       setFeaturedImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -145,11 +160,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
         formData.append('featuredImage', featuredImage);
       }
       
-      const response = await api.put(`/api/blogs/${params.id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.put(`/api/blogs/${params.id}`, formData);
       
       if (response.data.success) {
         toast.success('Blog updated successfully!');
@@ -338,14 +349,14 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
                         <span>Upload an image</span>
                       </label>
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                    <p className="text-xs text-gray-500">PNG, JPG or WEBP up to 5MB</p>
                   </div>
                 )}
                 <input
                   ref={fileInputRef}
                   type="file"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/webp"
                   onChange={handleImageChange}
                 />
               </div>
@@ -403,7 +414,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
                 Content <span className="text-red-500">*</span>
               </label>
-              <div className="min-h-[300px]">
+              <div className="editor-container min-h-[300px]">
                 <ReactQuill
                   theme="snow"
                   value={content}

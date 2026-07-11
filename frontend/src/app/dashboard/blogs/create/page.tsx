@@ -32,6 +32,9 @@ const POPULAR_TAGS = [
   'JavaScript', 'React', 'Node.js', 'Python', 'AI', 'Cloud', 'DevOps', 'Security', 'UI/UX', 'Mobile'
 ];
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
 export default function CreateBlogPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -82,6 +85,18 @@ export default function CreateBlogPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        toast.error('Thumbnail must be a PNG, JPG, or WEBP image');
+        e.target.value = '';
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        toast.error('Thumbnail must be smaller than 5MB');
+        e.target.value = '';
+        return;
+      }
+
       setFeaturedImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -139,11 +154,7 @@ export default function CreateBlogPage() {
         formData.append('featuredImage', featuredImage);
       }
       
-      const response = await api.post('/api/blogs', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/api/blogs', formData);
       
       if (response.data.success) {
         toast.success(status === 'published' ? 'Blog published successfully!' : 'Blog saved as draft!');
@@ -471,7 +482,7 @@ export default function CreateBlogPage() {
                       <FaImage className="mx-auto h-10 w-10" />
                     </div>
                     <p className="text-sm font-medium text-indigo-600">Click to upload thumbnail</p>
-                    <p className="mt-1 text-xs text-gray-500">PNG, JPG or WEBP (Max 2MB)</p>
+                    <p className="mt-1 text-xs text-gray-500">PNG, JPG or WEBP (Max 5MB)</p>
                   </div>
                 )}
                 <input

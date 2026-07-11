@@ -95,11 +95,7 @@ export const uploadApi = {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await api.post('/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.post('/api/upload', formData);
 
       return response.data;
     } catch (error: any) {
@@ -179,8 +175,14 @@ api.interceptors.request.use(
       config.url?.includes('?') ? '&' : '?'
     }_t=${timestamp}`;
 
-    // Don't modify content-type if it's form data
-    if (!(config.data instanceof FormData)) {
+    // Let the browser set multipart boundaries for file uploads.
+    if (config.data instanceof FormData) {
+      if (typeof config.headers.delete === 'function') {
+        config.headers.delete('Content-Type');
+      } else {
+        delete config.headers['Content-Type'];
+      }
+    } else {
       config.headers['Content-Type'] = 'application/json';
     }
 

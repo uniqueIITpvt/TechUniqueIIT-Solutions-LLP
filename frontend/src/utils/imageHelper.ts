@@ -15,19 +15,21 @@ const normalizeImageUrl = (url: string): string => {
  * Falls back to a local image when the backend/default image is missing.
  */
 export const getImageUrl = (imagePath: string | undefined): string => {
-  if (!imagePath || imagePath === 'default-blog.jpg') {
+  const normalizedPath = imagePath?.trim();
+
+  if (!normalizedPath || normalizedPath === 'default-blog.jpg') {
     return fallbackBlogImage;
   }
 
-  if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-    return normalizeImageUrl(imagePath);
+  if (normalizedPath.startsWith('http') || normalizedPath.startsWith('https')) {
+    return normalizeImageUrl(normalizedPath);
   }
 
-  if (imagePath.startsWith('/')) {
-    return imagePath;
+  if (normalizedPath.startsWith('/')) {
+    return normalizedPath;
   }
 
-  return `${apiUrl}/uploads/${imagePath}`;
+  return `${apiUrl}/uploads/${normalizedPath}`;
 };
 
 export const applyBlogImageFallback = (image: HTMLImageElement) => {

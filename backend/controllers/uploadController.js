@@ -1,6 +1,12 @@
 const asyncHandler = require('express-async-handler');
 const { uploadImage: uploadToCloudinary } = require('../utils/cloudinary');
 
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
+const getUploadedFile = (fileOrFiles) => {
+    return Array.isArray(fileOrFiles) ? fileOrFiles[0] : fileOrFiles;
+};
+
 // @desc    Upload image
 // @route   POST /api/upload
 // @access  Public
@@ -13,13 +19,13 @@ exports.uploadImage = asyncHandler(async (req, res) => {
             });
         }
 
-        const file = req.files.image;
+        const file = getUploadedFile(req.files.image);
 
         // Check if file is an image
-        if (!file.mimetype.startsWith('image')) {
+        if (!file || !ALLOWED_IMAGE_TYPES.has(file.mimetype)) {
             return res.status(400).json({
                 success: false,
-                message: 'Please upload an image file'
+                message: 'Please upload a PNG, JPG, or WEBP image'
             });
         }
 
@@ -46,4 +52,4 @@ exports.uploadImage = asyncHandler(async (req, res) => {
             error: error.message
         });
     }
-}); 
+});
