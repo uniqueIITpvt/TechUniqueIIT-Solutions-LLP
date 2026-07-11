@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { blogApi } from '@/services/api';
 import LoadingSpinner from '../LoadingSpinner';
-import { getImageUrl } from '@/utils/imageHelper';
+import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
 import { featuredBlogs as fallbackFeaturedBlogs, FallbackBlog } from '@/data/fallbackBlogs';
 
 interface Blog {
@@ -107,7 +107,12 @@ const FeaturedBlogs = () => {
                     src={getImageUrl(blog.featuredImage || '')}
                     alt={blog.title || 'Blog post'}
                     fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    unoptimized
                     className="object-cover"
+                    onError={(e) => {
+                      applyBlogImageFallback(e.currentTarget);
+                    }}
                   />
                 </div>
               </Link>

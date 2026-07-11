@@ -8,7 +8,7 @@ import { FaCalendarAlt, FaClock, FaUser, FaTag } from 'react-icons/fa';
 import { blogApi } from '@/services/api';
 import { Blog } from '@/types/blog';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { getImageUrl } from '@/utils/imageHelper';
+import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
 import { getBlogBySlug } from '@/data/fallbackBlogs';
 
 export default function BlogDetailPage({ params }: { params: { slug: string } }) {
@@ -83,7 +83,7 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
         <header className="mb-8">
           {/* {usingFallback && (
             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm mb-4 text-center">
-              📝 Demo Content - This is sample blog content for demonstration purposes
+              Demo Content - This is sample blog content for demonstration purposes
             </div>
           )} */}
           <div className="flex flex-wrap items-center text-sm text-gray-500 gap-4 mb-4">
@@ -135,7 +135,12 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
             src={getImageUrl(blog.featuredImage)}
             alt={blog.title}
             fill
+            sizes="(min-width: 1024px) 768px, 100vw"
+            unoptimized
             className="object-cover"
+            onError={(e) => {
+              applyBlogImageFallback(e.currentTarget);
+            }}
           />
         </div>
         
