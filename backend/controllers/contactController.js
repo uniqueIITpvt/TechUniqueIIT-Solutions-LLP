@@ -24,6 +24,99 @@ const escapeHtml = (value) =>
     .replace(/[\x22]/g, '&quot;')
     .replace(/'/g, '&#039;');
 
+const formatMultilineHtml = (value) =>
+  escapeHtml(value).replace(/\r\n|\r|\n/g, '<br>');
+
+const buildReplyEmailText = ({ fullName, replyMessage, originalMessage }) =>
+  [
+    `Hello ${fullName || 'there'},`,
+    '',
+    replyMessage,
+    '',
+    'Thank you,',
+    'TechUniqueIIT Solutions',
+    '',
+    'Your original message:',
+    originalMessage,
+  ].join('\n');
+
+const buildReplyEmailHtml = ({ fullName, replyMessage, originalMessage }) => {
+  const safeName = escapeHtml(fullName || 'there');
+  const safeReply = formatMultilineHtml(replyMessage);
+  const safeOriginal = formatMultilineHtml(originalMessage);
+  const siteUrl = (
+    process.env.FRONTEND_URL ||
+    process.env.CLIENT_URL ||
+    process.env.SITE_URL ||
+    'https://tech-unique-iit-solutions-llp-front.vercel.app'
+  ).replace(/\/$/, '');
+  const logoUrl = `${siteUrl}/uniqueiit-logo.png`;
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Response from TechUniqueIIT Solutions</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f7f7f7;font-family:Arial,Helvetica,sans-serif;color:#555555;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background:#f7f7f7;">
+      <tr>
+        <td align="center" style="padding:50px 16px 28px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:820px;background:#ffffff;border:1px solid #dddddd;border-top:8px solid #2f314f;">
+            <tr>
+              <td align="center" style="padding:72px 52px 28px;">
+                <img src="${logoUrl}" width="96" alt="TechUniqueIIT Solutions" style="display:block;border:0;outline:none;text-decoration:none;width:96px;max-width:96px;height:auto;margin:0 auto 42px;">
+                <h1 style="margin:0;color:#555555;font-size:42px;line-height:1.2;font-weight:700;letter-spacing:0;">Response from TechUniqueIIT</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:46px 52px 30px;">
+                <p style="margin:0 0 34px;color:#555555;font-size:24px;line-height:1.45;font-weight:400;">Hello ${safeName}!</p>
+                <p style="margin:0 0 18px;color:#555555;font-size:24px;line-height:1.45;font-weight:400;">Thank you for contacting TechUniqueIIT Solutions. Our team has replied to your query:</p>
+                <div style="margin:0;color:#555555;font-size:21px;line-height:1.55;font-weight:400;">${safeReply}</div>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:22px 52px 54px;">
+                <a href="${siteUrl}" style="display:inline-block;background:#3164ef;color:#ffffff;text-decoration:none;border-radius:4px;padding:20px 46px;font-size:22px;line-height:1.2;font-weight:400;">Visit Our Website</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 52px 42px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-left:4px solid #3164ef;">
+                  <tr>
+                    <td style="padding:22px 24px;">
+                      <p style="margin:0 0 10px;color:#555555;font-size:18px;line-height:1.45;font-weight:700;">Your original message:</p>
+                      <div style="margin:0;color:#666666;font-size:17px;line-height:1.55;">${safeOriginal}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 52px 64px;">
+                <p style="margin:0 0 26px;color:#555555;font-size:22px;line-height:1.45;">Best regards,</p>
+                <p style="margin:0;color:#555555;font-size:21px;line-height:1.45;">TechUniqueIIT Solutions Team<br>Technology Consulting and Development<br><a href="${siteUrl}" style="color:#2563eb;text-decoration:underline;">${siteUrl.replace(/^https?:\/\//, '')}</a></p>
+              </td>
+            </tr>
+          </table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:820px;">
+            <tr>
+              <td align="center" style="padding:28px 20px 0;">
+                <p style="margin:0 0 14px;color:#888888;font-size:16px;line-height:1.5;">TechUniqueIIT Solutions</p>
+                <p style="margin:0;color:#888888;font-size:16px;line-height:1.5;">You are receiving this email because you submitted a contact query to TechUniqueIIT Solutions.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+};
+
 const createTransporter = () => {
   const requiredVariables = [
     'SMTP_HOST',
@@ -190,18 +283,22 @@ exports.replyToContactQuery = asyncHandler(async (req, res) => {
   try {
     const transporter = createTransporter();
     const fullName = `${contact.firstName} ${contact.lastName}`.trim();
+    const subject = 'Response to your TechUniqueIIT query';
     const info = await transporter.sendMail({
       from: process.env.MAIL_FROM,
+      replyTo: process.env.MAIL_REPLY_TO || process.env.MAIL_FROM,
       to: contact.email,
-      subject: 'Re: Your query to TechUniqueIIT',
-      text: `Hello ${fullName},\n\n${body}\n\n---\nYour original message:\n${contact.message}`,
-      html: `
-        <p>Hello ${escapeHtml(fullName)},</p>
-        <p>${escapeHtml(body).replace(/\n/g, '<br>')}</p>
-        <hr>
-        <p><strong>Your original message:</strong></p>
-        <p>${escapeHtml(contact.message).replace(/\n/g, '<br>')}</p>
-      `,
+      subject,
+      text: buildReplyEmailText({
+        fullName,
+        replyMessage: body,
+        originalMessage: contact.message,
+      }),
+      html: buildReplyEmailHtml({
+        fullName,
+        replyMessage: body,
+        originalMessage: contact.message,
+      }),
     });
 
     reply.deliveryStatus = 'sent';
