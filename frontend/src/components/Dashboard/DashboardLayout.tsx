@@ -11,6 +11,7 @@ import {
   FaSignOutAlt,
   FaUser,
   FaBook,
+  FaEnvelope,
 } from 'react-icons/fa';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { MdDashboard, MdCreate } from 'react-icons/md';
@@ -41,6 +42,11 @@ const menuItems = [
     title: 'Analytics',
     path: '/dashboard/analytics',
     icon: <FaChartLine size={20} />,
+  },
+  {
+    title: 'Messages',
+    path: '/dashboard/messages',
+    icon: <FaEnvelope size={20} />,
   },
 ];
 
