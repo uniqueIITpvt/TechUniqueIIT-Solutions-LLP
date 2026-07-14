@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { countryCodes } from '@/data/countryCodes';
-import { sendContactEmail } from '@/utils/emailService';
+import { submitContactQuery } from '@/services/contactService';
 
 interface MobileContactFormProps {
   isOpen: boolean;
@@ -29,7 +29,7 @@ export const MobileContactForm = ({
     const form = e.currentTarget;
 
     try {
-      const result = await sendContactEmail(form);
+      const result = await submitContactQuery(form);
 
       if (result.success) {
         setSubmitStatus({
@@ -44,7 +44,7 @@ export const MobileContactForm = ({
         }, 2000);
       }
     } catch (error) {
-      console.error('Email sending failed:', error);
+      console.error('Contact query submission failed:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again later.',

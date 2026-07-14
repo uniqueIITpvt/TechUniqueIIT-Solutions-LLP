@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { countryCodes } from '@/data/countryCodes';
-import { sendContactEmail } from '@/utils/emailService';
+import { submitContactQuery } from '@/services/contactService';
 
 export const PageContactSection = () => {
   const [selectedCountry, setSelectedCountry] = useState({
@@ -56,7 +56,7 @@ export const PageContactSection = () => {
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      const result = await sendContactEmail(form);
+      const result = await submitContactQuery(form);
 
       if (result.success) {
         setSubmitStatus({
@@ -73,7 +73,7 @@ export const PageContactSection = () => {
         });
       }
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error submitting contact query:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again later.',

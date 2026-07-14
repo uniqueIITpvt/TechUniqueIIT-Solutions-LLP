@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { sendContactEmail } from '@/utils/emailService';
+import { submitContactQuery } from '@/services/contactService';
 import { countryCodes } from '@/data/countryCodes';
 
 const contactInfo = [
@@ -119,7 +119,7 @@ export const ContactSection = () => {
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      const result = await sendContactEmail(formRef.current);
+      const result = await submitContactQuery(formRef.current);
 
       if (result.success) {
         setSubmitStatus({
@@ -131,7 +131,7 @@ export const ContactSection = () => {
         setIsOpen(false);
       }
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error submitting contact query:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again later.',
