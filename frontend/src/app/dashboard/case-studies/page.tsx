@@ -9,7 +9,6 @@ import {
   FiPlus,
   FiEdit2,
   FiTrash2,
-  FiEye,
   FiSearch,
   FiFilter,
   FiLoader,
@@ -457,14 +456,6 @@ export default function CaseStudiesPage() {
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                         <div className='flex items-center justify-end space-x-2'>
-                          <Link
-                            href={`/case-studies/${caseStudy.slug}`}
-                            target='_blank'
-                            className='text-indigo-600 hover:text-indigo-900 p-1'
-                            title='View'
-                          >
-                            <FiEye size={18} />
-                          </Link>
                           <Link
                             href={`/dashboard/case-studies/edit/${caseStudy._id}`}
                             className='text-blue-600 hover:text-blue-900 p-1'

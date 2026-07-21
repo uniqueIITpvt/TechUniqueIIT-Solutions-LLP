@@ -24,8 +24,8 @@ export const FaqContent = ({ sections }: FaqContentProps) => {
   };
 
   return (
-    <section className='py-16 sm:py-20 lg:py-24'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+    <section className='py-12 sm:py-16 lg:py-20'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Navigation */}
         <div className='flex flex-nowrap overflow-x-auto pb-4 mb-8 gap-3 sm:gap-4 scrollbar-hide'>
           {sections.map((section) => (

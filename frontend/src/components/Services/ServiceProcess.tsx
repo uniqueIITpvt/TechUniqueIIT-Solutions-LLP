@@ -95,7 +95,7 @@ const steps = [
 
 export const ServiceProcess = () => {
   return (
-    <section className='relative pt-5 sm:pt-10 lg:pt-15 overflow-hidden'>
+    <section className='relative overflow-hidden py-12 sm:py-16 lg:py-20'>
       {/* Enhanced Background Elements */}
       <div className='absolute inset-0'>
         <div className='absolute inset-0 bg-gradient-to-b from-white via-indigo-50/50 to-white'></div>
@@ -114,7 +114,7 @@ export const ServiceProcess = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

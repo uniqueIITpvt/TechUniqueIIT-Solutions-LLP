@@ -87,9 +87,9 @@ const FeaturedBlogs = () => {
   }
 
   return (
-    <section className="py-12 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center mb-8">
+    <section className="bg-white py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 flex items-center justify-center sm:mb-16">
           <h2 className="text-3xl font-bold text-center">Featured Articles</h2>
           {/* {usingFallback && (
             <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm ml-4">
@@ -98,7 +98,7 @@ const FeaturedBlogs = () => {
           )} */}
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {featuredBlogs.filter(blog => blog && blog._id).map((blog) => (
             <div key={blog._id} className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 hover:shadow-lg">
               <Link href={`/blogs/${blog.slug}`}>
@@ -117,7 +117,7 @@ const FeaturedBlogs = () => {
                 </div>
               </Link>
               
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 <div className="flex items-center text-sm text-gray-500 mb-3">
                   <span className="inline-flex items-center mr-3">
                     <FaCalendarAlt className="mr-1" />

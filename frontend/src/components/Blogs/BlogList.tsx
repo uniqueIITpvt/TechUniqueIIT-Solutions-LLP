@@ -141,9 +141,9 @@ const BlogList = () => {
   }
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col gap-3 mb-8 sm:flex-row sm:items-end sm:justify-between">
+    <section className="bg-gray-50 py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-3xl font-bold">Our Blog Posts</h2>
             <p className="mt-2 text-gray-500">
@@ -185,7 +185,7 @@ const BlogList = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {paginatedBlogs.map((blog) => (
                 <article
                   key={blog._id}
@@ -207,7 +207,7 @@ const BlogList = () => {
                     </div>
                   </Link>
 
-                  <div className="p-6">
+                  <div className="p-5 sm:p-6">
                     <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
                       <span className="inline-flex items-center">
                         <FaCalendarAlt className="mr-1" />

@@ -83,7 +83,7 @@ export const AboutMission = () => {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <section className='py-20 relative overflow-hidden'>
+    <section className='relative overflow-hidden py-12 sm:py-16 lg:py-20'>
       {/* Background Elements */}
       <div className='absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-white'></div>
       <div className='absolute top-0 left-0 w-full h-full'>
@@ -92,7 +92,7 @@ export const AboutMission = () => {
         <div className='absolute -bottom-8 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-blob animation-delay-4000'></div>
       </div>
 
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='max-w-7xl mx-auto' ref={ref}>
           {/* Mission Cards */}
           <div className='grid md:grid-cols-3 gap-8 mb-20'>

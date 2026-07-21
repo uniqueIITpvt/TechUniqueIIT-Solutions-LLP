@@ -86,10 +86,10 @@ export const Hero = () => {
                     className='w-full sm:w-auto'
                   >
                     <Link
-                      href='/case-studies'
+                      href='/services'
                       className='group w-full sm:w-auto inline-flex justify-center items-center px-6 sm:px-8 py-3.5 sm:py-4 text-base sm:text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl hover:shadow-lg hover:shadow-indigo-200 transition-all duration-300'
                     >
-                      Browse Products
+                      Explore Services
                       <motion.svg
                         className='ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1'
                         fill='none'

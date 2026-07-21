@@ -92,12 +92,12 @@ export const AboutStory = () => {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <section className='py-20 relative overflow-hidden'>
+    <section className='relative overflow-hidden py-12 sm:py-16 lg:py-20'>
       {/* Background Pattern */}
       <div className='absolute inset-0 bg-[linear-gradient(to_right,#f1f5f91a_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f91a_1px,transparent_1px)] bg-[size:4rem_4rem]'></div>
       <div className='absolute inset-0 bg-gradient-to-b from-white via-transparent to-white'></div>
 
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='max-w-7xl mx-auto' ref={ref}>
           {/* Achievements Section */}
           <div className='grid md:grid-cols-3 gap-8 mb-24'>
