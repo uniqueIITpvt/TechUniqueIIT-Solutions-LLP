@@ -144,7 +144,7 @@ const faqSections = [
 
 export default function FaqPage() {
   return (
-    <main className='min-h-screen pt-16 bg-gradient-to-b from-white via-indigo-50/30 to-white'>
+    <main className='min-h-screen bg-gradient-to-b from-white via-indigo-50/30 to-white pt-16 pb-16 md:pb-0'>
       <FaqHero />
       <FaqContent sections={faqSections} />
       <ServiceCTA />

@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 export const CareersHero = () => {
   return (
-    <section className='relative py-20 overflow-hidden bg-gradient-to-b from-indigo-50 to-white'>
-      <div className='container mx-auto px-4'>
+    <section className='relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white py-12 sm:py-16 lg:py-20'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='grid lg:grid-cols-2 gap-12 items-center'>
           {/* Content */}
           <motion.div

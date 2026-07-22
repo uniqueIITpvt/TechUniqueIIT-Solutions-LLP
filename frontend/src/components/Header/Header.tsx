@@ -30,10 +30,6 @@ const navItems: NavItem[] = [
       { label: 'AI Solutions', href: '/services/ai-solutions' },
     ],
   },
-  {
-    label: 'Case Studies',
-    href: '/case-studies',
-  },
   { label: 'Blogs', href: '/blogs' },
   { label: 'Careers', href: '/careers' },
   {

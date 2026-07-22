@@ -1,6 +1,7 @@
 const cloudinary = require('cloudinary').v2;
+const crypto = require('crypto');
+const path = require('path');
 
-// Check Cloudinary configuration
 const isCloudinaryConfigured = () => {
     return (
         process.env.CLOUDINARY_CLOUD_NAME &&
@@ -9,7 +10,6 @@ const isCloudinaryConfigured = () => {
     );
 };
 
-// Configure Cloudinary only if all required environment variables are present
 if (isCloudinaryConfigured()) {
     cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,7 +18,7 @@ if (isCloudinaryConfigured()) {
     });
     console.log('Cloudinary configured successfully');
 } else {
-    console.warn('Cloudinary not configured. Image uploads are disabled.');
+    console.warn('Cloudinary not configured. Image and resume uploads are disabled.');
 }
 
 const buildUploadOptions = (originalName) => ({
@@ -26,7 +26,7 @@ const buildUploadOptions = (originalName) => ({
     resource_type: 'image',
     use_filename: true,
     unique_filename: false,
-    filename_override: `${Date.now()}-${originalName.replace(/\s+/g, '-')}`,
+    filename_override: Date.now() + '-' + originalName.replace(/\s+/g, '-'),
 });
 
 const formatUploadResult = (result) => {
@@ -74,7 +74,6 @@ const uploadFilePathToCloudinary = async (filePath, originalName) => {
     return formatUploadResult(result);
 };
 
-// Upload image
 const uploadImage = async (file) => {
     if (!file) {
         throw new Error('No file provided for upload');
@@ -92,11 +91,10 @@ const uploadImage = async (file) => {
         return await uploadBufferToCloudinary(file.data, file.name);
     } catch (error) {
         console.error('Image upload error:', error);
-        throw new Error(`Error uploading image: ${error.message}`);
+        throw new Error('Error uploading image: ' + error.message);
     }
 };
 
-// Delete image
 const deleteImage = async (public_id) => {
     try {
         if (!isCloudinaryConfigured()) {
@@ -104,11 +102,111 @@ const deleteImage = async (public_id) => {
         }
 
         await cloudinary.uploader.destroy(public_id);
-        return { message: "Image deleted successfully from Cloudinary" };
+        return { message: 'Image deleted successfully from Cloudinary' };
     } catch (error) {
         console.error('Image deletion error:', error);
-        throw new Error(`Error deleting image: ${error.message}`);
+        throw new Error('Error deleting image: ' + error.message);
     }
+};
+
+const getSafeResumeName = (originalName) => {
+    const extension = path.extname(originalName).toLowerCase();
+    const baseName = path
+        .basename(originalName, extension)
+        .replace(/[^a-z0-9_-]+/gi, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60) || 'resume';
+
+    return {
+        format: extension.replace(/^\./, ''),
+        publicId:
+            'job-resumes/' +
+            Date.now() +
+            '-' +
+            crypto.randomBytes(6).toString('hex') +
+            '-' +
+            baseName +
+            extension,
+    };
+};
+
+const uploadPrivateResume = async (file) => {
+    if (!isCloudinaryConfigured()) {
+        throw new Error('Cloudinary configuration is required for resume uploads');
+    }
+
+    if (!file || !Buffer.isBuffer(file.data) || file.data.length === 0) {
+        throw new Error('Uploaded resume data is empty');
+    }
+
+    const { format, publicId } = getSafeResumeName(file.name);
+
+    const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                public_id: publicId,
+                resource_type: 'raw',
+                type: 'authenticated',
+                use_filename: false,
+                unique_filename: false,
+            },
+            (error, uploadResult) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                resolve(uploadResult);
+            }
+        );
+
+        stream.end(file.data);
+    });
+
+    if (!result?.public_id) {
+        throw new Error('Cloudinary did not return a resume identifier');
+    }
+
+    return {
+        public_id: result.public_id,
+        format: result.format || format,
+    };
+};
+
+const deleteResume = async (publicId) => {
+    if (!isCloudinaryConfigured()) {
+        throw new Error('Cloudinary configuration is required for resume deletion');
+    }
+
+    return cloudinary.uploader.destroy(publicId, {
+        resource_type: 'raw',
+        type: 'authenticated',
+        invalidate: true,
+    });
+};
+
+const createResumeDownloadUrl = ({ publicId, format }) => {
+    if (!isCloudinaryConfigured()) {
+        throw new Error('Cloudinary configuration is required for resume downloads');
+    }
+
+    const normalizedFormat = String(format || '').replace(/^\./, '').toLowerCase();
+    const suffix = normalizedFormat ? '.' + normalizedFormat : '';
+    const downloadPublicId =
+        suffix && publicId.toLowerCase().endsWith(suffix)
+            ? publicId.slice(0, -suffix.length)
+            : publicId;
+
+    return cloudinary.utils.private_download_url(
+        downloadPublicId,
+        normalizedFormat,
+        {
+            resource_type: 'raw',
+            type: 'authenticated',
+            attachment: true,
+            expires_at: Math.floor(Date.now() / 1000) + 5 * 60,
+        }
+    );
 };
 
 module.exports = {
@@ -116,5 +214,8 @@ module.exports = {
     uploadFilePathToCloudinary,
     uploadBufferToCloudinary,
     deleteImage,
+    uploadPrivateResume,
+    deleteResume,
+    createResumeDownloadUrl,
     isCloudinaryConfigured,
 };

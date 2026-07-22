@@ -50,7 +50,9 @@ const buildReplyEmailHtml = ({ fullName, replyMessage, originalMessage }) => {
     process.env.SITE_URL ||
     'https://tech-unique-iit-solutions-llp-front.vercel.app'
   ).replace(/\/$/, '');
-  const logoUrl = `${siteUrl}/uniqueiit-logo.png`;
+  const logoUrl =
+    process.env.MAIL_LOGO_URL ||
+    'https://res.cloudinary.com/techuniqueiit/image/upload/c_fit,q_auto,w_220/v1784029741/techuniqueiit/email/reply-email-logo-220.png';
 
   return `<!doctype html>
 <html lang="en">
@@ -67,7 +69,7 @@ const buildReplyEmailHtml = ({ fullName, replyMessage, originalMessage }) => {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:820px;background:#ffffff;border:1px solid #dddddd;border-top:8px solid #2f314f;">
             <tr>
               <td align="center" style="padding:72px 52px 28px;">
-                <img src="${logoUrl}" width="96" alt="TechUniqueIIT Solutions" style="display:block;border:0;outline:none;text-decoration:none;width:96px;max-width:96px;height:auto;margin:0 auto 42px;">
+                <img src="${logoUrl}" width="220" alt="TechUniqueIIT Solutions" style="display:block;border:0;outline:none;text-decoration:none;width:220px;max-width:220px;height:auto;margin:0 auto 42px;">
                 <h1 style="margin:0;color:#555555;font-size:42px;line-height:1.2;font-weight:700;letter-spacing:0;">Response from TechUniqueIIT</h1>
               </td>
             </tr>

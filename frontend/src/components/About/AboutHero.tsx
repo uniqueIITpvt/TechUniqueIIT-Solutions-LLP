@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 export const AboutHero = () => {
   return (
-    <section className='relative overflow-hidden py-8 sm:py-12 lg:py-16'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+    <section className='relative overflow-hidden py-12 sm:py-16 lg:py-20'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='grid lg:grid-cols-2 gap-12 lg:gap-20 items-center'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

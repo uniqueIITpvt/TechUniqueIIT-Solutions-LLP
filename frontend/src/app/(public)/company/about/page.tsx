@@ -6,7 +6,7 @@ import { ServiceCTA } from '@/components/Services/ServiceCTA';
 
 export default function AboutPage() {
   return (
-    <main className='min-h-screen pt-16 bg-gradient-to-b from-white via-indigo-50/30 to-white'>
+    <main className='min-h-screen bg-gradient-to-b from-white via-indigo-50/30 to-white pt-16 pb-16 md:pb-0'>
       <AboutHero />
       <AboutStory />
       <AboutMission />

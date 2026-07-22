@@ -176,7 +176,7 @@ const services = [
 
 export const ServicesList = () => {
   return (
-    <section className='relative pt-16 sm:pt-20 lg:pt-24 overflow-hidden'>
+    <section className='relative overflow-hidden pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20'>
       {/* Background Elements */}
       <div className='absolute inset-0'>
         <div className='absolute inset-0 bg-gradient-to-b from-white via-indigo-50/50 to-white'></div>
@@ -189,7 +189,7 @@ export const ServicesList = () => {
         ></div>
       </div>
 
-      <div className='container mx-auto px-4 relative'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
