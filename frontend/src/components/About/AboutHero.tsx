@@ -52,7 +52,7 @@ export const AboutHero = () => {
           >
             <div className='relative rounded-3xl overflow-hidden shadow-2xl'>
               <Image
-                src='/about/team-hero.jpg'
+                src='/about/about-1.jpg'
                 alt='Our Team'
                 width={600}
                 height={700}
