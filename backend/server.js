@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -6,7 +7,22 @@ const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // Load env vars
-dotenv.config();
+const isLocalDev =
+  process.env.LOCAL_DEV === 'true' || process.env.npm_lifecycle_event === 'dev';
+
+if (isLocalDev) {
+  process.env.NODE_ENV = 'development';
+}
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+if (isLocalDev) {
+  dotenv.config({
+    path: path.resolve(__dirname, '.env.development.local'),
+    override: true,
+  });
+  process.env.NODE_ENV = 'development';
+}
 
 // Create Express app
 const app = express();
@@ -71,6 +87,7 @@ const mountAllRoutes = () => {
   app.use('/api/contact', require('./routes/contactRoutes'));
   app.use('/api/upload', require('./routes/uploadRoutes'));
   app.use('/api/blogs', require('./routes/blogRoutes'));
+  app.use('/api/jobs', require('./routes/jobRoutes'));
 };
 
 const initializeApp = async () => {
@@ -146,6 +163,7 @@ const startServer = async () => {
     if (dbConnected) {
       console.log('Authentication API available at: /api/auth');
       console.log('Blogs API available at: /api/blogs');
+      console.log('Jobs API available at: /api/jobs');
     }
   });
 

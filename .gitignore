@@ -34,10 +34,12 @@ out/
 .env.production.local
 /frontend/.env
 /frontend/.env.local
+/frontend/.env*.local
 /frontend/.env.development
 /frontend/.env.production
 /backend/.env
 /backend/.env.local
+/backend/.env*.local
 /backend/.env.development
 /backend/.env.production
 

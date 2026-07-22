@@ -28,8 +28,8 @@ const values = [
 
 export const AboutValues = () => {
   return (
-    <section className='py-16 bg-white'>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+    <section className='bg-white py-12 sm:py-16 lg:py-20'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='text-center mb-12'>
           <span className='inline-flex items-center px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-4'>
             Our Values
