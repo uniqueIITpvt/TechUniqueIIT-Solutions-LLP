@@ -37,8 +37,8 @@ export const CompanyStats = () => {
   });
 
   return (
-    <section className='py-20 bg-gradient-to-br from-gray-50 to-white'>
-      <div className='container mx-auto px-4'>
+    <section className='bg-gradient-to-br from-gray-50 to-white py-12 sm:py-16 lg:py-20'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <motion.div
           ref={ref}
           className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'

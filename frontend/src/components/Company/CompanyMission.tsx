@@ -72,8 +72,8 @@ const values = [
 
 export const CompanyMission = () => {
   return (
-    <section className='py-20 bg-white'>
-      <div className='container mx-auto px-4'>
+    <section className='bg-white py-12 sm:py-16 lg:py-20'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Mission & Vision */}
         <div className='grid md:grid-cols-2 gap-8 mb-20'>
           {missions.map((item, index) => (

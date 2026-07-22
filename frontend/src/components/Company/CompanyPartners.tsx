@@ -57,8 +57,8 @@ const testimonials = [
 
 export const CompanyPartners = () => {
   return (
-    <section className='py-20 bg-white'>
-      <div className='container mx-auto px-4'>
+    <section className='bg-white py-12 sm:py-16 lg:py-20'>
+      <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
