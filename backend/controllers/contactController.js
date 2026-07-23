@@ -244,6 +244,25 @@ exports.getContactQuery = asyncHandler(async (req, res) => {
   res.json({ success: true, data: contact });
 });
 
+// @desc    Delete one contact query
+// @route   DELETE /api/contact/:id
+// @access  Private/Admin
+exports.deleteContactQuery = asyncHandler(async (req, res) => {
+  if (!ensureDatabaseConnection(res)) return;
+
+  const contact = await Contact.findByIdAndDelete(req.params.id);
+  if (!contact) {
+    return res.status(404).json({
+      success: false,
+      message: 'Contact message not found',
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'Contact message deleted successfully',
+  });
+});
 // @desc    Reply to a contact query by email
 // @route   POST /api/contact/:id/reply
 // @access  Private/Admin

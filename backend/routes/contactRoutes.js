@@ -3,6 +3,7 @@ const {
   createContactQuery,
   getContactQueries,
   getContactQuery,
+  deleteContactQuery,
   replyToContactQuery,
 } = require('../controllers/contactController');
 const { protect, authorize } = require('../middleware/authMiddleware');
@@ -14,6 +15,7 @@ router.post('/', createContactQuery);
 router.use(protect, authorize('admin'));
 router.get('/', getContactQueries);
 router.get('/:id', getContactQuery);
+router.delete('/:id', deleteContactQuery);
 router.post('/:id/reply', replyToContactQuery);
 
 module.exports = router;

@@ -89,4 +89,11 @@ export const contactAdminApi = {
     }>(`/api/contact/${id}/reply`, { message });
     return response.data;
   },
+  deleteMessage: async (id: string) => {
+    const response = await api.delete<{
+      success: boolean;
+      message: string;
+    }>(`/api/contact/${id}`);
+    return response.data;
+  },
 };

@@ -1,145 +1,27 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import {
-  FiUsers,
-  FiEye,
-  FiThumbsUp,
-  FiCalendar,
-  FiRefreshCw,
-  FiArrowUp,
+  FiActivity,
   FiArrowDown,
-  FiInfo,
+  FiArrowUp,
+  FiBriefcase,
+  FiEdit3,
+  FiEye,
+  FiFileText,
+  FiInbox,
+  FiMessageSquare,
+  FiRefreshCw,
+  FiUsers,
 } from 'react-icons/fi';
 import {
-  FaRegCommentDots,
-  FaGlobe,
-  FaDesktop,
-  FaTabletAlt,
-  FaMobileAlt,
-} from 'react-icons/fa';
+  AnalyticsActivity,
+  AnalyticsData,
+  AnalyticsStatusItem,
+  analyticsAdminApi,
+} from '@/services/analyticsService';
 
-// Mock data for demonstration
-const mockData = {
-  overview: {
-    totalViews: 24689,
-    viewsChange: 12.8,
-    totalReaders: 8432,
-    readersChange: 8.3,
-    totalLikes: 1245,
-    likesChange: 15.7,
-    totalComments: 683,
-    commentsChange: -3.2,
-  },
-  postsPerformance: [
-    {
-      id: 1,
-      title: 'Getting Started with React Hooks',
-      views: 3245,
-      likes: 187,
-      comments: 42,
-      engagement: 78,
-    },
-    {
-      id: 2,
-      title: 'Building Responsive Layouts with Tailwind CSS',
-      views: 2876,
-      likes: 156,
-      comments: 38,
-      engagement: 72,
-    },
-    {
-      id: 3,
-      title: 'Understanding TypeScript Generics',
-      views: 2154,
-      likes: 132,
-      comments: 29,
-      engagement: 65,
-    },
-    {
-      id: 4,
-      title: 'Next.js 13 Features Explained',
-      views: 1987,
-      likes: 124,
-      comments: 31,
-      engagement: 63,
-    },
-    {
-      id: 5,
-      title: 'Modern JavaScript Techniques',
-      views: 1765,
-      likes: 98,
-      comments: 24,
-      engagement: 58,
-    },
-  ],
-  viewsByDevice: [
-    { device: 'Mobile', percentage: 58, icon: <FaMobileAlt /> },
-    { device: 'Desktop', percentage: 32, icon: <FaDesktop /> },
-    { device: 'Tablet', percentage: 10, icon: <FaTabletAlt /> },
-  ],
-  topCountries: [
-    { country: 'United States', views: 8765, percentage: 35.5 },
-    { country: 'India', views: 4321, percentage: 17.5 },
-    { country: 'United Kingdom', views: 2876, percentage: 11.6 },
-    { country: 'Germany', views: 1987, percentage: 8.0 },
-    { country: 'Canada', views: 1654, percentage: 6.7 },
-  ],
-  viewsOverTime: [
-    { date: 'Jan', views: 1200 },
-    { date: 'Feb', views: 1900 },
-    { date: 'Mar', views: 1600 },
-    { date: 'Apr', views: 2200 },
-    { date: 'May', views: 2500 },
-    { date: 'Jun', views: 2300 },
-    { date: 'Jul', views: 2800 },
-    { date: 'Aug', views: 3100 },
-    { date: 'Sep', views: 3400 },
-    { date: 'Oct', views: 3200 },
-    { date: 'Nov', views: 3700 },
-    { date: 'Dec', views: 4100 },
-  ],
-  recentActivity: [
-    {
-      type: 'comment',
-      user: 'Sarah Johnson',
-      content: 'Great article! This helped me understand hooks better.',
-      post: 'Getting Started with React Hooks',
-      time: '2 hours ago',
-    },
-    {
-      type: 'like',
-      user: 'Michael Chen',
-      content: 'liked your post',
-      post: 'Next.js 13 Features Explained',
-      time: '4 hours ago',
-    },
-    {
-      type: 'view',
-      user: 'Anonymous',
-      content: 'viewed your post',
-      post: 'Building Responsive Layouts with Tailwind CSS',
-      time: '5 hours ago',
-    },
-    {
-      type: 'comment',
-      user: 'Emily Rodriguez',
-      content: "I've been using this approach in my projects. Works great!",
-      post: 'Modern JavaScript Techniques',
-      time: '1 day ago',
-    },
-    {
-      type: 'like',
-      user: 'David Kim',
-      content: 'liked your post',
-      post: 'Understanding TypeScript Generics',
-      time: '1 day ago',
-    },
-  ],
-};
-
-// Time period options
 const timePeriods = [
   { value: '7days', label: 'Last 7 days' },
   { value: '30days', label: 'Last 30 days' },
@@ -148,525 +30,416 @@ const timePeriods = [
   { value: 'all', label: 'All time' },
 ];
 
+const formatNumber = (value: number) =>
+  new Intl.NumberFormat('en-IN').format(value);
+
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: string } } })
+      .response;
+    if (response?.data?.message) return response.data.message;
+  }
+
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+};
+
+function ChangeText({ value }: { value: number | null }) {
+  if (value === null) {
+    return <span className='text-gray-400'>All-time total</span>;
+  }
+
+  const isPositive = value >= 0;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 ${
+        isPositive ? 'text-emerald-600' : 'text-red-600'
+      }`}
+    >
+      {isPositive ? <FiArrowUp /> : <FiArrowDown />}
+      {Math.abs(value)}% vs previous period
+    </span>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+  change,
+  icon,
+  accentClass,
+}: {
+  title: string;
+  value: number;
+  change: number | null;
+  icon: ReactNode;
+  accentClass: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'
+    >
+      <div className='flex items-start justify-between gap-4'>
+        <div className='min-w-0'>
+          <p className='text-sm font-medium text-gray-500'>{title}</p>
+          <p className='mt-2 text-2xl font-bold text-gray-900'>
+            {formatNumber(value)}
+          </p>
+        </div>
+        <div
+          className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg ${accentClass}`}
+        >
+          {icon}
+        </div>
+      </div>
+      <p className='mt-4 text-xs font-medium'>
+        <ChangeText value={change} />
+      </p>
+    </motion.div>
+  );
+}
+
+function StatusBreakdown({
+  title,
+  items,
+}: {
+  title: string;
+  items: AnalyticsStatusItem[];
+}) {
+  return (
+    <div className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'>
+      <h2 className='text-base font-semibold text-gray-900'>{title}</h2>
+      <div className='mt-5 space-y-4'>
+        {items.map((item) => (
+          <div key={item.label}>
+            <div className='mb-1.5 flex items-center justify-between text-sm'>
+              <span className='font-medium text-gray-700'>{item.label}</span>
+              <span className='text-gray-500'>
+                {formatNumber(item.count)} ({item.percentage}%)
+              </span>
+            </div>
+            <div className='h-2 rounded-full bg-gray-100'>
+              <div
+                className='h-2 rounded-full bg-indigo-600'
+                style={{ width: `${item.percentage}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const activityConfig: Record<
+  AnalyticsActivity['type'],
+  { icon: ReactNode; className: string }
+> = {
+  blog: {
+    icon: <FiFileText />,
+    className: 'bg-blue-50 text-blue-600',
+  },
+  message: {
+    icon: <FiMessageSquare />,
+    className: 'bg-amber-50 text-amber-600',
+  },
+  application: {
+    icon: <FiUsers />,
+    className: 'bg-emerald-50 text-emerald-600',
+  },
+};
+
 export default function AnalyticsPage() {
-  const [isLoading, setIsLoading] = useState(true);
   const [timePeriod, setTimePeriod] = useState('30days');
-  const [data, setData] = useState(mockData);
+  const [data, setData] = useState<AnalyticsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Simulate data loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const loadAnalytics = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const result = await analyticsAdminApi.getAnalytics(timePeriod);
+      setData(result.data);
+    } catch (loadError) {
+      setError(
+        getErrorMessage(loadError, 'Analytics data could not be loaded.')
+      );
+    } finally {
       setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Simulate data refresh when time period changes
-  const refreshData = useCallback(() => {
-    if (!isLoading) {
-      setIsLoading(true);
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 800);
-
-      return () => clearTimeout(timer);
     }
-  }, [isLoading]);
+  }, [timePeriod]);
 
   useEffect(() => {
-    refreshData();
-  }, [timePeriod, refreshData]);
+    loadAnalytics();
+  }, [loadAnalytics]);
 
-  // Function to format numbers with commas
-  const formatNumber = (num: number) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
+  const maxActivity = useMemo(() => {
+    if (!data?.trend.length) return 1;
+    return Math.max(...data.trend.map((item) => item.totalActivity), 1);
+  }, [data]);
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <div className='w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        {/* Header */}
-        <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4'>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className='text-2xl sm:text-3xl font-bold text-gray-800'>
-              Analytics Dashboard
-            </h1>
-            <p className='text-gray-600 mt-1'>
-              Track your blog performance and audience engagement
-            </p>
-          </motion.div>
-
-          <div className='flex flex-col sm:flex-row gap-3'>
-            <div className='relative'>
-              <select
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value)}
-                className='appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-4 pr-10 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
-              >
-                {timePeriods.map((period) => (
-                  <option key={period.value} value={period.value}>
-                    {period.label}
-                  </option>
-                ))}
-              </select>
-              <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                <FiCalendar className='h-4 w-4' />
-              </div>
-            </div>
-
-            <button
-              onClick={refreshData}
-              disabled={isLoading}
-              className='flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50'
-            >
-              <FiRefreshCw
-                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-              />
-              <span>Refresh</span>
-            </button>
-          </div>
+    <div className='space-y-6'>
+      <div className='flex flex-col justify-between gap-4 lg:flex-row lg:items-end'>
+        <div>
+          <h2 className='text-2xl font-bold text-gray-900'>Analytics Dashboard</h2>
+          <p className='mt-1 text-sm text-gray-500'>
+            Real data from blogs, contact messages, jobs, and applications.
+          </p>
         </div>
 
-        {isLoading ? (
-          <div className='flex items-center justify-center h-96'>
-            <div className='flex flex-col items-center'>
-              <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500'></div>
-              <p className='mt-4 text-gray-600'>Loading analytics data...</p>
-            </div>
+        <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
+          <select
+            value={timePeriod}
+            onChange={(event) => setTimePeriod(event.target.value)}
+            className='rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100'
+          >
+            {timePeriods.map((period) => (
+              <option key={period.value} value={period.value}>
+                {period.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type='button'
+            onClick={loadAnalytics}
+            disabled={isLoading}
+            className='inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50'
+          >
+            <FiRefreshCw className={isLoading ? 'animate-spin' : ''} />
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700'>
+          {error}
+        </div>
+      )}
+
+      {isLoading && !data ? (
+        <div className='flex min-h-[420px] items-center justify-center rounded-lg border border-gray-200 bg-white'>
+          <div className='text-center'>
+            <div className='mx-auto h-10 w-10 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent' />
+            <p className='mt-4 text-sm text-gray-500'>Loading real analytics data...</p>
           </div>
-        ) : (
-          <>
-            {/* Overview Cards */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-              >
-                <div className='flex justify-between'>
-                  <div>
-                    <p className='text-sm font-medium text-gray-500'>
-                      Total Views
-                    </p>
-                    <p className='text-2xl font-bold text-gray-800 mt-1'>
-                      {formatNumber(data.overview.totalViews)}
-                    </p>
-                  </div>
-                  <div className='h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600'>
-                    <FiEye size={24} />
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center mt-4 text-sm ${
-                    data.overview.viewsChange >= 0
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {data.overview.viewsChange >= 0 ? (
-                    <FiArrowUp className='mr-1' />
-                  ) : (
-                    <FiArrowDown className='mr-1' />
-                  )}
-                  <span>
-                    {Math.abs(data.overview.viewsChange)}% from previous period
-                  </span>
-                </div>
-              </motion.div>
+        </div>
+      ) : data ? (
+        <>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4'>
+            <MetricCard
+              title='Total Blog Views'
+              value={data.overview.totalViews}
+              change={data.overview.viewsChange}
+              icon={<FiEye size={22} />}
+              accentClass='bg-blue-50 text-blue-600'
+            />
+            <MetricCard
+              title='Blog Posts'
+              value={data.overview.totalBlogs}
+              change={data.overview.blogsChange}
+              icon={<FiEdit3 size={22} />}
+              accentClass='bg-violet-50 text-violet-600'
+            />
+            <MetricCard
+              title='Client Messages'
+              value={data.overview.totalMessages}
+              change={data.overview.messagesChange}
+              icon={<FiInbox size={22} />}
+              accentClass='bg-amber-50 text-amber-600'
+            />
+            <MetricCard
+              title='Job Applications'
+              value={data.overview.totalApplications}
+              change={data.overview.applicationsChange}
+              icon={<FiBriefcase size={22} />}
+              accentClass='bg-emerald-50 text-emerald-600'
+            />
+          </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-                className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-              >
-                <div className='flex justify-between'>
+          <div className='grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]'>
+            <div className='space-y-6'>
+              <div className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'>
+                <div className='flex flex-col justify-between gap-2 sm:flex-row sm:items-center'>
                   <div>
-                    <p className='text-sm font-medium text-gray-500'>
-                      Total Readers
-                    </p>
-                    <p className='text-2xl font-bold text-gray-800 mt-1'>
-                      {formatNumber(data.overview.totalReaders)}
-                    </p>
-                  </div>
-                  <div className='h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600'>
-                    <FiUsers size={24} />
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center mt-4 text-sm ${
-                    data.overview.readersChange >= 0
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {data.overview.readersChange >= 0 ? (
-                    <FiArrowUp className='mr-1' />
-                  ) : (
-                    <FiArrowDown className='mr-1' />
-                  )}
-                  <span>
-                    {Math.abs(data.overview.readersChange)}% from previous
-                    period
-                  </span>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-                className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-              >
-                <div className='flex justify-between'>
-                  <div>
-                    <p className='text-sm font-medium text-gray-500'>
-                      Total Likes
-                    </p>
-                    <p className='text-2xl font-bold text-gray-800 mt-1'>
-                      {formatNumber(data.overview.totalLikes)}
-                    </p>
-                  </div>
-                  <div className='h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600'>
-                    <FiThumbsUp size={24} />
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center mt-4 text-sm ${
-                    data.overview.likesChange >= 0
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {data.overview.likesChange >= 0 ? (
-                    <FiArrowUp className='mr-1' />
-                  ) : (
-                    <FiArrowDown className='mr-1' />
-                  )}
-                  <span>
-                    {Math.abs(data.overview.likesChange)}% from previous period
-                  </span>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
-                className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-              >
-                <div className='flex justify-between'>
-                  <div>
-                    <p className='text-sm font-medium text-gray-500'>
-                      Total Comments
-                    </p>
-                    <p className='text-2xl font-bold text-gray-800 mt-1'>
-                      {formatNumber(data.overview.totalComments)}
-                    </p>
-                  </div>
-                  <div className='h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600'>
-                    <FaRegCommentDots size={24} />
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center mt-4 text-sm ${
-                    data.overview.commentsChange >= 0
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {data.overview.commentsChange >= 0 ? (
-                    <FiArrowUp className='mr-1' />
-                  ) : (
-                    <FiArrowDown className='mr-1' />
-                  )}
-                  <span>
-                    {Math.abs(data.overview.commentsChange)}% from previous
-                    period
-                  </span>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Main Content Grid */}
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-              {/* Left Column */}
-              <div className='lg:col-span-2 space-y-6'>
-                {/* Views Over Time Chart */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-                >
-                  <div className='flex justify-between items-center mb-6'>
-                    <h2 className='text-lg font-semibold text-gray-800'>
-                      Views Over Time
+                    <h2 className='text-base font-semibold text-gray-900'>
+                      Activity Trend
                     </h2>
-                    <button className='text-gray-500 hover:text-gray-700'>
-                      <FiInfo size={18} />
-                    </button>
+                    <p className='mt-1 text-xs text-gray-500'>
+                      Blogs created, messages received, and applications submitted for {data.periodLabel.toLowerCase()}.
+                    </p>
                   </div>
+                  <span className='text-xs text-gray-400'>
+                    Updated {formatDate(data.generatedAt)}
+                  </span>
+                </div>
 
-                  <div className='h-64 relative'>
-                    {/* Simplified chart visualization */}
-                    <div className='absolute bottom-0 left-0 right-0 h-56 flex items-end'>
-                      {data.viewsOverTime.map((month, index) => (
+                <div className='mt-6 flex h-64 items-end gap-2 overflow-x-auto pb-2'>
+                  {data.trend.map((item) => (
+                    <div
+                      key={item.key}
+                      className='flex min-w-10 flex-1 flex-col items-center justify-end gap-2'
+                      title={`${item.label}: ${item.totalActivity} activity`}
+                    >
+                      <div className='flex h-48 w-full items-end justify-center'>
                         <div
-                          key={month.date}
-                          className='flex-1 flex flex-col items-center'
-                        >
-                          <div
-                            className='w-full max-w-[30px] bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-sm mx-1'
-                            style={{
-                              height: `${(month.views / 4100) * 100}%`,
-                              opacity:
-                                index === data.viewsOverTime.length - 1
-                                  ? 1
-                                  : 0.7 + index * 0.02,
-                            }}
-                          ></div>
-                          <span className='text-xs text-gray-500 mt-2'>
-                            {month.date}
-                          </span>
-                        </div>
-                      ))}
+                          className='w-full max-w-8 rounded-t bg-indigo-600 transition-all'
+                          style={{
+                            height: `${Math.max(6, (item.totalActivity / maxActivity) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className='max-w-16 truncate text-[11px] text-gray-500'>
+                        {item.label}
+                      </span>
                     </div>
-                  </div>
-                </motion.div>
+                  ))}
+                </div>
 
-                {/* Top Performing Posts */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 }}
-                  className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-                >
-                  <div className='flex justify-between items-center mb-6'>
-                    <h2 className='text-lg font-semibold text-gray-800'>
-                      Top Performing Posts
-                    </h2>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-sm text-gray-500'>Sort by:</span>
-                      <select className='text-sm border-gray-300 rounded-md'>
-                        <option>Views</option>
-                        <option>Engagement</option>
-                        <option>Likes</option>
-                        <option>Comments</option>
-                      </select>
-                    </div>
-                  </div>
+                <div className='mt-4 grid gap-3 border-t border-gray-100 pt-4 text-xs text-gray-500 sm:grid-cols-4'>
+                  <span>Blogs: {formatNumber(data.trend.reduce((sum, item) => sum + item.blogs, 0))}</span>
+                  <span>Messages: {formatNumber(data.trend.reduce((sum, item) => sum + item.messages, 0))}</span>
+                  <span>Applications: {formatNumber(data.trend.reduce((sum, item) => sum + item.applications, 0))}</span>
+                  <span>Post views: {formatNumber(data.trend.reduce((sum, item) => sum + item.views, 0))}</span>
+                </div>
+              </div>
 
-                  <div className='overflow-x-auto'>
-                    <table className='min-w-full'>
-                      <thead>
-                        <tr className='border-b border-gray-200'>
-                          <th className='py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                            Post Title
-                          </th>
-                          <th className='py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                            Views
-                          </th>
-                          <th className='py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                            Likes
-                          </th>
-                          <th className='py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                            Comments
-                          </th>
-                          <th className='py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                            Engagement
-                          </th>
+              <div className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'>
+                <div className='mb-5 flex items-center justify-between gap-3'>
+                  <h2 className='text-base font-semibold text-gray-900'>Top Blog Posts</h2>
+                  <span className='text-xs text-gray-500'>Sorted by real view count</span>
+                </div>
+
+                <div className='overflow-x-auto'>
+                  <table className='min-w-full text-sm'>
+                    <thead>
+                      <tr className='border-b border-gray-100 text-left text-xs uppercase text-gray-400'>
+                        <th className='py-3 pr-4 font-semibold'>Post</th>
+                        <th className='py-3 px-4 font-semibold'>Category</th>
+                        <th className='py-3 px-4 font-semibold'>Status</th>
+                        <th className='py-3 px-4 text-right font-semibold'>Views</th>
+                        <th className='py-3 pl-4 text-right font-semibold'>Read</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.topPosts.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className='py-8 text-center text-gray-500'>
+                            No blog posts found.
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {data.postsPerformance.map((post, index) => (
-                          <tr
-                            key={post.id}
-                            className={
-                              index !== data.postsPerformance.length - 1
-                                ? 'border-b border-gray-100'
-                                : ''
-                            }
-                          >
-                            <td className='py-4 text-sm font-medium text-gray-900 truncate max-w-[200px]'>
-                              {post.title}
+                      ) : (
+                        data.topPosts.map((post) => (
+                          <tr key={post.id} className='border-b border-gray-50 last:border-0'>
+                            <td className='max-w-[280px] py-4 pr-4'>
+                              <p className='truncate font-semibold text-gray-900'>{post.title}</p>
+                              <p className='mt-1 text-xs text-gray-400'>{formatDate(post.createdAt)}</p>
                             </td>
-                            <td className='py-4 text-sm text-gray-500 text-right'>
+                            <td className='px-4 py-4 text-gray-600'>{post.category}</td>
+                            <td className='px-4 py-4'>
+                              <span
+                                className={`rounded-full px-2 py-1 text-xs font-semibold capitalize ${
+                                  post.status === 'published'
+                                    ? 'bg-green-50 text-green-700'
+                                    : 'bg-gray-100 text-gray-600'
+                                }`}
+                              >
+                                {post.status}
+                              </span>
+                            </td>
+                            <td className='px-4 py-4 text-right font-semibold text-gray-900'>
                               {formatNumber(post.views)}
                             </td>
-                            <td className='py-4 text-sm text-gray-500 text-right'>
-                              {formatNumber(post.likes)}
-                            </td>
-                            <td className='py-4 text-sm text-gray-500 text-right'>
-                              {formatNumber(post.comments)}
-                            </td>
-                            <td className='py-4 text-right'>
-                              <div className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-                                {post.engagement}%
-                              </div>
+                            <td className='py-4 pl-4 text-right text-gray-500'>
+                              {post.readTime} min
                             </td>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className='mt-4 text-center'>
-                    <button className='text-indigo-600 hover:text-indigo-800 text-sm font-medium'>
-                      View All Posts
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Right Column */}
-              <div className='space-y-6'>
-                {/* Device Breakdown */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 }}
-                  className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-                >
-                  <h2 className='text-lg font-semibold text-gray-800 mb-6'>
-                    Device Breakdown
-                  </h2>
-
-                  <div className='space-y-4'>
-                    {data.viewsByDevice.map((device) => (
-                      <div key={device.device} className='flex items-center'>
-                        <div className='w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-4'>
-                          {device.icon}
-                        </div>
-                        <div className='flex-1'>
-                          <div className='flex justify-between mb-1'>
-                            <span className='text-sm font-medium text-gray-700'>
-                              {device.device}
-                            </span>
-                            <span className='text-sm font-medium text-gray-700'>
-                              {device.percentage}%
-                            </span>
-                          </div>
-                          <div className='w-full bg-gray-200 rounded-full h-2'>
-                            <div
-                              className='bg-indigo-600 h-2 rounded-full'
-                              style={{ width: `${device.percentage}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Geographic Distribution */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.5 }}
-                  className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-                >
-                  <div className='flex justify-between items-center mb-6'>
-                    <h2 className='text-lg font-semibold text-gray-800'>
-                      Geographic Distribution
-                    </h2>
-                    <div className='text-indigo-600 bg-indigo-100 p-2 rounded-full'>
-                      <FaGlobe size={16} />
-                    </div>
-                  </div>
-
-                  <div className='space-y-4'>
-                    {data.topCountries.map((country, index) => (
-                      <div
-                        key={country.country}
-                        className='flex items-center justify-between'
-                      >
-                        <div className='flex items-center'>
-                          <div className='w-6 h-6 flex items-center justify-center font-medium text-xs text-gray-500 mr-3'>
-                            {index + 1}
-                          </div>
-                          <span className='text-sm font-medium text-gray-800'>
-                            {country.country}
-                          </span>
-                        </div>
-                        <div className='text-sm text-gray-500'>
-                          {formatNumber(country.views)} views
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className='mt-6 pt-4 border-t border-gray-100'>
-                    <button className='text-indigo-600 hover:text-indigo-800 text-sm font-medium'>
-                      View Full Report
-                    </button>
-                  </div>
-                </motion.div>
-
-                {/* Recent Activity */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.6 }}
-                  className='bg-white rounded-xl shadow-sm p-6 border border-gray-200'
-                >
-                  <h2 className='text-lg font-semibold text-gray-800 mb-6'>
-                    Recent Activity
-                  </h2>
-
-                  <div className='space-y-4'>
-                    {data.recentActivity.map((activity, index) => (
-                      <div key={index} className='flex'>
-                        <div className='mr-4'>
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              activity.type === 'comment'
-                                ? 'bg-orange-100 text-orange-600'
-                                : activity.type === 'like'
-                                ? 'bg-green-100 text-green-600'
-                                : 'bg-blue-100 text-blue-600'
-                            }`}
-                          >
-                            {activity.type === 'comment' ? (
-                              <FaRegCommentDots size={14} />
-                            ) : activity.type === 'like' ? (
-                              <FiThumbsUp size={14} />
-                            ) : (
-                              <FiEye size={14} />
-                            )}
-                          </div>
-                        </div>
-                        <div>
-                          <p className='text-sm text-gray-800'>
-                            <span className='font-medium'>{activity.user}</span>{' '}
-                            {activity.content}
-                          </p>
-                          <p className='text-xs text-gray-500 mt-1'>
-                            <span className='font-medium'>{activity.post}</span>{' '}
-                            • {activity.time}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className='mt-6 pt-4 border-t border-gray-100'>
-                    <button className='text-indigo-600 hover:text-indigo-800 text-sm font-medium'>
-                      View All Activity
-                    </button>
-                  </div>
-                </motion.div>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </>
-        )}
-      </div>
+
+            <div className='space-y-6'>
+              <StatusBreakdown title='Blog Status' items={data.blogStatus} />
+              <StatusBreakdown title='Message Status' items={data.messageStatus} />
+
+              <div className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'>
+                <h2 className='text-base font-semibold text-gray-900'>Applications by Department</h2>
+                <div className='mt-5 space-y-4'>
+                  {data.applicationsByDepartment.length === 0 ? (
+                    <p className='text-sm text-gray-500'>No applications submitted yet.</p>
+                  ) : (
+                    data.applicationsByDepartment.map((item) => (
+                      <div key={item.department}>
+                        <div className='mb-1.5 flex items-center justify-between text-sm'>
+                          <span className='font-medium text-gray-700'>{item.department}</span>
+                          <span className='text-gray-500'>{formatNumber(item.applications)}</span>
+                        </div>
+                        <div className='h-2 rounded-full bg-gray-100'>
+                          <div
+                            className='h-2 rounded-full bg-emerald-600'
+                            style={{ width: `${item.percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className='rounded-lg border border-gray-200 bg-white p-5 shadow-sm'>
+                <div className='mb-5 flex items-center gap-2'>
+                  <FiActivity className='text-indigo-600' />
+                  <h2 className='text-base font-semibold text-gray-900'>Recent Activity</h2>
+                </div>
+                <div className='space-y-4'>
+                  {data.recentActivity.length === 0 ? (
+                    <p className='text-sm text-gray-500'>No recent activity yet.</p>
+                  ) : (
+                    data.recentActivity.map((activity) => {
+                      const config = activityConfig[activity.type];
+                      return (
+                        <div key={`${activity.type}-${activity.id}`} className='flex gap-3'>
+                          <div
+                            className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${config.className}`}
+                          >
+                            {config.icon}
+                          </div>
+                          <div className='min-w-0'>
+                            <p className='truncate text-sm font-semibold text-gray-900'>
+                              {activity.title}
+                            </p>
+                            <p className='mt-0.5 line-clamp-2 text-xs text-gray-500'>
+                              {activity.subtitle}
+                            </p>
+                            <p className='mt-1 text-[11px] text-gray-400'>
+                              {formatDate(activity.createdAt)}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

@@ -190,15 +190,12 @@ const createResumeDownloadUrl = ({ publicId, format }) => {
         throw new Error('Cloudinary configuration is required for resume downloads');
     }
 
-    const normalizedFormat = String(format || '').replace(/^\./, '').toLowerCase();
-    const suffix = normalizedFormat ? '.' + normalizedFormat : '';
-    const downloadPublicId =
-        suffix && publicId.toLowerCase().endsWith(suffix)
-            ? publicId.slice(0, -suffix.length)
-            : publicId;
+    const normalizedFormat = String(format || path.extname(publicId) || '')
+        .replace(/^\./, '')
+        .toLowerCase();
 
     return cloudinary.utils.private_download_url(
-        downloadPublicId,
+        publicId,
         normalizedFormat,
         {
             resource_type: 'raw',

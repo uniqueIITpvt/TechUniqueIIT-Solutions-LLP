@@ -8,6 +8,7 @@ import {
   FaExclamationCircle,
   FaPaperPlane,
   FaPhone,
+  FaTrash,
   FaUser,
 } from 'react-icons/fa';
 import {
@@ -53,6 +54,7 @@ export default function MessagesPage() {
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [reply, setReply] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const loadMessages = useCallback(async () => {
@@ -137,6 +139,51 @@ export default function MessagesPage() {
     }
   };
 
+  const handleDelete = async (message: ContactMessage) => {
+    const fullName = `${message.firstName} ${message.lastName}`.trim();
+    const confirmed = window.confirm(
+      `Delete ${fullName || message.email}'s message permanently? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(message._id);
+    setError('');
+
+    try {
+      await contactAdminApi.deleteMessage(message._id);
+      toast.success('Message deleted.');
+
+      const remainingMessages = messages.filter((item) => item._id !== message._id);
+      if (selectedId === message._id) {
+        const nextMessage = remainingMessages[0] || null;
+        setSelectedId(nextMessage?._id || null);
+        setSelectedMessage(nextMessage);
+      }
+
+      if (messages.length === 1 && page > 1) {
+        setPage((current) => current - 1);
+      } else {
+        setMessages(remainingMessages);
+        setPagination((current) => {
+          const total = Math.max(0, current.total - 1);
+          return {
+            ...current,
+            total,
+            pages: Math.max(1, Math.ceil(total / current.limit)),
+          };
+        });
+      }
+    } catch (deleteError) {
+      const messageText = getErrorMessage(
+        deleteError,
+        'Message could not be deleted.'
+      );
+      toast.error(messageText);
+      setError(messageText);
+    } finally {
+      setDeletingId(null);
+    }
+  };
   return (
     <div className='space-y-6'>
       <div>
@@ -270,15 +317,26 @@ export default function MessagesPage() {
                       Received {formatDate(selectedMessage.createdAt)}
                     </p>
                   </div>
-                  <span
-                    className={`w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-                      selectedMessage.status === 'replied'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-amber-100 text-amber-700'
-                    }`}
-                  >
-                    {selectedMessage.status}
-                  </span>
+                  <div className='flex flex-wrap items-center gap-2'>
+                    <button
+                      type='button'
+                      onClick={() => handleDelete(selectedMessage)}
+                      disabled={deletingId === selectedMessage._id}
+                      className='inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50'
+                    >
+                      <FaTrash />
+                      {deletingId === selectedMessage._id ? 'Deleting...' : 'Delete'}
+                    </button>
+                    <span
+                      className={`w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                        selectedMessage.status === 'replied'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-amber-100 text-amber-700'
+                      }`}
+                    >
+                      {selectedMessage.status}
+                    </span>
+                  </div>
                 </div>
 
                 <div className='mt-5 grid gap-3 text-sm sm:grid-cols-2'>

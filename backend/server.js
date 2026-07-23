@@ -88,6 +88,7 @@ const mountAllRoutes = () => {
   app.use('/api/upload', require('./routes/uploadRoutes'));
   app.use('/api/blogs', require('./routes/blogRoutes'));
   app.use('/api/jobs', require('./routes/jobRoutes'));
+  app.use('/api/analytics', require('./routes/analyticsRoutes'));
 };
 
 const initializeApp = async () => {
@@ -164,6 +165,7 @@ const startServer = async () => {
       console.log('Authentication API available at: /api/auth');
       console.log('Blogs API available at: /api/blogs');
       console.log('Jobs API available at: /api/jobs');
+      console.log('Analytics API available at: /api/analytics');
     }
   });
 
