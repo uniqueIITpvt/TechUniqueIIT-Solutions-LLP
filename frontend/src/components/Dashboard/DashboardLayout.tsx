@@ -10,7 +10,6 @@ import {
   FaUsers,
   FaSignOutAlt,
   FaUser,
-  FaBook,
   FaEnvelope,
   FaBriefcase,
 } from 'react-icons/fa';
@@ -33,11 +32,6 @@ const menuItems = [
     title: 'Blogs',
     path: '/dashboard/my-blogs',
     icon: <FaBlog size={20} />,
-  },
-  {
-    title: 'Case Studies',
-    path: '/dashboard/case-studies',
-    icon: <FaBook size={20} />,
   },
   {
     title: 'Jobs',
@@ -282,3 +276,4 @@ export default function DashboardLayout({
     </div>
   );
 }
+

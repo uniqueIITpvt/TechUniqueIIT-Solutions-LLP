@@ -8,8 +8,6 @@ import {
   FaThumbsUp,
   FaUsers,
   FaChartLine,
-  FaBookOpen,
-  FaProjectDiagram,
   FaRegNewspaper,
   FaRegCommentDots,
   FaRegClock,
@@ -23,8 +21,6 @@ import {
   MdDrafts,
   MdTrendingUp,
   MdAccessTime,
-  MdWorkOutline,
-  MdOutlineBusinessCenter,
 } from 'react-icons/md';
 import {
   FiTrendingUp,
@@ -62,28 +58,6 @@ interface RecentBlog {
   createdAt: string;
 }
 
-interface Stat {
-  label: string;
-  value: string;
-}
-
-interface CaseStudy {
-  _id: string;
-  title: string;
-  slug: string;
-  category: string;
-  description: string;
-  image: string;
-  client: string;
-  duration: string;
-  year: string;
-  stats: Stat[];
-  tags: string[];
-  featured: boolean;
-  status: 'published' | 'draft';
-  views: number;
-  createdAt: string;
-}
 
 // Define interfaces for analytics data
 interface AnalyticsOverview {
@@ -240,7 +214,6 @@ export default function DashboardPage() {
     totalLikes: 0,
   });
   const [recentBlogs, setRecentBlogs] = useState<RecentBlog[]>([]);
-  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
@@ -276,18 +249,6 @@ export default function DashboardPage() {
         }
         return true;
       },
-    },
-    {
-      name: 'New Case Study',
-      icon: MdWorkOutline,
-      color: 'bg-amber-600',
-      href: '/dashboard/case-studies/create',
-    },
-    {
-      name: 'Manage Case Studies',
-      icon: FaProjectDiagram,
-      color: 'bg-green-600',
-      href: '/dashboard/case-studies',
     },
     {
       name: 'View Analytics',
@@ -346,8 +307,6 @@ export default function DashboardPage() {
           createdAt: blog.createdAt,
         }))
       );
-
-      setCaseStudies([]);
     } catch (error) {
       setError('Failed to load dashboard data');
       console.error('Error fetching dashboard data:', error);
@@ -438,15 +397,6 @@ export default function DashboardPage() {
     show: { opacity: 1, y: 0 },
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
 
   // Function to format numbers with commas
   const formatNumber = (num: number) => {
@@ -500,7 +450,7 @@ export default function DashboardPage() {
 
         {/* Dashboard Tabs */}
         <div className='mt-6 flex space-x-2 overflow-x-auto pb-1'>
-          {['overview', 'case-studies', 'analytics', 'content'].map((tab) => (
+          {['overview', 'analytics', 'content'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -651,295 +601,8 @@ export default function DashboardPage() {
                   </div>
                 )}
               </motion.div>
-
-              {/* Featured Case Studies Preview */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className='bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden'
-              >
-                <div className='p-6 border-b border-gray-200 bg-gray-50'>
-                  <div className='flex justify-between items-center'>
-                    <div>
-                      <h2 className='text-lg font-bold text-gray-900'>
-                        Featured Case Studies
-                      </h2>
-                      <p className='mt-1 text-sm text-gray-500'>
-                        Showcase of your best work and projects
-                      </p>
-                    </div>
-                    <Link
-                      href='/dashboard/case-studies'
-                      className='px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors shadow-sm'
-                    >
-                      View All
-                    </Link>
-                  </div>
-                </div>
-
-                <div className='p-6 grid grid-cols-1 md:grid-cols-2 gap-6'>
-                  {caseStudies.length === 0 ? (
-                    <div className='p-8 text-center text-gray-500 col-span-2'>
-                      <MdWorkOutline className='mx-auto h-12 w-12 text-gray-400 mb-3' />
-                      <p>
-                        No case studies found. Create your first case study!
-                      </p>
-                      <Link
-                        href='/dashboard/case-studies/create'
-                        className='mt-4 inline-block px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors'
-                      >
-                        Create Case Study
-                      </Link>
-                    </div>
-                  ) : (
-                    caseStudies
-                      .filter((study) => study.featured)
-                      .slice(0, 2)
-                      .map((study) => (
-                        <motion.div
-                          key={study._id}
-                          whileHover={{ y: -5 }}
-                          className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden'
-                        >
-                          <div
-                            className='h-48 bg-gray-200 relative bg-cover bg-center'
-                            style={{
-                              backgroundImage: study.image
-                                ? `url(${study.image})`
-                                : 'none',
-                            }}
-                          >
-                            <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end'>
-                              <div className='p-4 text-white'>
-                                <h3 className='font-bold text-lg'>
-                                  {study.title}
-                                </h3>
-                                <p className='text-white/80 text-sm'>
-                                  {study.client}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className='p-4'>
-                            <div className='flex justify-between items-center'>
-                              <span className='bg-indigo-100 text-indigo-800 text-xs px-2.5 py-0.5 rounded-full'>
-                                {study.category}
-                              </span>
-                              <div className='flex items-center text-sm text-gray-500'>
-                                <FaEye className='mr-1.5 h-3 w-3' />
-                                {study.views || 0}
-                              </div>
-                            </div>
-                            <div className='mt-3 flex justify-between'>
-                              <div className='text-sm text-gray-500'>
-                                <MdAccessTime className='inline mr-1 h-3 w-3' />
-                                {formatDate(study.createdAt)}
-                              </div>
-                              <Link
-                                href={`/dashboard/case-studies/edit/${study._id}`}
-                                className='text-indigo-600 text-sm font-medium hover:text-indigo-800'
-                              >
-                                Edit Details
-                              </Link>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))
-                  )}
-                </div>
-              </motion.div>
             </div>
           )}
-
-          {activeTab === 'case-studies' && (
-            <div className='space-y-6'>
-              {/* Case Studies Header */}
-              <div className='bg-white rounded-xl shadow-md p-6 border border-gray-200'>
-                <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                  <div>
-                    <h2 className='text-xl font-bold text-gray-900'>
-                      Case Studies
-                    </h2>
-                    <p className='text-gray-500 mt-1'>
-                      Showcase your portfolio of client work and projects
-                    </p>
-                  </div>
-                  <div className='flex space-x-3'>
-                    <Link
-                      href='/dashboard/case-studies/create'
-                      className='px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors shadow-sm flex items-center'
-                    >
-                      <MdPublish className='mr-1.5' /> New Case Study
-                    </Link>
-                    <Link
-                      href='/dashboard/case-studies'
-                      className='px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition-colors shadow-sm'
-                    >
-                      Manage All
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Case Studies Grid */}
-              {caseStudies.length === 0 ? (
-                <div className='bg-white rounded-xl shadow-md p-12 border border-gray-200 text-center'>
-                  <MdWorkOutline className='mx-auto h-16 w-16 text-gray-400 mb-4' />
-                  <h3 className='text-xl font-semibold text-gray-900 mb-2'>
-                    No Case Studies Found
-                  </h3>
-                  <p className='text-gray-500 mb-6 max-w-md mx-auto'>
-                    You haven't created any case studies yet. Showcase your work
-                    by creating your first case study.
-                  </p>
-                  <Link
-                    href='/dashboard/case-studies/create'
-                    className='px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center'
-                  >
-                    <MdPublish className='mr-2' /> Create Your First Case Study
-                  </Link>
-                </div>
-              ) : (
-                <motion.div
-                  variants={container}
-                  initial='hidden'
-                  animate='show'
-                  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-                >
-                  {caseStudies.slice(0, 6).map((study, index) => (
-                    <motion.div
-                      key={study._id}
-                      variants={item}
-                      whileHover={{
-                        y: -8,
-                        boxShadow:
-                          '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                      }}
-                      className='bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden transition-all duration-300'
-                    >
-                      <div
-                        className='h-48 bg-gray-200 relative bg-cover bg-center'
-                        style={{
-                          backgroundImage: study.image
-                            ? `url(${study.image})`
-                            : 'none',
-                        }}
-                      >
-                        {study.featured && (
-                          <div className='absolute top-2 right-2 bg-amber-500 text-white text-xs px-2 py-1 rounded-full'>
-                            Featured
-                          </div>
-                        )}
-                        <div className='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end'>
-                          <div className='p-5 text-white'>
-                            <h3 className='font-bold text-xl'>{study.title}</h3>
-                            <p className='text-white/90'>{study.client}</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className='p-5'>
-                        <div className='flex justify-between items-center mb-4'>
-                          <span className='bg-indigo-100 text-indigo-800 text-xs px-2.5 py-0.5 rounded-full'>
-                            {study.category}
-                          </span>
-                          <div className='flex items-center text-sm text-gray-500'>
-                            <FaEye className='mr-1.5 h-4 w-4' />
-                            {study.views || 0}
-                          </div>
-                        </div>
-                        <div className='flex items-center text-sm text-gray-500 mb-4'>
-                          <MdAccessTime className='mr-1.5 h-4 w-4' />
-                          {formatDate(study.createdAt)}
-                        </div>
-                        <div className='flex justify-between items-center'>
-                          <Link
-                            href={`/dashboard/case-studies/edit/${study._id}`}
-                            className='text-indigo-600 hover:text-indigo-800 font-medium text-sm'
-                          >
-                            Edit Details
-                          </Link>
-                          <div className='flex space-x-2'>
-                            <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                ${
-                                  study.status === 'published'
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-yellow-100 text-yellow-800'
-                                }`}
-                            >
-                              {study.status === 'published' ? (
-                                <MdPublish className='mr-1' />
-                              ) : (
-                                <MdDrafts className='mr-1' />
-                              )}
-                              {study.status}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-
-              {caseStudies.length > 0 && (
-                <div className='flex justify-center mt-6'>
-                  <Link
-                    href='/dashboard/case-studies'
-                    className='px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center'
-                  >
-                    View All Case Studies ({caseStudies.length})
-                  </Link>
-                </div>
-              )}
-
-              {/* Case Studies Stats */}
-              {caseStudies.length > 0 && (
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
-                  <StatCard
-                    title='Total Case Studies'
-                    value={caseStudies.length}
-                    icon={FaProjectDiagram}
-                    color='bg-indigo-600'
-                    bgColor='bg-indigo-50'
-                    delay={0}
-                  />
-                  <StatCard
-                    title='Published'
-                    value={
-                      caseStudies.filter(
-                        (study) => study.status === 'published'
-                      ).length
-                    }
-                    icon={MdPublish}
-                    color='bg-green-600'
-                    bgColor='bg-green-50'
-                    delay={1}
-                  />
-                  <StatCard
-                    title='Featured'
-                    value={caseStudies.filter((study) => study.featured).length}
-                    icon={FaBookOpen}
-                    color='bg-amber-600'
-                    bgColor='bg-amber-50'
-                    delay={2}
-                  />
-                  <StatCard
-                    title='Categories'
-                    value={
-                      new Set(caseStudies.map((study) => study.category)).size
-                    }
-                    icon={MdOutlineBusinessCenter}
-                    color='bg-emerald-600'
-                    bgColor='bg-emerald-50'
-                    delay={3}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
           {activeTab === 'analytics' && (
             <div className='space-y-6'>
               {/* Analytics Header */}
@@ -1357,6 +1020,7 @@ function AnalyticCard({
     </motion.div>
   );
 }
+
 
 
 
