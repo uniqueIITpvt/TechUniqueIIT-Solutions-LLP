@@ -5,190 +5,100 @@ import Link from 'next/link';
 
 const services = [
   {
-    title: 'Web Development',
+    id: 'web-development',
+    title: 'Custom Web & Software Development',
+    subtitle: 'Scalable, High-Performance Web Applications',
     description:
-      'Custom web applications built with modern technologies and best practices.',
-    path: '/services/web-development',
+      'We design and develop custom web applications from scratch tailored to your exact business workflow. Using modern frameworks across Frontend (React.js, Next.js, Angular), Backend (Node.js, Express, Python, .NET), Database (MongoDB, PostgreSQL, MySQL, SQL, GraphQL), and Cloud (AWS, Azure, Docker, Kubernetes, Terraform), we build fast, secure, and resilient web platforms.',
+    features: [
+      'Frontend Stack: React.js, Next.js, Angular, Tailwind CSS',
+      'Backend Stack: Node.js, Express, Python, .NET',
+      'Database Architecture: MongoDB, PostgreSQL, MySQL, SQL, GraphQL',
+      'Cloud & Infrastructure: AWS, Azure, Docker, Kubernetes, Terraform',
+      'Custom SaaS & Web Application Development'
+    ],
     icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'
-        />
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M14 4h6v6M10 20H4v-6'
-        />
+      <svg className='w-7 h-7 text-indigo-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' />
       </svg>
     ),
-    gradient: 'from-blue-500 to-indigo-500',
+    badge: 'Core Expertise',
+    gradient: 'from-indigo-500 to-blue-600',
   },
   {
-    title: 'Mobile Development',
+    id: 'software-maintenance',
+    title: 'Software Maintenance & Code Management',
+    subtitle: 'Existing Application Takeover, Support & Server Maintenance',
     description:
-      'Native and cross-platform mobile applications for iOS and Android.',
-    path: '/services/mobile-development',
+      'Have an existing software application built by another team? We take full ownership of maintaining, upgrading, and optimizing pre-existing software. From bug fixing, code refactoring, security audits, database backups to 24/7 cloud server uptime management, we ensure your software runs smoothly without interruptions.',
+    features: [
+      'Existing & Legacy Codebase Takeover & Management',
+      'Bug Fixing, Patch Management & Performance Optimization',
+      'Cloud Infrastructure Management (AWS, Azure, Docker, Kubernetes)',
+      'Database Tuning, Security Audits & Regular Data Backups',
+      '24/7 Server Monitoring & Ongoing Technical Support'
+    ],
     icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
+      <svg className='w-7 h-7 text-blue-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
+        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+      </svg>
+    ),
+    badge: 'Application Support',
+    gradient: 'from-blue-600 to-cyan-600',
+  },
+  {
+    id: 'mobile-development',
+    title: 'Mobile App Development',
+    subtitle: 'Cross-Platform iOS & Android Applications',
+    description:
+      'Empower your mobile presence with intuitive, feature-rich mobile applications built for both iOS and Android. We utilize React Native and Flutter for seamless cross-platform performance, native feel, and cost-effective development.',
+    features: [
+      'Cross-Platform iOS & Android App Development',
+      'React Native & Flutter Technology Stack',
+      'Mobile UI/UX Design & User Onboarding',
+      'Real-Time Push Notifications & API Integration',
+      'App Store & Google Play Store Publishing'
+    ],
+    icon: (
+      <svg className='w-7 h-7 text-purple-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
         <rect x='5' y='2' width='14' height='20' rx='2' strokeWidth={1.5} />
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M12 18h.01M8 2h8'
-        />
-        <path d='M9 22h6' strokeLinecap='round' strokeWidth={1.5} />
-        <path
-          d='M7 6h10M7 9h10M7 12h10'
-          strokeLinecap='round'
-          strokeWidth={1.5}
-        />
+        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M12 18h.01' />
       </svg>
     ),
-    gradient: 'from-purple-500 to-pink-500',
+    badge: 'Mobile First',
+    gradient: 'from-purple-500 to-pink-600',
   },
   {
-    title: 'UI/UX Design',
+    id: 'digital-marketing',
+    title: 'Digital Marketing & Social Media Management',
+    subtitle: 'Data-Driven Brand Visibility & Lead Growth',
     description:
-      'User-centered design solutions that create engaging digital experiences.',
-    path: '/services/ui-ux-design',
+      'Scale your brand visibility and attract qualified leads through targeted digital marketing strategies. From YouTube channel growth, Instagram, LinkedIn, and Facebook campaign management to SEO and performance marketing, we build an impactful online brand presence.',
+    features: [
+      'YouTube Channel Management & Video Content Strategy',
+      'Social Media Management (Instagram, LinkedIn, Facebook)',
+      'Search Engine Optimization (SEO & Local Visibility)',
+      'Performance Marketing & Targeted Ad Campaigns',
+      'Brand Identity & Online Reputation Management'
+    ],
     icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4z'
-        />
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z'
-        />
-        <path
-          d='M7 9l10-4M17 19L7 15'
-          strokeLinecap='round'
-          strokeWidth={1.5}
-        />
+      <svg className='w-7 h-7 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
       </svg>
     ),
-    gradient: 'from-indigo-500 to-violet-500',
-  },
-  {
-    title: 'Cloud Solutions',
-    description:
-      'Scalable cloud infrastructure and solutions for modern businesses.',
-    path: '/services/cloud-solutions',
-    icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z'
-        />
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M12 12v7m0 0l-3-3m3 3l3-3'
-        />
-        <circle cx='12' cy='8' r='1' fill='currentColor' />
-      </svg>
-    ),
-    gradient: 'from-cyan-500 to-blue-500',
-  },
-  {
-    title: 'Digital Marketing',
-    description:
-      'Strategic digital marketing solutions to grow your online presence.',
-    path: '/services/digital-marketing',
-    icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'
-        />
-        <circle cx='16' cy='5' r='1' fill='currentColor' />
-        <circle cx='12' cy='9' r='1' fill='currentColor' />
-        <circle cx='8' cy='13' r='1' fill='currentColor' />
-      </svg>
-    ),
-    gradient: 'from-green-500 to-emerald-500',
-  },
-  {
-    title: 'AI Solutions',
-    description:
-      'Intelligent automation and AI-powered solutions for business growth.',
-    path: '/services/ai-solutions',
-    icon: (
-      <svg
-        className='w-10 h-10'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth={1.5}
-          d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-        />
-        <circle cx='7.5' cy='12' r='1' fill='currentColor' />
-        <circle cx='16.5' cy='12' r='1' fill='currentColor' />
-      </svg>
-    ),
-    gradient: 'from-rose-500 to-red-500',
+    badge: 'Growth Marketing',
+    gradient: 'from-emerald-500 to-teal-600',
   },
 ];
 
 export const ServicesList = () => {
-  return (
-    <section className='relative overflow-hidden pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20'>
-      {/* Background Elements */}
-      <div className='absolute inset-0'>
-        <div className='absolute inset-0 bg-gradient-to-b from-white via-indigo-50/50 to-white'></div>
-        <div
-          className='absolute inset-0 bg-[linear-gradient(to_right,#f1f5f91a_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f91a_1px,transparent_1px)] bg-[size:4rem_4rem]'
-          style={{
-            maskImage:
-              'radial-gradient(circle at center, transparent 50%, white)',
-          }}
-        ></div>
-      </div>
+  const handleDownloadBrochure = () => {
+    alert('TechUniqueIIT Brochure download will start shortly. Thank you for your interest!');
+  };
 
+  return (
+    <section className='relative overflow-hidden pt-12 pb-10 sm:pt-16 sm:pb-14 bg-gradient-to-b from-white via-indigo-50/30 to-white'>
       <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Header */}
         <motion.div
@@ -196,115 +106,84 @@ export const ServicesList = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className='text-center mb-12 md:mb-16'
+          className='text-center max-w-3xl mx-auto mb-12'
         >
-          <span className='inline-flex items-center px-3 py-1.5 rounded-full bg-white shadow-md shadow-indigo-100 border border-indigo-50 text-sm text-indigo-600 font-medium mb-4'>
+          <span className='inline-flex items-center px-4 py-1.5 rounded-full bg-white shadow-md shadow-indigo-100 border border-indigo-50 text-xs sm:text-sm text-indigo-600 font-medium mb-4'>
             <span className='flex h-2 w-2 rounded-full bg-indigo-600 mr-2'></span>
-            Our Services
+            What We Do
           </span>
-          <h2 className='text-3xl sm:text-4xl font-bold text-gray-900 mb-4'>
-            Transforming Ideas into{' '}
-            <span className='relative'>
-              <span className='relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600'>
-                Digital Reality
-              </span>
-              <span className='absolute inset-x-0 bottom-0 h-3 bg-indigo-100/50 z-0'></span>
+          <h1 className='text-3xl sm:text-4xl font-bold text-gray-900 mb-4'>
+            Comprehensive Technology &{' '}
+            <span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600'>
+              Digital Services
             </span>
-          </h2>
-          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-            Explore our comprehensive range of services designed to help your
-            business thrive in the digital age.
+          </h1>
+          <p className='text-base text-gray-600 leading-relaxed'>
+            We deliver end-to-end software development, existing application maintenance, and digital marketing solutions designed to accelerate business growth.
           </p>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12'>
+        {/* Services Cards Container (Reduced card size by ~15%) */}
+        <div className='space-y-8 mb-12'>
           {services.map((service, index) => (
             <motion.div
-              key={service.title}
+              key={service.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              className='bg-white rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-lg border border-gray-100 transition-all duration-300 grid lg:grid-cols-12 gap-6 items-center'
             >
-              <Link href={service.path}>
-                <div className='group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500'>
-                  {/* Top Gradient Bar */}
-                  <div
-                    className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient} transform origin-left transition-transform duration-500 group-hover:scale-x-100`}
-                  ></div>
-
-                  <div className='p-8 sm:p-10'>
-                    <div className='flex items-start gap-6'>
-                      {/* Icon Container */}
-                      <div
-                        className={`flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${service.gradient} p-[1px] transform group-hover:scale-110 transition-transform duration-500`}
-                      >
-                        <div className='w-full h-full bg-white rounded-2xl flex items-center justify-center'>
-                          <div
-                            className={`group-hover:scale-110 transition-transform duration-300`}
-                          >
-                            <div
-                              className={`bg-gradient-to-br ${service.gradient} [&>svg]:stroke-white p-3 rounded-xl`}
-                            >
-                              {service.icon}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className='flex-1'>
-                        <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors duration-300'>
-                          {service.title}
-                        </h3>
-                        <p className='text-gray-600 mb-4 group-hover:text-gray-900 transition-colors duration-300'>
-                          {service.description}
-                        </p>
-
-                        {/* Learn More Link */}
-                        <div
-                          className={`inline-flex items-center font-semibold bg-gradient-to-br ${service.gradient} text-white px-4 py-2 rounded-full text-sm transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300`}
-                        >
-                          <span>Learn More</span>
-                          <svg
-                            className='w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300'
-                            fill='none'
-                            stroke='currentColor'
-                            viewBox='0 0 24 24'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M17 8l4 4m0 0l-4 4m4-4H3'
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Gradient Line - Animated */}
-                    <div className='absolute bottom-0 left-0 w-full h-[2px] overflow-hidden'>
-                      <div
-                        className={`w-full h-full bg-gradient-to-r ${service.gradient} transform translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700`}
-                      ></div>
-                    </div>
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
-                  ></div>
+              {/* Service Info (7 Cols) */}
+              <div className='lg:col-span-7 space-y-3'>
+                <div className='flex items-center space-x-3'>
+                  <div className='p-2.5 bg-gray-50 rounded-xl border border-gray-100'>{service.icon}</div>
+                  <span className='text-xs font-semibold px-2.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-full uppercase tracking-wider'>
+                    {service.badge}
+                  </span>
                 </div>
-              </Link>
+                <h2 className='text-xl sm:text-2xl font-bold text-gray-900'>{service.title}</h2>
+                <p className='text-indigo-600 font-medium text-xs sm:text-sm'>{service.subtitle}</p>
+                <p className='text-gray-600 leading-relaxed text-xs sm:text-sm'>{service.description}</p>
+              </div>
+
+              {/* Capabilities & Action Buttons (5 Cols) */}
+              <div className='lg:col-span-5 bg-gray-50/80 rounded-xl p-5 border border-gray-100 space-y-2.5'>
+                <h3 className='text-xs font-bold text-gray-900 uppercase tracking-wider mb-2'>Core Capabilities & Stack</h3>
+                {service.features.map((feat, idx) => (
+                  <div key={idx} className='flex items-start text-xs text-gray-700 font-medium leading-snug'>
+                    <svg className='w-3.5 h-3.5 text-indigo-600 mr-2 flex-shrink-0 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
+                    </svg>
+                    <span>{feat}</span>
+                  </div>
+                ))}
+                
+                {/* Action Buttons: Request Consultation & Download Brochure */}
+                <div className='pt-3 flex flex-wrap items-center gap-2 sm:gap-3 border-t border-gray-200/60 mt-3'>
+                  <Link
+                    href='/contact'
+                    className='inline-flex items-center justify-center px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm'
+                  >
+                    <span>Request Consultation</span>
+                    <svg className='w-3.5 h-3.5 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                    </svg>
+                  </Link>
+
+                  <button
+                    onClick={handleDownloadBrochure}
+                    className='inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition-colors'
+                  >
+                    <svg className='w-3.5 h-3.5 mr-1 text-indigo-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
+                    </svg>
+                    <span>Download Brochure</span>
+                  </button>
+                </div>
+              </div>
             </motion.div>
           ))}
-        </div>
-
-        {/* Optional: Add a decorative element at the bottom */}
-        <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
-          <div className='w-96 h-96 bg-gradient-to-r from-indigo-100/20 to-violet-100/20 rounded-full blur-3xl opacity-50'></div>
         </div>
       </div>
     </section>

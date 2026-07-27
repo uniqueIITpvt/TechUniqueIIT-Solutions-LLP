@@ -6,7 +6,7 @@ const missions = [
   {
     title: 'Our Mission',
     description:
-      'To empower businesses with innovative technology solutions that drive growth and create lasting impact.',
+      'To design, build, and support practical digital solutions aligned with each client’s real workflows and goals.',
     icon: (
       <svg
         className='w-6 h-6'
@@ -24,9 +24,9 @@ const missions = [
     ),
   },
   {
-    title: 'Our Vision',
+    title: 'Our Approach',
     description:
-      'To be the global leader in transformative technology solutions that shape the future of digital innovation.',
+      'Understand the requirement first, choose technology responsibly, communicate clearly, and stay accountable after launch.',
     icon: (
       <svg
         className='w-6 h-6'
@@ -53,20 +53,20 @@ const missions = [
 
 const values = [
   {
-    title: 'Innovation',
-    description: 'Pushing boundaries and embracing new technologies.',
+    title: 'Ownership',
+    description: 'Taking responsibility for delivery, stability, and support.',
   },
   {
-    title: 'Excellence',
-    description: 'Delivering outstanding quality in everything we do.',
+    title: 'Clarity',
+    description: 'Keeping priorities, trade-offs, and progress easy to understand.',
   },
   {
-    title: 'Integrity',
-    description: 'Operating with honesty, transparency, and ethics.',
+    title: 'Practical Innovation',
+    description: 'Using the right technology to solve the actual problem.',
   },
   {
-    title: 'Collaboration',
-    description: 'Working together to achieve extraordinary results.',
+    title: 'Partnership',
+    description: 'Listening carefully and supporting clients beyond delivery.',
   },
 ];
 
@@ -84,8 +84,8 @@ export const CompanyMission = () => {
               transition={{ duration: 0.5, delay: index * 0.2 }}
               className='relative'
             >
-              <div className='bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 h-full border border-blue-100'>
-                <div className='w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mb-6'>
+              <div className='bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-8 h-full border border-indigo-100'>
+                <div className='w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white mb-6'>
                   {item.icon}
                 </div>
                 <h3 className='text-2xl font-bold text-gray-900 mb-4'>
@@ -104,15 +104,15 @@ export const CompanyMission = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-full'>
+            <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-full'>
               Our Values
             </span>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
               What Drives Us Forward
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-              Our core values shape our culture and guide every decision we
-              make.
+              How we work across product development, maintenance, and client
+              collaboration.
             </p>
           </motion.div>
         </div>
@@ -127,7 +127,7 @@ export const CompanyMission = () => {
               className='group'
             >
               <div className='bg-white rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100'>
-                <h3 className='text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors'>
+                <h3 className='text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors'>
                   {value.title}
                 </h3>
                 <p className='text-gray-600'>{value.description}</p>

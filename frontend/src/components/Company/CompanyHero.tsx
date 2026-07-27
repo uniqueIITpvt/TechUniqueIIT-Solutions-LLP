@@ -1,126 +1,101 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+
+const companyFacts = [
+  { value: '17+ Yrs', label: 'IT Leadership' },
+  { value: 'Since 2022', label: 'Company Journey' },
+  { value: '20+', label: 'Team Members' },
+];
+
+const capabilities = [
+  { step: '01', label: 'Build', detail: 'Web & software' },
+  { step: '02', label: 'Maintain', detail: 'Code & cloud' },
+  { step: '03', label: 'Launch', detail: 'Mobile apps' },
+  { step: '04', label: 'Grow', detail: 'Digital marketing' },
+];
 
 export const CompanyHero = () => {
   return (
-    <section className='relative overflow-hidden bg-gradient-to-b from-blue-50 to-white py-12 sm:py-16 lg:py-20'>
+    <section className='relative overflow-hidden bg-gradient-to-b from-indigo-50/70 to-white py-12 sm:py-16 lg:py-20'>
+      <div className='absolute left-1/2 top-0 h-80 w-2/3 -translate-x-1/2 rounded-full bg-indigo-100/40 blur-3xl' />
       <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-        <div className='grid lg:grid-cols-2 gap-12 items-center'>
-          {/* Content */}
+        <div className='grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16'>
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-full'>
-              About Us
+            <span className='mb-5 inline-flex items-center rounded-full border border-indigo-100 bg-white px-3 py-1 text-xs font-semibold text-indigo-600 shadow-sm'>
+              About TechUniqueIIT
             </span>
-            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6'>
-              Building the Future of{' '}
-              <span className='text-blue-600'>Technology</span>
+            <h1 className='max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl'>
+              Technology built around{' '}
+              <span className='bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent'>
+                real business needs
+              </span>
             </h1>
-            <p className='text-lg text-gray-600 mb-8 max-w-lg'>
-              We&apos;re a team of passionate innovators dedicated to creating
-              solutions that transform businesses and enhance lives.
+            <p className='mt-6 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg'>
+              TechUniqueIIT designs, builds, and supports practical web,
+              mobile, cloud, and growth solutions—starting with a clear
+              understanding of how each client works.
             </p>
 
-            {/* Stats */}
-            <div className='grid grid-cols-3 gap-8 mt-12 pt-12 border-t'>
-              {[
-                { label: 'Founded', value: '2015' },
-                { label: 'Team Members', value: '200+' },
-                { label: 'Global Offices', value: '12' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className='text-3xl font-bold text-gray-900 mb-2'>
-                    {stat.value}
-                  </div>
-                  <div className='text-sm text-gray-600'>{stat.label}</div>
+            <dl className='mt-9 grid grid-cols-3 gap-4 border-t border-indigo-100 pt-7'>
+              {companyFacts.map((fact) => (
+                <div key={fact.label}>
+                  <dt className='text-xs leading-4 text-gray-500 sm:text-sm'>
+                    {fact.label}
+                  </dt>
+                  <dd className='mt-1 text-lg font-bold text-gray-900 sm:text-2xl'>
+                    {fact.value}
+                  </dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </motion.div>
 
-          {/* Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className='relative lg:h-[600px] h-[400px]'
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-indigo-800 to-violet-700 p-6 shadow-[0_28px_70px_-36px_rgba(67,56,202,0.75)] sm:p-8'
           >
-            <Image
-              src='/company/company-1.jpg'
-              alt='Our Company'
-              fill
-              className='object-cover rounded-2xl'
+            <div
+              className='absolute inset-0 opacity-20'
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px)',
+                backgroundSize: '38px 38px',
+              }}
             />
-            {/* Floating Achievement Cards */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className='absolute -right-6 top-1/4 bg-white p-4 rounded-xl shadow-lg'
-            >
-              <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center'>
-                  <svg
-                    className='w-6 h-6 text-blue-600'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
+            <div className='relative'>
+              <p className='text-xs font-bold uppercase tracking-[0.2em] text-indigo-200'>
+                What we do
+              </p>
+              <div className='mt-6 grid grid-cols-2 gap-3'>
+                {capabilities.map((capability) => (
+                  <div
+                    key={capability.step}
+                    className='border-l border-white/25 bg-white/10 px-4 py-5 backdrop-blur-sm'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div className='text-sm font-medium text-gray-900'>
-                    Industry Leader
+                    <span className='text-[10px] font-bold text-indigo-300'>
+                      {capability.step}
+                    </span>
+                    <h2 className='mt-3 text-lg font-bold text-white'>
+                      {capability.label}
+                    </h2>
+                    <p className='mt-1 text-xs text-indigo-200'>
+                      {capability.detail}
+                    </p>
                   </div>
-                  <div className='text-xs text-gray-500'>
-                    Top 10 Tech Companies 2024
-                  </div>
-                </div>
+                ))}
               </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className='absolute -left-6 bottom-1/4 bg-white p-4 rounded-xl shadow-lg'
-            >
-              <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'>
-                  <svg
-                    className='w-6 h-6 text-green-600'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div className='text-sm font-medium text-gray-900'>
-                    Sustainable Growth
-                  </div>
-                  <div className='text-xs text-gray-500'>
-                    100% YoY Revenue Growth
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+              <p className='mt-6 border-t border-white/15 pt-5 text-sm leading-6 text-indigo-100'>
+                One team supporting the full path from product planning and
+                development to maintenance and growth.
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

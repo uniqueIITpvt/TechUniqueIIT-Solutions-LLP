@@ -1,0 +1,422 @@
+# 🔍 TechUniqueIIT Website — Full UI Audit Report
+
+**Date:** 25 July 2026  
+**Auditor:** Antigravity AI  
+**Scope:** UI-specific audit — demo data, duplicate/redundant content, AI-generated credibility issues, broken links & layout problems  
+**Total Pages Audited:** 15+
+
+---
+
+> [!CAUTION]
+> This website has **severe credibility issues** across multiple pages. Fake team members, fabricated office locations, placeholder testimonials, inconsistent statistics, and visible test data all strongly indicate AI-generated content that was never reviewed or customized.
+
+---
+
+## 📋 Executive Summary
+
+| Issue Category | Count | Severity |
+|:---|:---:|:---:|
+| **Fake/Demo Data** (names, addresses, companies) | 25+ instances | 🔴 Critical |
+| **Inconsistent Statistics** (numbers contradict across pages) | 12+ conflicts | 🔴 Critical |
+| **Broken Links** (404 pages) | 3 links (sitewide) | 🔴 Critical |
+| **Placeholder Social Links** (point to root domains / `#`) | 6+ instances | 🟠 High |
+| **Duplicate/Near-duplicate Content** | 8+ sections | 🟠 High |
+| **AI Template Leaks** (generic emails, boilerplate text) | 5+ instances | 🟠 High |
+| **Test/Mock Data Visible to Users** | 4 instances | 🔴 Critical |
+
+---
+
+## 📄 Page-by-Page Audit
+
+---
+
+### 1. Homepage (`/`)
+
+**File:** [page.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/app/page.tsx)
+
+#### Hero Section
+**File:** [Hero.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Hero/Hero.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Stats inconsistency** | Hero shows `17+ Years Experience`, `50+ Projects Completed`, `20+ Team Members` | 🟠 |
+| **"We're Hiring!" badge** | Always visible in hero — should only show when actually hiring, not as decoration | 🟡 |
+| **Logo-only hero image** | Right side only shows the company logo SVG instead of a real hero image/illustration | 🟡 |
+
+#### Features Section
+**File:** [Features.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Home/Features.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| ✅ OK | Features list (Custom Software, Cloud, Mobile, UI/UX) — reasonably accurate | — |
+
+#### Stats Section  
+**File:** [Stats.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Home/Stats.tsx#L6-L87)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Inflated "50+ Clients Worldwide"** | Hero says 50+ projects, this says 50+ clients — inconsistent | 🔴 |
+| **Inflated "100+ Projects Completed"** | Hero says 50+, this section says 100+ | 🔴 |
+| **Fake "99% Client Satisfaction"** | Unverifiable, sounds fabricated | 🔴 |
+| **"24/7 Support Available"** | Unlikely for a small team of 20 — hurts credibility | 🟠 |
+
+#### Testimonials Section
+**File:** [Testimonials.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Home/Testimonials.tsx#L7-L36)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **100% fake names** | "Sarah Johnson" (CEO, TechCorp), "Michael Chen" (CTO, InnovateLabs), "Emily Rodriguez" (Security Director, SecureNet) — all fabricated | 🔴 |
+| **Duplicate testimonial** | 4th testimonial (`" Chen"`, CTO, InnovateLabs) is near-duplicate of 2nd (`"Michael Chen"`) with a broken name (leading space, missing first name) | 🔴 |
+| **Fake companies** | "TechCorp", "InnovateLabs", "SecureNet" — none are real companies | 🔴 |
+| **Placeholder images** | `/testimonials/testimonial-1.jpg` etc. — likely stock/placeholder photos | 🟠 |
+| **Generic AI text** | "Working with TechUniqueIIT has been transformative for our business" — textbook AI template | 🟠 |
+
+#### Tech Stack / "Trusted By" Section
+**File:** [TrustedBy.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Home/TrustedBy.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Misleading section name** | Section is titled "Powered by Modern Technology" but was previously called "TrustedBy" — it shows tech logos (AWS, Azure, Docker etc.), NOT actual client logos. This is OK as a tech stack showcase | 🟡 |
+| ✅ OK | Tech logos are legitimate technology stack items | — |
+
+#### Contact Section (on Homepage)
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| ✅ OK | Contact form looks functional | — |
+
+#### Footer (Global — appears on every page)
+**File:** [Footer.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Footer/Footer.tsx#L24-L56)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Placeholder social links** | Twitter → `https://twitter.com`, LinkedIn → `https://linkedin.com`, GitHub → `https://github.com` — all point to root domains, NOT company profiles | 🔴 |
+| **Broken "Privacy Policy" link** | Points to `/privacy` which returns **404**. Actual page is at `/company/privacy` | 🔴 |
+| **Broken "Terms of Service" link** | Points to `/terms` which returns **404**. No terms page exists anywhere | 🔴 |
+
+---
+
+### 2. Services Listing Page (`/services`)
+
+**File:** [page.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/app/(public)/services/page.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Verbose AI descriptions** | Each service card has overly polished buzzword-heavy descriptions | 🟡 |
+| ✅ OK | Service links work, 6 services listed | — |
+
+---
+
+### 3. Web Development Page (`/services/web-development`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Fake case study data** | Client names, project details, and results are all fabricated | 🔴 |
+| **Inflated stats** | Claims like "300% increase in performance" without evidence | 🟠 |
+| **Over-written content** | Multiple paragraphs of generic AI text about web development | 🟡 |
+
+---
+
+### 4. Mobile Development Page (`/services/mobile-development`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Same template as web-development** | Uses identical section structure with different buzzwords | 🟠 |
+| **Fake case study data** | Same pattern of fabricated client names and results | 🔴 |
+
+---
+
+### 5. Cloud Solutions Page (`/services/cloud-solutions`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Same template pattern** | Identical layout to other service pages | 🟠 |
+| **Fake case study data** | Fabricated client names, companies, results | 🔴 |
+
+---
+
+### 6. AI Solutions Page (`/services/ai-solutions`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Same template pattern** | Identical to other service pages | 🟠 |
+| **Fake case study data** | Fabricated clients and metrics | 🔴 |
+
+---
+
+### 7. Digital Marketing Page (`/services/digital-marketing`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Same template pattern** | Identical to other service pages | 🟠 |
+| **Fake case study data** | Fabricated client data | 🔴 |
+
+---
+
+### 8. UI/UX Design Page (`/services/ui-ux-design`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Same template pattern** | Identical to other service pages | 🟠 |
+| **Fake case study data** | Fabricated client data | 🔴 |
+
+---
+
+### 9. Company Overview Page (`/company`)
+
+**File:** [page.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/app/(public)/company/page.tsx)
+
+#### Company Hero
+**File:** [CompanyHero.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyHero.tsx#L31-L34)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Wildly inflated stats** | `Founded: 2015`, `200+ Team Members`, `12 Global Offices` — company was actually founded much later, has ~20 members, and has NO global offices | 🔴 |
+| **Fake achievement badges** | "Industry Leader — Top 10 Tech Companies 2024" and "100% YoY Revenue Growth" — completely fabricated claims | 🔴 |
+
+#### Company Mission
+**File:** [CompanyMission.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyMission.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Generic AI mission/vision** | "To be the global leader in transformative technology solutions" — textbook AI-generated boilerplate | 🟠 |
+| **Duplicate mission content** | Similar mission text also appears in About page | 🟠 |
+
+#### Company Stats
+**File:** [CompanyStats.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyStats.tsx#L6-L31)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **"500+ Global Clients"** | Homepage says 50+, this says 500+. Massive contradiction | 🔴 |
+| **"100M+ Revenue Generated"** | Completely fabricated and unrealistic for a small team | 🔴 |
+| **"95% Customer Satisfaction"** | Homepage says 99%, here says 95%. Inconsistent | 🔴 |
+
+#### Company Team
+**File:** [CompanyTeam.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyTeam.tsx#L6-L47)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **100% fake team members** | "John Anderson" (CEO), "Sarah Chen" (CTO), "Michael Roberts" (COO), "Emily Parker" (CMO) — ALL fabricated names | 🔴 |
+| **Reusing testimonial images** | Team member photos use same image paths as testimonials (`/testimonials/testimonial-1.jpg` etc.) | 🔴 |
+| **Placeholder social links** | All team member LinkedIn and Twitter links point to `#` | 🟠 |
+| **Generic AI bios** | "With over 20 years of experience in technology leadership" — classic AI filler | 🟠 |
+
+#### Company Offices
+**File:** [CompanyOffices.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyOffices.tsx#L6-L31)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Completely fake office locations** | San Francisco (100 Market Street), London (10 Liverpool Street), Singapore (1 Raffles Place) — company has NONE of these offices | 🔴 |
+| **Fake phone numbers** | `+1 (415) 555-0123`, `+44 20 7123 4567`, `+65 6789 0123` — all fake/placeholder numbers | 🔴 |
+| **Template email leak** | `sf@company.com`, `london@company.com`, `singapore@company.com` — generic template emails, not even using `@techuniqueiit.com` | 🔴 |
+
+#### Company Partners
+**File:** [CompanyPartners.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Company/CompanyPartners.tsx#L6-L56)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **False partnership claims** | Claims to be partners with Microsoft, AWS, Google Cloud, Salesforce, Oracle, IBM — these are serious legal/credibility risks if untrue | 🔴 |
+| **Fake partner testimonials** | "David Wilson" (CTO, Global Tech Solutions), "Jennifer Lee" (Director of Innovation, Future Enterprises) — fabricated names and companies | 🔴 |
+| **Broken "Become a Partner" button** | CTA link points to `#` | 🟠 |
+
+---
+
+### 10. About Us Page (`/company/about`)
+
+**File:** [page.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/app/(public)/company/about/page.tsx)
+
+#### About Hero
+**File:** [AboutHero.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/About/AboutHero.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Generic AI heading** | "Crafting Digital Excellence Since Day One" | 🟡 |
+
+#### About Story / Journey
+**File:** [AboutStory.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/About/AboutStory.tsx#L7-L88)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Inconsistent founding year** | Journey says `2022` (The Beginning), Company page says `2015` | 🔴 |
+| **Stats contradiction** | Shows `25+ Projects Completed`, `95% Client Satisfaction` — different from Homepage (50+/100+ projects, 99% satisfaction) and Company page (500+ clients) | 🔴 |
+
+#### About Mission
+**File:** [AboutMission.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/About/AboutMission.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Duplicate mission content** | Very similar to CompanyMission.tsx — different wording but same theme | 🟠 |
+| **Lists "DevOps" and "Consulting"** | These aren't listed as services on the services page | 🟡 |
+
+---
+
+### 11. FAQ Page (`/company/faq`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Generic AI-generated Q&A** | Standard template questions like "What services do you offer?" with boilerplate answers | 🟡 |
+| ✅ Mostly OK | FAQ content is generic but not harmful | — |
+
+---
+
+### 12. Privacy Policy Page (`/company/privacy`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Unreachable from footer** | Footer links to `/privacy` (404), not `/company/privacy` | 🔴 |
+| **Generic template content** | Standard AI-generated privacy policy | 🟡 |
+
+---
+
+### 13. Contact Page (`/contact`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Vague address** | "South Delhi, Delhi, India" — no street address, office number, or pin code | 🟠 |
+| **Header "Contact Us" button** | Points to `/#contact-section` — navigates away from the contact page instead of staying | 🟡 |
+| ✅ OK | Email `info@techuniqueiit.com` and phone `+91 7838758293` appear to be real | — |
+
+---
+
+### 14. Careers Page (`/careers`)
+
+**File:** [CareersHero.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Careers/CareersHero.tsx)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **Stats claim "15 Open Positions"** | But only 1 visible mock job listing | 🔴 |
+| **Stats claim "50+ Team Members"** | Hero says 20+, Company says 200+ — all different | 🔴 |
+| **Mock job listing** | Title: "full stack job", Location: "delhi", Description: "this is the test" — visible test data | 🔴 |
+| **Template email leak** | `careers@company.com` in JoinTeam section — not even using company domain | 🔴 |
+| **Placeholder social links** | LinkedIn, Twitter, GitHub all point to `#` in JoinTeam section | 🟠 |
+
+**File:** [JoinTeam.tsx](file:///e:/UNIQUE%20IIT/Techunique-Main-website/TechUniqueIIT-Solutions-LLP/frontend/src/components/Careers/JoinTeam.tsx#L6-L52)
+
+---
+
+### 15. Blogs Page (`/blogs`)
+
+| Issue | Detail | Severity |
+|:---|:---|:---:|
+| **3 out of 5 posts are test data** | `"What is React JS?... test 1"`, `"this is 2nd"`, `"this is title test"` — clearly mock test posts | 🔴 |
+| **Duplicate blog post** | "What is React JS?" appears twice (once clean, once with "test 1" appended) | 🔴 |
+| **All posts under "Web Development"** | No variety in categories despite mock tags | 🟡 |
+| **"Admin User" author** | Test posts authored by "Admin User" instead of a real person | 🟠 |
+
+---
+
+## 📊 Statistics Contradiction Matrix
+
+This is the most damaging credibility issue — the same metrics show wildly different numbers across pages:
+
+| Metric | Homepage Hero | Homepage Stats | Company Hero | Company Stats | About Story | Careers |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Projects/Clients** | 50+ projects | 50+ clients / 100+ projects | — | 500+ clients | 25+ projects | — |
+| **Team Members** | 20+ | — | 200+ | — | — | 50+ |
+| **Client Satisfaction** | — | 99% | — | 95% | 95% | — |
+| **Founded** | — | — | 2015 | — | 2022 | — |
+| **Global Offices** | — | — | 12 | — | — | 12 countries |
+| **Open Positions** | — | — | — | — | — | 15 (only 1 exists) |
+
+> [!WARNING]
+> These contradictions are the single biggest "red flag" that the website content is AI-generated. Any visitor checking 2+ pages will notice these discrepancies.
+
+---
+
+## 🔗 Broken Links (Sitewide)
+
+| Link Text | Current href | Appears In | Status | Fix |
+|:---|:---|:---|:---:|:---|
+| Privacy Policy | `/privacy` | Footer (all pages) | **404** | Change to `/company/privacy` |
+| Terms of Service | `/terms` | Footer (all pages) | **404** | Create page or remove link |
+| Become a Partner | `#` | Company page | **Dead** | Link to contact page or remove |
+| All team social links | `#` | Company Team | **Dead** | Add real URLs or remove |
+| Careers social links | `#` | Careers JoinTeam | **Dead** | Add real URLs or remove |
+
+---
+
+## 🎭 Fake/Demo Data Inventory
+
+### Fake People (must be removed or replaced)
+
+| Name | Role | Company | Found In |
+|:---|:---|:---|:---|
+| Sarah Johnson | CEO | TechCorp | Homepage Testimonials |
+| Michael Chen | CTO | InnovateLabs | Homepage Testimonials |
+| Emily Rodriguez | Security Director | SecureNet | Homepage Testimonials |
+| " Chen" (broken) | CTO | InnovateLabs | Homepage Testimonials (duplicate) |
+| John Anderson | CEO | TechUniqueIIT | Company Team |
+| Sarah Chen | CTO | TechUniqueIIT | Company Team |
+| Michael Roberts | COO | TechUniqueIIT | Company Team |
+| Emily Parker | CMO | TechUniqueIIT | Company Team |
+| David Wilson | CTO | Global Tech Solutions | Company Partners |
+| Jennifer Lee | Director | Future Enterprises | Company Partners |
+
+### Fake Offices (must be removed)
+
+| City | Address | Phone | Email |
+|:---|:---|:---|:---|
+| San Francisco | 100 Market Street, Suite 300 | +1 (415) 555-0123 | sf@company.com |
+| London | 10 Liverpool Street, EC2M 7PD | +44 20 7123 4567 | london@company.com |
+| Singapore | 1 Raffles Place, #20-61 | +65 6789 0123 | singapore@company.com |
+
+### Fake Partnership Claims
+
+| Partner | Claimed Relationship |
+|:---|:---|
+| Microsoft | Technology Partner |
+| Amazon Web Services | Cloud Partner |
+| Google Cloud | Technology Partner |
+| Salesforce | Solution Partner |
+| Oracle | Technology Partner |
+| IBM | Strategic Partner |
+
+---
+
+## 🤖 AI-Generated Content Indicators
+
+These patterns across the site strongly suggest AI-generated content:
+
+1. **Buzzword-heavy headings**: "Transforming Ideas into Digital Reality", "Building the Future of Technology", "Crafting Digital Excellence"
+2. **Repeating section patterns**: Every service page uses identical structure (Hero → Features → Process → CTA)
+3. **Generic mission/vision statements**: "To be the global leader in transformative technology solutions"
+4. **Template value propositions**: "Innovation", "Excellence", "Integrity", "Collaboration" — classic ChatGPT output
+5. **Fake testimonials with stereotypical names**: Western names (Sarah, Michael, Emily) for what appears to be an Indian company
+6. **Inflated metrics with no evidence**: 500+ clients, 100M+ revenue, 99% satisfaction
+7. **Template email addresses**: `@company.com` instead of `@techuniqueiit.com`
+8. **"Founded 2015"** on one page, **"Founded 2022"** on another
+9. **Test data visible**: "this is the test", "this is 2nd", "this is title test"
+
+---
+
+## ✅ Recommended Priority Actions
+
+### 🔴 P0 — Must Fix Immediately (Credibility Killers)
+
+1. **Remove all fake team members** from Company page — replace with real founders/team or remove section entirely
+2. **Remove fake office locations** (San Francisco, London, Singapore) — show only real Delhi office
+3. **Remove or clearly mark partnership logos** — unless actual partnerships exist with Microsoft, AWS, etc.
+4. **Fix statistics** — use ONE consistent set of real numbers across ALL pages
+5. **Remove fake testimonials** — replace with real client feedback or remove section
+6. **Delete test blog posts** — remove "this is 2nd", "this is title test", and duplicate "test 1" post from database
+7. **Fix broken footer links** — Privacy Policy → `/company/privacy`, Terms → create or remove
+
+### 🟠 P1 — Fix Soon (Professionalism Issues)
+
+8. **Update social media links** — point to actual company profiles (LinkedIn, Twitter/X, GitHub)
+9. **Fix `careers@company.com`** → `careers@techuniqueiit.com`
+10. **Add real street address** with pin code in Contact page
+11. **Remove fake achievement badges** ("Top 10 Tech Companies 2024", "100% YoY Revenue Growth")
+12. **Remove "We're Hiring!" badge** from hero if not actively hiring, or link it to careers page
+
+### 🟡 P2 — Nice to Fix (Polish)
+
+13. **Rewrite AI-sounding headings** with more authentic, brand-specific language
+14. **Add real hero image** instead of just showing the company logo
+15. **Diversify blog categories** — not everything should be "Web Development"
+16. **Reduce section count** on service pages — they're over-engineered with too many AI-generated sections
+17. **Add real "Our Journey" milestones** with specific achievements instead of generic labels
+
+---
+
+> [!IMPORTANT]
+> **Bottom Line:** The website structure and design are solid. The core issue is that nearly ALL content is AI-generated placeholder/demo data that was never replaced with real information. The fix involves content replacement, NOT a redesign. Focus on getting real testimonials, real team photos, real statistics, and consistent messaging.

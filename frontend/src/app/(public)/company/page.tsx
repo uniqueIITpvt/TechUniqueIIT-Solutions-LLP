@@ -1,19 +1,21 @@
 import { CompanyHero } from '@/components/Company/CompanyHero';
 import { CompanyMission } from '@/components/Company/CompanyMission';
-import { CompanyStats } from '@/components/Company/CompanyStats';
 import { CompanyOffices } from '@/components/Company/CompanyOffices';
-import { CompanyPartners } from '@/components/Company/CompanyPartners';
 import { CompanyTeam } from '@/components/Company/CompanyTeam';
+import { CompanyExpertise } from '@/components/Company/CompanyExpertise';
+import { CompanyJourney } from '@/components/Company/CompanyJourney';
+import { Testimonials } from '@/components/Home/Testimonials';
 
 export default function CompanyPage() {
   return (
     <div className='pt-16'>
       <CompanyHero />
       <CompanyMission />
-      <CompanyStats />
+      <CompanyExpertise />
+      <CompanyJourney />
       <CompanyTeam />
       <CompanyOffices />
-      <CompanyPartners />
+      <Testimonials />
     </div>
   );
 }

@@ -1,17 +1,5 @@
-import { AboutHero } from '@/components/About/AboutHero';
-import { AboutMission } from '@/components/About/AboutMission';
-import { AboutStory } from '@/components/About/AboutStory';
-import { AboutValues } from '@/components/About/AboutValues';
-import { ServiceCTA } from '@/components/Services/ServiceCTA';
+import { redirect } from 'next/navigation';
 
 export default function AboutPage() {
-  return (
-    <main className='min-h-screen bg-gradient-to-b from-white via-indigo-50/30 to-white pt-16 pb-16 md:pb-0'>
-      <AboutHero />
-      <AboutStory />
-      <AboutMission />
-      <AboutValues />
-      <ServiceCTA />
-    </main>
-  );
+  redirect('/company');
 }

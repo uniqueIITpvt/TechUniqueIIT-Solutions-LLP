@@ -5,28 +5,12 @@ import Image from 'next/image';
 
 const offices = [
   {
-    city: 'San Francisco',
-    country: 'United States',
-    address: '100 Market Street, Suite 300, CA 94105',
-    image: '/company/company-2.jpg',
-    phone: '+1 (415) 555-0123',
-    email: 'sf@company.com',
-  },
-  {
-    city: 'London',
-    country: 'United Kingdom',
-    address: '10 Liverpool Street, EC2M 7PD',
-    image: '/company/company-3.jpg',
-    phone: '+44 20 7123 4567',
-    email: 'london@company.com',
-  },
-  {
-    city: 'Singapore',
-    country: 'Singapore',
-    address: '1 Raffles Place, #20-61, 048616',
-    image: '/company/company-4.jpg',
-    phone: '+65 6789 0123',
-    email: 'singapore@company.com',
+    city: 'New Delhi',
+    country: 'India',
+    address: 'South Delhi, Delhi, India',
+    image: '/uniqiit-logo.svg',
+    phone: '+91 7838758293',
+    email: 'info@techuniqueiit.com',
   },
 ];
 
@@ -41,19 +25,19 @@ export const CompanyOffices = () => {
           transition={{ duration: 0.5 }}
           className='text-center max-w-3xl mx-auto mb-16'
         >
-          <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-full'>
-            Global Presence
+          <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-full'>
+            Headquarters
           </span>
           <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-            Our Offices Around the World
+            Our Office Location
           </h2>
           <p className='text-lg text-gray-600'>
-            Strategically located offices to serve our global client base.
+            Reach the TechUniqueIIT team at its South Delhi location.
           </p>
         </motion.div>
 
         {/* Offices Grid */}
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+        <div className='max-w-xl mx-auto'>
           {offices.map((office, index) => (
             <motion.div
               key={office.city}

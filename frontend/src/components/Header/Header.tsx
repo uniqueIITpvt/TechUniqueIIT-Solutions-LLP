@@ -18,25 +18,15 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  {
-    label: 'Services',
-    href: '/services',
-    dropdownItems: [
-      { label: 'Web Development', href: '/services/web-development' },
-      { label: 'Mobile Development', href: '/services/mobile-development' },
-      { label: 'UI/UX Design', href: '/services/ui-ux-design' },
-      { label: 'Cloud Solutions', href: '/services/cloud-solutions' },
-      { label: 'Digital Marketing', href: '/services/digital-marketing' },
-      { label: 'AI Solutions', href: '/services/ai-solutions' },
-    ],
-  },
+  { label: 'Services', href: '/services' },
+  { label: 'Products', href: '/products' },
   { label: 'Blogs', href: '/blogs' },
   { label: 'Careers', href: '/careers' },
   {
     label: 'Our Company',
     href: '/company',
     dropdownItems: [
-      { label: 'About Us', href: '/company/about' },
+      { label: 'About Us', href: '/company' },
       { label: 'FAQ', href: '/company/faq' },
       { label: 'Privacy Policy', href: '/company/privacy' },
     ],

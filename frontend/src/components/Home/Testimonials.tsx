@@ -1,37 +1,48 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const testimonials = [
   {
     content:
-      'Working with TechUniqueIIT has been transformative for our business. Their innovative solutions have helped us scale efficiently.',
-    author: 'Sarah Johnson',
-    role: 'CEO, TechCorp',
-    image: '/testimonials/testimonial-1.jpg',
+      'A sales commission application can be built by many developers, but finding a team that understands the business rules and takes ownership is difficult. TechUniqueIIT understood our calculation and payout process properly, suggested practical improvements, and delivered a system our team can manage with confidence.',
+    author: 'Mohammad Murtaza',
+    role: 'Entrepreneur',
+    project: 'Sales Commission Management System (SCMS)',
+    avatar: 'MM',
   },
   {
     content:
-      "The team's expertise and dedication to our project was exceptional. They delivered beyond our expectations.",
-    author: 'Michael Chen',
-    role: 'CTO, InnovateLabs',
-    image: '/testimonials/testimonial-2.jpg',
+      'They did not treat our HRMS as just another software project. The team patiently mapped our payroll, attendance, and onboarding workflows before development, while the project manager kept every stage clear and organised. That combination of product understanding and disciplined execution made the rollout much easier for us.',
+    author: 'Vinod Choudhary',
+    role: 'IT Manager',
+    project: 'HRMS (Human Resource Management System)',
+    avatar: 'VC',
   },
   {
     content:
-      'Their cybersecurity solutions have given us peace of mind. Highly recommended for any business serious about security.',
-    author: 'Emily Rodriguez',
-    role: 'Security Director, SecureNet',
-    image: '/testimonials/testimonial-3.jpg',
+      'What stood out was how carefully the team listened to both our teachers and administrative staff. They understood that course delivery, examinations, and student records all needed to work together, then shaped the portal around our daily routine. Their patience during feedback and training helped our staff adopt it comfortably.',
+    author: 'Rakesh Verma',
+    role: 'School Manager',
+    project: 'Student Management System / LMS',
+    avatar: 'RV',
   },
   {
     content:
-      'The team is very professional and dedicated to our project. They delivered beyond our expectations.',
-    author: ' Chen',
-    role: 'CTO, InnovateLabs',
-    image: '/testimonials/testimonial-2.jpg',
+      'Taking responsibility for an existing application is never easy, but their engineers first studied the old code instead of rushing into changes. They resolved long-standing issues, explained priorities honestly, and now manage the cloud environment with consistent updates. That transparency has made the team feel like a dependable technical partner.',
+    author: 'Mohammad Mufazzal',
+    role: 'Technical Manager',
+    project: 'Application Maintenance & Cloud Support',
+    avatar: 'MM',
+  },
+  {
+    content:
+      'The team did not arrive with a generic content calendar. They researched our audience, understood the purpose of each platform, and coordinated social content and YouTube work around clear goals. Their consistency, quick responses, and willingness to refine ideas have made working together genuinely easy.',
+    author: 'Hasan',
+    role: 'Owner, Caspian Media',
+    project: 'Social Media Research & Marketing',
+    avatar: 'H',
   },
 ];
 
@@ -69,13 +80,15 @@ export const Testimonials = () => {
   const visibleTestimonials = groups[currentIndex] ?? [];
 
   return (
-    <section className='relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 py-12 sm:py-16 lg:py-20'>
+    <section className='relative overflow-hidden bg-gradient-to-b from-white to-indigo-50/50 py-14 sm:py-18 lg:py-22'>
+      {/* Background Decorations */}
       <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-1/2 -left-32 h-96 w-96 rounded-full bg-indigo-100/50'></div>
-        <div className='absolute bottom-0 -right-32 h-96 w-96 rounded-full bg-violet-100/50'></div>
+        <div className='absolute top-1/2 -left-32 h-96 w-96 rounded-full bg-indigo-100/50 blur-3xl'></div>
+        <div className='absolute bottom-0 -right-32 h-96 w-96 rounded-full bg-violet-100/50 blur-3xl'></div>
       </div>
 
       <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -83,7 +96,7 @@ export const Testimonials = () => {
           transition={{ duration: 0.5 }}
           className='mx-auto mb-12 max-w-2xl text-center sm:mb-16'
         >
-          <span className='mb-6 inline-flex items-center rounded-full border border-indigo-50 bg-white px-4 py-2 text-sm font-medium text-indigo-600 shadow-md shadow-indigo-100'>
+          <span className='mb-4 inline-flex items-center rounded-full border border-indigo-50 bg-white px-4 py-1.5 text-xs sm:text-sm font-medium text-indigo-600 shadow-md shadow-indigo-100'>
             <span className='mr-2 flex h-2 w-2 rounded-full bg-indigo-600'></span>
             Client Stories
           </span>
@@ -91,193 +104,96 @@ export const Testimonials = () => {
             Trusted by{' '}
             <span className='relative'>
               <span className='relative z-10 bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent'>
-                Industry Leaders
+                Business Leaders
               </span>
               <span className='absolute inset-x-0 bottom-0 z-0 h-3 bg-indigo-100/50'></span>
             </span>
           </h2>
           <p className='text-base text-gray-600 sm:text-lg'>
-            Don&apos;t just take our word for it - hear from some of our
-            satisfied clients about their experience working with us.
+            Real feedback from business leaders and managers who rely on TechUniqueIIT software solutions.
           </p>
         </motion.div>
 
-        <div className='relative mx-auto max-w-6xl md:px-10'>
-          <div className='absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 md:block'>
-            <button
-              onClick={prevTestimonial}
-              suppressHydrationWarning
-              className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
-              aria-label='Previous testimonials'
-            >
-              <svg
-                className='h-6 w-6 text-indigo-600 transition-transform duration-300 group-hover:-translate-x-1'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M15 19l-7-7 7-7'
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className='absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 md:block'>
-            <button
-              onClick={nextTestimonial}
-              suppressHydrationWarning
-              className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
-              aria-label='Next testimonials'
-            >
-              <svg
-                className='h-6 w-6 text-indigo-600 transition-transform duration-300 group-hover:translate-x-1'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5l7 7-7 7'
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8'>
-            {visibleTestimonials.map((testimonial, index) => (
+        {/* Carousel Grid */}
+        <div className='relative'>
+          <div className='grid gap-6 sm:grid-cols-1 md:grid-cols-3'>
+            {visibleTestimonials.map((testimonial, idx) => (
               <motion.div
-                key={`${testimonial.author}-${currentIndex}-${index}`}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className='group'
+                key={testimonial.author + idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className='flex flex-col justify-between rounded-2xl bg-white p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300'
               >
-                <div className='relative h-full rounded-2xl bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(99,102,241,0.12)] sm:p-8'>
-                  <div className='absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-violet-50/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-                  <div className='absolute left-0 right-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-indigo-600 to-violet-600 transition-transform duration-300 group-hover:scale-x-100' />
-
-                  <div className='absolute right-6 top-6 -rotate-6 text-indigo-100 transition-colors duration-300 group-hover:text-indigo-200 sm:right-8'>
-                    <svg className='h-12 w-12 sm:h-16 sm:w-16' fill='currentColor' viewBox='0 0 24 24'>
-                      <path d='M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z' />
-                    </svg>
+                <div>
+                  {/* Rating Stars */}
+                  <div className='flex items-center space-x-1 mb-4 text-amber-400'>
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className='w-4 h-4 fill-current' viewBox='0 0 20 20'>
+                        <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                      </svg>
+                    ))}
                   </div>
 
-                  <div className='relative mb-6 sm:mb-8'>
-                    <p className='text-sm italic text-gray-600 sm:text-base'>
-                      {testimonial.content}
-                    </p>
-                  </div>
+                  <p className='text-xs sm:text-sm text-gray-700 leading-relaxed italic mb-6'>
+                    &ldquo;{testimonial.content}&rdquo;
+                  </p>
+                </div>
 
-                  <div className='flex items-center space-x-4'>
-                    <div className='relative h-12 w-12'>
-                      <div className='absolute inset-0 -rotate-6 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-transform duration-300 group-hover:rotate-6' />
-                      <div className='relative h-full w-full overflow-hidden rounded-full border-2 border-white'>
-                        <Image
-                          src={testimonial.image}
-                          alt={testimonial.author}
-                          fill
-                          className='object-cover'
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className='font-semibold text-gray-900 transition-colors duration-300 group-hover:text-indigo-600'>
-                        {testimonial.author}
-                      </div>
-                      <div className='text-sm text-gray-500'>
-                        {testimonial.role}
-                      </div>
-                    </div>
+                {/* Author Info */}
+                <div className='pt-4 border-t border-gray-100 flex items-center space-x-3'>
+                  <div className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-bold text-xs shadow-md'>
+                    {testimonial.avatar}
                   </div>
-
-                  <div className='absolute right-0 top-0 h-16 w-16 scale-0 rounded-bl-[100px] bg-gradient-to-br from-indigo-600/5 to-violet-600/5 transition-transform duration-300 group-hover:scale-100' />
-                  <div className='absolute bottom-0 left-0 h-16 w-16 scale-0 rounded-tr-[100px] bg-gradient-to-tr from-indigo-600/5 to-violet-600/5 transition-transform duration-300 group-hover:scale-100' />
+                  <div>
+                    <h4 className='text-sm font-bold text-gray-900 leading-tight'>
+                      {testimonial.author}
+                    </h4>
+                    <p className='text-xs text-indigo-600 font-medium'>{testimonial.role}</p>
+                    <p className='text-[10px] text-gray-400 mt-0.5'>{testimonial.project}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <div className='mt-6 flex items-center justify-center gap-3 md:hidden'>
-            <button
-              onClick={prevTestimonial}
-              suppressHydrationWarning
-              className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
-              aria-label='Previous testimonials'
-            >
-              <svg
-                className='h-5 w-5 text-indigo-600 transition-transform duration-300 group-hover:-translate-x-1'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M15 19l-7-7 7-7'
-                />
-              </svg>
-            </button>
-
-            <div className='flex justify-center space-x-2'>
-              {groups.map((_, idx) => (
-                <button
-                  key={idx}
-                  suppressHydrationWarning
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    currentIndex === idx
-                      ? 'w-6 bg-indigo-600'
-                      : 'w-2 bg-indigo-200 hover:bg-indigo-300'
-                  }`}
-                  aria-label={`Go to testimonial group ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={nextTestimonial}
-              suppressHydrationWarning
-              className='group rounded-full bg-white p-2 shadow-lg transition-all duration-300 hover:shadow-xl'
-              aria-label='Next testimonials'
-            >
-              <svg
-                className='h-5 w-5 text-indigo-600 transition-transform duration-300 group-hover:translate-x-1'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5l7 7-7 7'
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className='mt-8 hidden justify-center space-x-2 md:flex'>
-            {groups.map((_, idx) => (
+          {/* Carousel Navigation Controls */}
+          {groups.length > 1 && (
+            <div className='mt-8 flex items-center justify-center space-x-4'>
               <button
-                key={idx}
-                suppressHydrationWarning
-                onClick={() => setCurrentIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  currentIndex === idx
-                    ? 'w-6 bg-indigo-600'
-                    : 'w-2 bg-indigo-200 hover:bg-indigo-300'
-                }`}
-                aria-label={`Go to testimonial group ${idx + 1}`}
-              />
-            ))}
-          </div>
+                onClick={prevTestimonial}
+                className='flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md border border-gray-100 text-indigo-600 hover:bg-indigo-50 transition-colors'
+                aria-label='Previous testimonial'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
+                </svg>
+              </button>
+
+              <div className='flex space-x-2'>
+                {groups.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      currentIndex === idx ? 'w-8 bg-indigo-600' : 'w-2.5 bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={nextTestimonial}
+                className='flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md border border-gray-100 text-indigo-600 hover:bg-indigo-50 transition-colors'
+                aria-label='Next testimonial'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

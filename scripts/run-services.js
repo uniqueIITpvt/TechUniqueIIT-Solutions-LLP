@@ -22,14 +22,13 @@ try {
   process.exit(1);
 }
 
-const npmExecPath = process.env.npm_execpath;
-const useNpmCli = Boolean(npmExecPath);
-const npmCommand = useNpmCli ? process.execPath : process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const isWin = process.platform === 'win32';
 
 const services = [
   {
     name: 'backend',
-    script: 'dev',
+    cmd: process.execPath,
+    args: [path.resolve(rootDir, 'backend', 'node_modules', 'nodemon', 'bin', 'nodemon.js'), 'server.js'],
     dir: 'backend',
     env: {
       LOCAL_DEV: 'true',
@@ -41,7 +40,8 @@ const services = [
   },
   {
     name: 'frontend',
-    script: 'dev',
+    cmd: process.execPath,
+    args: [path.resolve(rootDir, 'frontend', 'node_modules', 'next', 'dist', 'bin', 'next'), 'dev'],
     dir: 'frontend',
     env: {
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
@@ -52,11 +52,6 @@ const services = [
 
 const children = [];
 let shuttingDown = false;
-
-const npmArgs = (service) =>
-  useNpmCli
-    ? [npmExecPath, 'run', service.script, '--prefix', service.dir]
-    : ['run', service.script, '--prefix', service.dir];
 
 const stopAll = (exitCode = 0) => {
   if (shuttingDown) {
@@ -73,15 +68,36 @@ const stopAll = (exitCode = 0) => {
   setTimeout(() => process.exit(exitCode), 500);
 };
 
+const cleanEnv = {};
+for (const key of Object.keys(process.env)) {
+  if (!key.startsWith('npm_')) {
+    cleanEnv[key] = process.env[key];
+  }
+}
+
 for (const service of services) {
-  const child = spawn(npmCommand, npmArgs(service), {
-    cwd: rootDir,
-    stdio: 'inherit',
+  const serviceDir = path.resolve(rootDir, service.dir);
+  const child = spawn(service.cmd, service.args, {
+    cwd: serviceDir,
+    stdio: ['ignore', 'pipe', 'pipe'],
     env: {
-      ...process.env,
+      ...cleanEnv,
       ...service.env,
     },
-    windowsHide: false,
+  });
+
+  child.stdout.on('data', (data) => {
+    const lines = data.toString().split('\n');
+    for (const line of lines) {
+      if (line.trim()) console.log(`[${service.name}] ${line}`);
+    }
+  });
+
+  child.stderr.on('data', (data) => {
+    const lines = data.toString().split('\n');
+    for (const line of lines) {
+      if (line.trim()) console.error(`[${service.name}-err] ${line}`);
+    }
   });
 
   children.push(child);

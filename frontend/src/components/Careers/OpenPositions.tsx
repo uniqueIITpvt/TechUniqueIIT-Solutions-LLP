@@ -94,11 +94,11 @@ export const OpenPositions = () => {
             Open Positions
           </span>
           <h2 className='mb-4 text-3xl font-bold text-gray-900 md:text-4xl'>
-            Join Our Growing Team
+            Current Opportunities
           </h2>
           <p className='text-lg text-gray-600'>
-            We&apos;re always looking for talented individuals to help us build
-            the future of technology.
+            Every role shown below is published and maintained by the
+            TechUniqueIIT team.
           </p>
         </motion.div>
 
