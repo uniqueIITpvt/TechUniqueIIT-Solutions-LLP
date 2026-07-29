@@ -112,21 +112,6 @@ const initializeApp = async () => {
       if (connected) {
         console.log('MongoDB connected successfully');
 
-        if (process.env.NODE_ENV === 'development') {
-          const Blog = require('./models/blogModel');
-          try {
-            const count = await Blog.countDocuments();
-            if (count === 0) {
-              console.log('No blogs found in database. Running seed script...');
-              require('./seed');
-            } else {
-              console.log(`${count} blogs found in database. Skipping seed.`);
-            }
-          } catch (err) {
-            console.error('Error checking blog count:', err);
-          }
-        }
-
         mountAllRoutes();
       } else {
         mountLimitedRoutes();

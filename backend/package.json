@@ -8,7 +8,6 @@
     "dev": "nodemon server.js",
     "safe-dev": "node killPort.js && nodemon server.js",
     "kill-port": "node killPort.js",
-    "seed": "node seed.js",
     "migrate-blog-images": "node scripts/migrateBlogImagesToCloudinary.js",
     "promote-super-admin": "node scripts/promoteSuperAdmin.js"
   },
