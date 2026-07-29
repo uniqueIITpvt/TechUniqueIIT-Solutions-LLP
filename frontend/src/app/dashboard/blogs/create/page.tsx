@@ -51,12 +51,12 @@ export default function CreateBlogPage() {
   const { user } = useAuth();
   
   // Check if user is admin
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
   
   // Redirect non-admin users trying to access this page
   useEffect(() => {
     if (user && !isAdmin) {
-      toast.error('Only admin users can create blog posts');
+      toast.error('Only admin or super admin users can create blog posts');
       router.push('/dashboard');
     }
   }, [user, isAdmin, router]);

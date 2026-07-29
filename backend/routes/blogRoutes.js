@@ -17,7 +17,7 @@ router.get('/slug/:slug', getBlogBySlug);
 
 // Protected routes
 router.use(protect); // Apply protection for all routes below
-router.post('/', authorize('admin'), createBlog);
+router.post('/', authorize('admin', 'super_admin'), createBlog);
 router.put('/:id', updateBlog);
 router.delete('/:id', deleteBlog);
 router.get('/user/:userId', getUserBlogs);

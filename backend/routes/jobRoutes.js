@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/', getPublishedJobs);
 router.post('/:jobId/apply', applyForJob);
 
-router.use(protect, authorize('admin'));
+router.use(protect, authorize('admin', 'super_admin'));
 router.get('/admin', getAdminJobs);
 router.get('/applications', getJobApplications);
 router.get('/applications/:applicationId/resume', getResumeDownload);

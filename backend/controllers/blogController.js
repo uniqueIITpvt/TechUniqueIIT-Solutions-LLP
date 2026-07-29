@@ -5,6 +5,9 @@ const { uploadImage, deleteImage } = require('../utils/cloudinary');
 
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const ADMIN_ROLES = new Set(['admin', 'super_admin']);
+
+const isAdminUser = (user) => Boolean(user && ADMIN_ROLES.has(user.role));
 
 const parseTags = (tags) => {
   if (typeof tags === 'string') {
@@ -125,7 +128,7 @@ exports.getBlogs = asyncHandler(async (req, res) => {
     removeFields.forEach(param => delete reqQuery[param]);
 
     // Only return published blogs for public requests
-    if (!req.user || req.user.role !== 'admin') {
+    if (!isAdminUser(req.user)) {
       reqQuery.status = 'published';
     }
 
@@ -219,7 +222,7 @@ exports.getBlog = asyncHandler(async (req, res) => {
 
     // Check if blog is published or user is author/admin
     if (blog.status === 'draft') {
-      if (!req.user || (req.user._id.toString() !== blog.author._id.toString() && req.user.role !== 'admin')) {
+      if (!req.user || (req.user._id.toString() !== blog.author._id.toString() && !isAdminUser(req.user))) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to access this blog'
@@ -306,7 +309,7 @@ exports.getBlogBySlug = asyncHandler(async (req, res) => {
 
     // Check if blog is published or user is author/admin
     if (blog.status === 'draft') {
-      if (!req.user || (req.user._id.toString() !== blog.author._id.toString() && req.user.role !== 'admin')) {
+      if (!req.user || (req.user._id.toString() !== blog.author._id.toString() && !isAdminUser(req.user))) {
         return res.status(403).json({
           success: false,
           message: 'Not authorized to access this blog'
@@ -349,7 +352,7 @@ exports.updateBlog = asyncHandler(async (req, res) => {
     }
 
     // Make sure user is blog author or admin
-    if (blog.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (blog.author.toString() !== req.user._id.toString() && !isAdminUser(req.user)) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to update this blog'
@@ -415,7 +418,7 @@ exports.deleteBlog = asyncHandler(async (req, res) => {
     }
 
     // Make sure user is blog author or admin
-    if (blog.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (blog.author.toString() !== req.user._id.toString() && !isAdminUser(req.user)) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this blog'
@@ -449,7 +452,7 @@ exports.getUserBlogs = asyncHandler(async (req, res) => {
     // Check if requesting own blogs or admin requesting other's blogs
     if (req.params.userId === 'me') {
       query = { author: req.user._id };
-    } else if (req.user.role === 'admin' || req.params.userId === req.user._id.toString()) {
+    } else if (isAdminUser(req.user) || req.params.userId === req.user._id.toString()) {
       query = { author: req.params.userId };
     } else {
       query = {

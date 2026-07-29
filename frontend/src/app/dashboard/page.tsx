@@ -227,7 +227,7 @@ export default function DashboardPage() {
   const router = useRouter();
   
   // Check if user is admin
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
 
   // Define quick actions
   const quickActions: QuickAction[] = [
@@ -244,7 +244,7 @@ export default function DashboardPage() {
       href: '/dashboard/blogs/create',
       onClick: () => {
         if (!isAdmin) {
-          toast.error('Only admin users can create blog posts');
+          toast.error('Only admin or super admin users can create blog posts');
           return false;
         }
         return true;
@@ -260,7 +260,7 @@ export default function DashboardPage() {
   // Redirect non-admin users trying to access blog creation features
   useEffect(() => {
     if (user && !isAdmin) {
-      toast.error('Only admin users can create blog posts');
+      toast.error('Only admin or super admin users can create blog posts');
     }
   }, [user, isAdmin]);
 

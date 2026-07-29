@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/', createContactQuery);
 
-router.use(protect, authorize('admin'));
+router.use(protect, authorize('admin', 'super_admin'));
 router.get('/', getContactQueries);
 router.get('/:id', getContactQuery);
 router.delete('/:id', deleteContactQuery);

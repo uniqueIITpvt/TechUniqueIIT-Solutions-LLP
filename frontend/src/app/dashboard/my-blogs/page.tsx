@@ -34,7 +34,7 @@ export default function MyBlogsPage() {
   const { user } = useAuth();
   
   // Check if user is admin
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
 
   // Fetch blogs when component mounts
   useEffect(() => {
