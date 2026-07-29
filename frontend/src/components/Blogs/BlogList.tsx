@@ -141,7 +141,7 @@ const BlogList = () => {
   }
 
   return (
-    <section className="bg-gray-50 py-12 sm:py-16">
+    <section className="bg-white py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -168,7 +168,7 @@ const BlogList = () => {
                   onClick={() => handleCategoryChange(category)}
                   className={`px-4 py-2 rounded-full transition-colors ${
                     selectedCategory === category
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-indigo-600 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -226,7 +226,7 @@ const BlogList = () => {
                     </div>
 
                     <Link href={`/blogs/${blog.slug}`}>
-                      <h3 className="mb-3 text-xl font-semibold text-gray-900 transition-colors hover:text-blue-600 line-clamp-2">
+                      <h3 className="mb-3 text-xl font-semibold text-gray-900 transition-colors hover:text-indigo-600 line-clamp-2">
                         {blog.title || 'Untitled'}
                       </h3>
                     </Link>
@@ -236,7 +236,7 @@ const BlogList = () => {
                     </p>
 
                     <div className="mb-5 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                      <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700">
                         <FaTag className="mr-1" /> {blog.category || 'Uncategorized'}
                       </span>
                       {blog.tags?.slice(0, 2).map((tag) => (
@@ -251,7 +251,7 @@ const BlogList = () => {
 
                     <Link
                       href={`/blogs/${blog.slug}`}
-                      className="inline-flex items-center font-medium text-blue-600 hover:underline"
+                      className="inline-flex items-center font-medium text-indigo-600 hover:underline"
                     >
                       Read More
                       <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +284,7 @@ const BlogList = () => {
                       onClick={() => handlePageChange(page)}
                       className={`rounded px-4 py-2 ${
                         currentPage === page
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-indigo-600 text-white'
                           : 'bg-white text-gray-700 hover:bg-gray-50'
                       }`}
                     >

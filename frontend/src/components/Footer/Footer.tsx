@@ -111,12 +111,7 @@ export const Footer = () => {
                 >
                   Privacy Policy
                 </Link>
-                <Link
-                  href='/terms'
-                  className='text-sm text-gray-600 hover:text-indigo-600 transition-colors duration-200'
-                >
-                  Terms of Service
-                </Link>
+               
               </div>
             </div>
           </div>

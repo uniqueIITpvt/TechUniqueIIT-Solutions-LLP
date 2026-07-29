@@ -82,7 +82,7 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
         {/* Header */}
         <header className="mb-8">
           {/* {usingFallback && (
-            <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm mb-4 text-center">
+            <div className="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg text-sm mb-4 text-center">
               Demo Content - This is sample blog content for demonstration purposes
             </div>
           )} */}
@@ -114,7 +114,7 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
           </p>
           
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700">
               <FaTag className="mr-1" />
               {blog.category}
             </span>
@@ -154,7 +154,7 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
         <div className="mt-12 pt-6 border-t border-gray-200">
           <Link 
             href="/blogs"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center text-indigo-600 hover:text-indigo-800"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

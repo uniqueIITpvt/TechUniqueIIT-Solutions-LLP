@@ -109,10 +109,10 @@ const privacySections = [
     title: 'Contact Us',
     content: [
       'If you have any questions about this Privacy Policy, please contact us:',
-      'By email: privacy@company.com',
-      'By phone: 1-800-123-4567',
-      'By mail: 123 Privacy Street, San Francisco, CA 94105',
-      'Our Data Protection Officer can be reached at dpo@company.com',
+      'By email: info@techuniqueiit.com',
+      'By phone: +91 7838758293',
+      'By mail: South Delhi, Delhi, India',
+      'For privacy-related requests, contact the TechUniqueIIT team at info@techuniqueiit.com',
       'Response time: We aim to respond to all privacy-related inquiries within 48 hours.',
     ],
   },
@@ -140,7 +140,7 @@ export const PrivacyContent = () => {
                     key={itemIndex}
                     className='flex items-start space-x-3 text-gray-600'
                   >
-                    <div className='w-1.5 h-1.5 rounded-full bg-blue-600 mt-2.5 flex-shrink-0' />
+                    <div className='w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2.5 flex-shrink-0' />
                     <p>{item}</p>
                   </div>
                 ))}

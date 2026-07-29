@@ -92,7 +92,7 @@ const FeaturedBlogs = () => {
         <div className="mb-12 flex items-center justify-center sm:mb-16">
           <h2 className="text-3xl font-bold text-center">Featured Articles</h2>
           {/* {usingFallback && (
-            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm ml-4">
+            <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm ml-4">
               Demo Content
             </div>
           )} */}
@@ -134,7 +134,7 @@ const FeaturedBlogs = () => {
                 </div>
                 
                 <Link href={`/blogs/${blog.slug || '#'}`}>
-                  <h3 className="text-xl font-semibold mb-3 hover:text-blue-600 transition-colors">
+                  <h3 className="text-xl font-semibold mb-3 hover:text-indigo-600 transition-colors">
                     {blog.title || 'Untitled'}
                   </h3>
                 </Link>
@@ -145,7 +145,7 @@ const FeaturedBlogs = () => {
                 
                 <Link 
                   href={`/blogs/${blog.slug || '#'}`}
-                  className="text-blue-600 font-medium hover:underline inline-flex items-center"
+                  className="text-indigo-600 font-medium hover:underline inline-flex items-center"
                 >
                   Read More
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

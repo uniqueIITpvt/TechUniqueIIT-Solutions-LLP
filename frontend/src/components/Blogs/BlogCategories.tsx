@@ -79,7 +79,7 @@ export function BlogCategories({
   // Define category colors
   const categoryColors = {
     Technology:
-      'bg-blue-500/10 border-blue-500/30 text-blue-600 hover:bg-blue-500/20',
+      'bg-indigo-500/10 border-indigo-500/30 text-indigo-600 hover:bg-indigo-500/20',
     Programming:
       'bg-green-500/10 border-green-500/30 text-green-600 hover:bg-green-500/20',
     'Web Development':

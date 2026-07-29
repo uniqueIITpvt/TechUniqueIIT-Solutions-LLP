@@ -6,7 +6,7 @@ import { NewsletterCTA } from '@/components/Blogs/NewsletterCTA';
 
 export default function BlogsPage() {
   return (
-    <div className='min-h-screen bg-gray-50 pb-16 md:pb-0'>
+    <div className='min-h-screen bg-white pb-16 md:pb-0'>
       <BlogHero />
       <FeaturedBlogs />
       <BlogList />

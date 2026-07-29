@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export const PrivacyHero = () => {
   return (
-    <section className='py-20 bg-gradient-to-b from-blue-50 to-white'>
+    <section className='py-20 bg-gradient-to-b from-indigo-50 to-white'>
       <div className='container mx-auto px-4'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -12,7 +12,7 @@ export const PrivacyHero = () => {
           transition={{ duration: 0.5 }}
           className='text-center max-w-3xl mx-auto'
         >
-          <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-blue-700 bg-blue-50 rounded-full'>
+          <span className='inline-block px-4 py-1.5 mb-4 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-full'>
             Privacy
           </span>
           <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6'>
