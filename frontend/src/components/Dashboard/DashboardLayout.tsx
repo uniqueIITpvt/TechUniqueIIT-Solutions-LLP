@@ -12,12 +12,20 @@ import {
   FaUser,
   FaEnvelope,
   FaBriefcase,
+  FaUserShield,
 } from 'react-icons/fa';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { MdDashboard, MdCreate } from 'react-icons/md';
 import { useAuth } from '@/contexts/AuthContext';
 
-const menuItems = [
+type MenuItem = {
+  title: string;
+  path: string;
+  icon: React.ReactNode;
+  roles?: string[];
+};
+
+const menuItems: MenuItem[] = [
   {
     title: 'Dashboard',
     path: '/dashboard',
@@ -27,6 +35,7 @@ const menuItems = [
     title: 'Create Post',
     path: '/dashboard/blogs/create',
     icon: <MdCreate size={20} />,
+    roles: ['admin', 'super_admin'],
   },
   {
     title: 'Blogs',
@@ -37,23 +46,43 @@ const menuItems = [
     title: 'Jobs',
     path: '/dashboard/jobs',
     icon: <FaBriefcase size={20} />,
+    roles: ['admin', 'super_admin'],
   },
   {
     title: 'Applications',
     path: '/dashboard/applications',
     icon: <FaUsers size={20} />,
+    roles: ['admin', 'super_admin'],
   },
   {
     title: 'Analytics',
     path: '/dashboard/analytics',
     icon: <FaChartLine size={20} />,
+    roles: ['admin', 'super_admin'],
   },
   {
     title: 'Messages',
     path: '/dashboard/messages',
     icon: <FaEnvelope size={20} />,
+    roles: ['admin', 'super_admin'],
+  },
+  {
+    title: 'Users',
+    path: '/dashboard/users',
+    icon: <FaUserShield size={20} />,
+    roles: ['super_admin'],
   },
 ];
+
+const canSeeItem = (role: string | undefined, item: MenuItem) => {
+  return !item.roles || Boolean(role && item.roles.includes(role));
+};
+
+const formatRole = (role?: string) => {
+  if (role === 'super_admin') return 'Super Admin';
+  if (role === 'admin') return 'Admin';
+  return 'User';
+};
 
 export default function DashboardLayout({
   children,
@@ -66,24 +95,23 @@ export default function DashboardLayout({
   const router = useRouter();
   const { user, logout, validateToken } = useAuth();
   const [isValidatingToken, setIsValidatingToken] = useState(true);
+  const visibleMenuItems = menuItems.filter((item) => canSeeItem(user?.role, item));
+  const canCreatePosts = user?.role === 'admin' || user?.role === 'super_admin';
 
-  // Validate token on mount
   useEffect(() => {
     let isMounted = true;
 
     const checkToken = async () => {
       if (!isMounted) return;
-      
+
       setIsValidatingToken(true);
 
       try {
-        // Simply check if the user is authenticated
         const isValid = await validateToken();
-        
+
         if (!isMounted) return;
 
         if (!isValid) {
-          // Only redirect to login page if not valid, without error
           logout();
         }
       } catch (error) {
@@ -98,13 +126,11 @@ export default function DashboardLayout({
 
     checkToken();
 
-    // Cleanup function to prevent state updates after unmount
     return () => {
       isMounted = false;
     };
   }, [validateToken, logout]);
 
-  // Handle screen resize
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -118,7 +144,6 @@ export default function DashboardLayout({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const sidebar = document.getElementById('sidebar');
@@ -156,7 +181,6 @@ export default function DashboardLayout({
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      {/* Overlay */}
       {isOpen && (
         <div
           className='fixed inset-0 z-30 bg-gray-950/40 md:hidden'
@@ -164,14 +188,12 @@ export default function DashboardLayout({
         />
       )}
 
-      {/* Sidebar */}
       <aside
         id='sidebar'
         className={`fixed top-0 left-0 z-40 h-screen transition-transform duration-300 ease-in-out transform 
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className='h-full w-72 overflow-y-auto border-r border-gray-200 bg-white px-4 py-6 shadow-lg'>
-          {/* Logo/Brand */}
           <div className='flex items-center justify-between mb-8'>
             <div className='flex items-center'>
               <FaBlog size={40} className='text-indigo-600' />
@@ -182,14 +204,14 @@ export default function DashboardLayout({
             <button
               onClick={() => setIsOpen(false)}
               className='md:hidden text-gray-500 hover:text-indigo-600 transition-colors'
+              aria-label='Close sidebar'
             >
               <HiX size={24} />
             </button>
           </div>
 
-          {/* Navigation */}
-          <nav className='space-y-1'>
-            {menuItems.map((item) => (
+          <nav className='space-y-1 pb-28'>
+            {visibleMenuItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
@@ -209,23 +231,26 @@ export default function DashboardLayout({
             ))}
           </nav>
 
-          {/* User Section */}
-          <div className='absolute bottom-0 left-0 right-0 p-4'>
+          <div className='absolute bottom-0 left-0 right-0 p-4 bg-white'>
             <div className='flex items-center rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3'>
               <div className='flex-shrink-0'>
                 <FaUser className='text-indigo-600' size={32} />
               </div>
-              <div className='ml-3'>
-                <p className='text-sm font-medium text-gray-900'>
+              <div className='ml-3 min-w-0'>
+                <p className='truncate text-sm font-medium text-gray-900'>
                   {user?.name || 'Loading...'}
                 </p>
-                <p className='text-xs text-gray-500'>
+                <p className='truncate text-xs text-gray-500'>
                   {user?.email || 'Loading...'}
+                </p>
+                <p className='text-xs font-medium text-indigo-700'>
+                  {formatRole(user?.role)}
                 </p>
               </div>
               <button
                 onClick={handleLogout}
                 className='ml-auto text-indigo-500 hover:text-indigo-700 transition-colors'
+                aria-label='Log out'
               >
                 <FaSignOutAlt size={18} />
               </button>
@@ -234,21 +259,20 @@ export default function DashboardLayout({
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className='md:ml-72 transition-all duration-300'>
-        {/* Header */}
         <header className='sticky top-0 z-20 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur'>
           <div className='flex items-center justify-between px-4 py-4 md:px-6'>
             <div className='flex items-center'>
               <button
                 onClick={() => setIsOpen(true)}
                 className='md:hidden rounded-lg bg-indigo-50 p-2 text-indigo-600 hover:bg-indigo-100 focus:outline-none'
+                aria-label='Open sidebar'
               >
                 <HiMenuAlt3 size={24} />
               </button>
               <div className='ml-4 md:ml-0'>
                 <h1 className='text-lg font-semibold text-gray-800'>
-                  {menuItems.find((item) => item.path === pathname)?.title ||
+                  {visibleMenuItems.find((item) => item.path === pathname)?.title ||
                     'Dashboard'}
                 </h1>
                 <p className='text-sm text-gray-500'>
@@ -257,23 +281,22 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            {/* Header Actions */}
-            <div className='flex items-center space-x-4'>
-              <Link
-                href='/dashboard/blogs/create'
-                className='hidden md:flex items-center px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors'
-              >
-                <MdCreate className='mr-2' size={18} />
-                New Post
-              </Link>
-            </div>
+            {canCreatePosts && (
+              <div className='flex items-center space-x-4'>
+                <Link
+                  href='/dashboard/blogs/create'
+                  className='hidden md:flex items-center px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors'
+                >
+                  <MdCreate className='mr-2' size={18} />
+                  New Post
+                </Link>
+              </div>
+            )}
           </div>
         </header>
 
-        {/* Page Content */}
         <main className='p-4 md:p-6 max-w-7xl mx-auto'>{children}</main>
       </div>
     </div>
   );
 }
-

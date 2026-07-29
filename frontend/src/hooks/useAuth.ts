@@ -11,7 +11,6 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   checkAuth: () => Promise<void>;
@@ -42,24 +41,7 @@ export const useAuth = create<AuthState>()(
           throw error;
         }
       },
-      register: async (name: string, email: string, password: string) => {
-        set({ isLoading: true, error: null });
-        try {
-          const response = await authApi.register(name, email, password);
-          if (response.success && response.token) {
-            set({ 
-              user: response.user, 
-              isAuthenticated: true, 
-              isLoading: false 
-            });
-          } else {
-            throw new Error('Registration failed');
-          }
-        } catch (error: any) {
-          set({ error: error.message, isLoading: false });
-          throw error;
-        }
-      },
+
       logout: () => {
         authApi.logout();
         set({ user: null, isAuthenticated: false });

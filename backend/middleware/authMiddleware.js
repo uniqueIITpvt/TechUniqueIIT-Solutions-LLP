@@ -45,6 +45,13 @@ const protect = asyncHandler(async (req, res, next) => {
       });
     }
 
+    if (user.isActive === false) {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account is inactive. Please contact the super admin.'
+      });
+    }
+
     // Set user in request
     req.user = user;
     next();

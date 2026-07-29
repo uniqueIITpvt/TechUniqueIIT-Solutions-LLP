@@ -43,23 +43,7 @@ export const authApi = {
     }
   },
 
-  register: async (name: string, email: string, password: string) => {
-    try {
-      const response = await api.post('/api/auth/register', { name, email, password });
-      if (response.data.success && response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        // Store user info
-        if (response.data.user) {
-          localStorage.setItem('user', JSON.stringify(response.data.user));
-        }
-      }
-      return response.data;
-    } catch (error: any) {
-      throw new Error(
-        error.response?.data?.message || error.message || 'Failed to register'
-      );
-    }
-  },
+
 
   logout: () => {
     localStorage.removeItem('token');

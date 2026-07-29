@@ -89,6 +89,7 @@ const mountAllRoutes = () => {
   app.use('/api/blogs', require('./routes/blogRoutes'));
   app.use('/api/jobs', require('./routes/jobRoutes'));
   app.use('/api/analytics', require('./routes/analyticsRoutes'));
+  app.use('/api/users', require('./routes/userRoutes'));
 };
 
 const initializeApp = async () => {
