@@ -26,7 +26,7 @@ export default function ContactPage() {
 
 // Add metadata for SEO
 export const metadata = {
-  title: 'Contact Us | TechUniqiit',
+  title: 'Contact Us | TechUniqueIIT',
   description:
-    "Get in touch with TechUniqiit. We'd love to hear from you and discuss how we can help with your project.",
+    "Get in touch with TechUniqueIIT. We'd love to hear from you and discuss how we can help with your project.",
 };

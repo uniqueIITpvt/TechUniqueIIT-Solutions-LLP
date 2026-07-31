@@ -8,7 +8,7 @@ const offices = [
     city: 'New Delhi',
     country: 'India',
     address: 'South Delhi, Delhi, India',
-    image: '/uniqiit-logo.svg',
+    image: '/company/company-1.jpg',
     phone: '+91 7838758293',
     email: 'info@techuniqueiit.com',
   },
@@ -51,7 +51,7 @@ export const CompanyOffices = () => {
                 <div className='relative h-48 overflow-hidden'>
                   <Image
                     src={office.image}
-                    alt={office.city}
+                    alt={office.city + ' office location'}
                     fill
                     className='object-cover group-hover:scale-105 transition-transform duration-500'
                   />
@@ -62,7 +62,7 @@ export const CompanyOffices = () => {
                   <h3 className='text-xl font-bold text-gray-900 mb-1'>
                     {office.city}
                   </h3>
-                  <div className='text-blue-600 font-medium mb-4'>
+                  <div className='text-indigo-600 font-medium mb-4'>
                     {office.country}
                   </div>
                   <div className='space-y-3 text-gray-600'>
@@ -74,7 +74,7 @@ export const CompanyOffices = () => {
                       <span className='font-medium'>Email:</span>{' '}
                       <a
                         href={`mailto:${office.email}`}
-                        className='text-blue-600 hover:text-blue-700'
+                        className='text-indigo-600 hover:text-indigo-700'
                       >
                         {office.email}
                       </a>

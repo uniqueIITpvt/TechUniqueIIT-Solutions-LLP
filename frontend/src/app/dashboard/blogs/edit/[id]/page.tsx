@@ -9,6 +9,7 @@ import { FaArrowLeft, FaImage } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { api } from '@/services/api';
 import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
+import { compressBlogThumbnail, formatImageSize } from '@/utils/imageCompression';
 
 // Import rich text editor dynamically to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -105,7 +106,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   // Handle image selection
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -120,12 +121,21 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      setFeaturedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedFile = await compressBlogThumbnail(file);
+        setFeaturedImage(compressedFile);
+        toast.success(`Thumbnail compressed to ${formatImageSize(compressedFile.size)}`);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error: any) {
+        console.error('Thumbnail compression failed:', error);
+        toast.error(error.message || 'Failed to compress thumbnail');
+        e.target.value = '';
+      }
     }
   };
 

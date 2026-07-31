@@ -23,7 +23,7 @@ export const PrivacyHero = () => {
             security of your personal information.
           </p>
           <div className='text-sm text-gray-500'>
-            Last updated: March 15, 2024
+            Last updated: July 30, 2026
           </div>
         </motion.div>
       </div>

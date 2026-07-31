@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { FaCalendarAlt, FaClock, FaTag } from 'react-icons/fa';
 import LoadingSpinner from '../LoadingSpinner';
 import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
-import { getPaginatedBlogs } from '@/data/fallbackBlogs';
 
 interface Blog {
   _id: string;
@@ -68,17 +67,9 @@ const BlogList = () => {
         const data = await response.json();
         setAllBlogs(normalizeBlogsResponse(data));
       } catch (err) {
-        console.error('Error fetching blogs from API, using fallback data:', err);
-
-        const fallbackData = getPaginatedBlogs(1, 100);
-        if (fallbackData && Array.isArray(fallbackData.blogs)) {
-          setAllBlogs(fallbackData.blogs as Blog[]);
-          setError('');
-          return;
-        }
-
+        console.error('Error fetching blogs from API:', err);
         setAllBlogs([]);
-        setError('Failed to load blogs');
+        setError('Blogs are currently unavailable. Please check back soon.');
       } finally {
         setIsLoading(false);
       }
@@ -126,7 +117,7 @@ const BlogList = () => {
 
   if (isLoading) {
     return (
-      <div className="py-10 text-center">
+      <div className='py-10 text-center'>
         <LoadingSpinner />
       </div>
     );
@@ -134,19 +125,22 @@ const BlogList = () => {
 
   if (error) {
     return (
-      <div className="py-10 text-center">
-        <p className="text-red-500">{error}</p>
-      </div>
+      <section className='bg-white py-12 sm:py-16'>
+        <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8'>
+          <h2 className='text-2xl font-bold text-gray-900'>Blogs unavailable</h2>
+          <p className='mt-3 text-gray-600'>{error}</p>
+        </div>
+      </section>
     );
   }
 
   return (
-    <section className="bg-white py-12 sm:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <section className='bg-white py-12 sm:py-16'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        <div className='mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
           <div>
-            <h2 className="text-3xl font-bold">Our Blog Posts</h2>
-            <p className="mt-2 text-gray-500">
+            <h2 className='text-3xl font-bold'>Our Blog Posts</h2>
+            <p className='mt-2 text-gray-500'>
               {selectedCategory === ALL_CATEGORY
                 ? `${filteredBlogs.length} published blog${filteredBlogs.length === 1 ? '' : 's'} available`
                 : `${filteredBlogs.length} blog${filteredBlogs.length === 1 ? '' : 's'} in ${selectedCategory}`}
@@ -154,8 +148,8 @@ const BlogList = () => {
           </div>
         </div>
 
-        <div className="mb-8 overflow-x-auto pb-2">
-          <div className="flex space-x-2 min-w-max">
+        <div className='mb-8 overflow-x-auto pb-2'>
+          <div className='flex min-w-max space-x-2'>
             {categoriesList.map((category) => {
               const count =
                 category === ALL_CATEGORY
@@ -166,7 +160,7 @@ const BlogList = () => {
                 <button
                   key={category}
                   onClick={() => handleCategoryChange(category)}
-                  className={`px-4 py-2 rounded-full transition-colors ${
+                  className={`rounded-full px-4 py-2 transition-colors ${
                     selectedCategory === category
                       ? 'bg-indigo-600 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -180,26 +174,26 @@ const BlogList = () => {
         </div>
 
         {paginatedBlogs.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-gray-500">No blogs found in this category.</p>
+          <div className='py-10 text-center'>
+            <p className='text-gray-500'>No blogs found in this category.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8'>
               {paginatedBlogs.map((blog) => (
                 <article
                   key={blog._id}
-                  className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-gray-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
+                  className='overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-gray-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl'
                 >
                   <Link href={`/blogs/${blog.slug}`}>
-                    <div className="relative h-52 w-full bg-gray-100">
+                    <div className='relative h-52 w-full bg-gray-100'>
                       <Image
                         src={getImageUrl(blog.featuredImage || '')}
                         alt={blog.title || 'Blog post'}
                         fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
                         unoptimized
-                        className="object-cover"
+                        className='object-cover'
                         onError={(e) => {
                           applyBlogImageFallback(e.currentTarget);
                         }}
@@ -207,10 +201,10 @@ const BlogList = () => {
                     </div>
                   </Link>
 
-                  <div className="p-5 sm:p-6">
-                    <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-                      <span className="inline-flex items-center">
-                        <FaCalendarAlt className="mr-1" />
+                  <div className='p-5 sm:p-6'>
+                    <div className='mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>
+                      <span className='inline-flex items-center'>
+                        <FaCalendarAlt className='mr-1' />
                         {blog.createdAt
                           ? new Date(blog.createdAt).toLocaleDateString('en-US', {
                               month: 'short',
@@ -219,30 +213,30 @@ const BlogList = () => {
                             })
                           : 'No date'}
                       </span>
-                      <span className="inline-flex items-center">
-                        <FaClock className="mr-1" />
+                      <span className='inline-flex items-center'>
+                        <FaClock className='mr-1' />
                         {blog.readTime || 5} min read
                       </span>
                     </div>
 
                     <Link href={`/blogs/${blog.slug}`}>
-                      <h3 className="mb-3 text-xl font-semibold text-gray-900 transition-colors hover:text-indigo-600 line-clamp-2">
+                      <h3 className='mb-3 line-clamp-2 text-xl font-semibold text-gray-900 transition-colors hover:text-indigo-600'>
                         {blog.title || 'Untitled'}
                       </h3>
                     </Link>
 
-                    <p className="mb-4 line-clamp-3 text-gray-600">
+                    <p className='mb-4 line-clamp-3 text-gray-600'>
                       {blog.summary || 'No summary available'}
                     </p>
 
-                    <div className="mb-5 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700">
-                        <FaTag className="mr-1" /> {blog.category || 'Uncategorized'}
+                    <div className='mb-5 flex flex-wrap gap-2'>
+                      <span className='inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700'>
+                        <FaTag className='mr-1' /> {blog.category || 'Uncategorized'}
                       </span>
                       {blog.tags?.slice(0, 2).map((tag) => (
                         <span
                           key={tag}
-                          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                          className='inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700'
                         >
                           {tag}
                         </span>
@@ -251,11 +245,11 @@ const BlogList = () => {
 
                     <Link
                       href={`/blogs/${blog.slug}`}
-                      className="inline-flex items-center font-medium text-indigo-600 hover:underline"
+                      className='inline-flex items-center font-medium text-indigo-600 hover:underline'
                     >
                       Read More
-                      <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      <svg className='ml-1 h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M14 5l7 7m0 0l-7 7m7-7H3' />
                       </svg>
                     </Link>
                   </div>
@@ -264,8 +258,8 @@ const BlogList = () => {
             </div>
 
             {totalPages > 1 && (
-              <div className="mt-12 flex justify-center">
-                <div className="flex space-x-1">
+              <div className='mt-12 flex justify-center'>
+                <div className='flex space-x-1'>
                   <button
                     onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
@@ -314,4 +308,3 @@ const BlogList = () => {
 };
 
 export default BlogList;
-

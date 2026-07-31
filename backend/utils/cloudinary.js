@@ -27,6 +27,13 @@ const buildUploadOptions = (originalName) => ({
     use_filename: true,
     unique_filename: false,
     filename_override: Date.now() + '-' + originalName.replace(/\s+/g, '-'),
+    transformation: [
+        {
+            width: 1200,
+            crop: 'limit',
+            quality: 'auto:eco',
+        },
+    ],
 });
 
 const formatUploadResult = (result) => {

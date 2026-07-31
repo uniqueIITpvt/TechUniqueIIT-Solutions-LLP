@@ -9,67 +9,36 @@ const faqSections = [
     questions: [
       {
         question: 'What services does TechUniqueIIT offer?',
-        answer: `We offer a comprehensive range of digital solutions including:
-          • Web Development & Design
-          • Mobile App Development
-          • Cloud Infrastructure Services
-          • UI/UX Design
-          • Digital Marketing & Branding
-          • AI & Machine Learning Solutions
-          • DevOps Services
-          • IT Consulting`,
+        answer:
+          'TechUniqueIIT focuses on custom web and software development, software maintenance and code management, mobile app development, and digital marketing with social media management. For hosting, deployment, or infrastructure needs, we handle the required server and cloud work as part of a software delivery or maintenance scope.',
       },
       {
         question:
           'How does TechUniqueIIT approach digital marketing and branding?',
-        answer: `Our digital marketing and branding approach is data-driven and results-focused. We create customized strategies that include:
-          • SEO and Content Marketing
-          • Social Media Management
-          • Brand Identity Development
-          • Performance Marketing
-          • Analytics and Reporting
-          • Influencer Marketing
-          • Email Marketing Campaigns`,
+        answer:
+          'We start by understanding the business, target audience, platforms, and current online presence. Based on that, we plan practical work such as social media management, YouTube channel support, SEO basics, content planning, campaign management, and performance review. The goal is steady brand visibility and useful lead generation, not generic posting.',
       },
       {
-        question: 'Can you elaborate on your cloud infrastructure services?',
-        answer: `Our cloud infrastructure services include:
-          • Cloud Migration & Integration
-          • Cloud Architecture Design
-          • AWS/Azure/GCP Solutions
-          • Cloud Security Implementation
-          • Performance Optimization
-          • 24/7 Monitoring & Support
-          • Disaster Recovery Planning`,
+        question: 'Do you provide server and cloud support?',
+        answer:
+          'Yes. Server and cloud support is available when it is connected to a software project or an existing application maintenance engagement. This can include deployment, hosting setup, monitoring, backups, performance checks, and routine server maintenance for platforms such as AWS, Azure, Docker-based environments, or similar stacks.',
       },
     ],
   },
   {
-    title: 'Technology & Innovation',
+    title: 'Technology & Delivery',
     questions: [
       {
         question:
           'What sets TechUniqueIIT apart in terms of software solutions?',
-        answer: `We distinguish ourselves through:
-          • Cutting-edge Technology Stack
-          • Custom Software Development
-          • Agile Development Methodology
-          • Scalable Architecture
-          • Robust Security Measures
-          • Continuous Innovation
-          • Quality Assurance`,
+        answer:
+          'We spend time understanding the business workflow before development starts. That helps us build software around real operations, not only screens. Our work usually includes clear planning, modern web and mobile stacks, practical architecture, testing, deployment support, and post-launch maintenance when needed.',
       },
       {
         question:
           'How does TechUniqueIIT approach website development and design?',
-        answer: `Our website development approach focuses on:
-          • Responsive Design
-          • User-Centric Development
-          • Performance Optimization
-          • SEO-Friendly Architecture
-          • Modern Technologies (React, Next.js)
-          • Regular Maintenance
-          • Security Implementation`,
+        answer:
+          'For websites and web applications, we focus on responsive UI, clear user flows, performance, SEO-ready structure, maintainable code, and secure integrations. Depending on the project, we use technologies such as React, Next.js, Node.js, Python, .NET, MongoDB, PostgreSQL, MySQL, and Tailwind CSS.',
       },
     ],
   },
@@ -78,37 +47,20 @@ const faqSections = [
     questions: [
       {
         question:
-          'What makes TechUniqueIIT a one-stop solution for businesses seeking technological advancement?',
-        answer: `We offer comprehensive end-to-end solutions including:
-          • Strategic IT Consulting
-          • Custom Development
-          • Digital Transformation
-          • Ongoing Support & Maintenance
-          • Technology Stack Integration
-          • Scalable Solutions
-          • Innovation Leadership`,
+          'What makes TechUniqueIIT a practical technology partner for businesses?',
+        answer:
+          'A business can work with us for the full delivery cycle: requirement discussion, UI planning, development, deployment, maintenance, and digital growth support. This is useful for teams that want one accountable technical partner instead of coordinating separate vendors for every step.',
       },
       {
-        question: 'How does TechUniqueIIT ensure client satisfaction?',
-        answer: `We ensure client satisfaction through:
-          • Regular Communication
-          • Transparent Project Management
-          • Quality Deliverables
-          • Timely Support
-          • Performance Monitoring
-          • Client Feedback Integration
-          • Continuous Improvement`,
+        question: 'How does TechUniqueIIT keep projects clear for clients?',
+        answer:
+          'We confirm requirements before major work begins, share progress during development, test key workflows, and take feedback before launch. For maintenance clients, we prioritize issues, explain tradeoffs, and keep the application stable with regular support.',
       },
       {
         question:
           'Can TechUniqueIIT accommodate specific business requirements?',
-        answer: `Yes, we offer customized solutions tailored to specific business needs:
-          • Requirement Analysis
-          • Custom Development
-          • Flexible Engagement Models
-          • Scalable Solutions
-          • Industry-Specific Compliance
-          • Integration Capabilities`,
+        answer:
+          'Yes. Most of our software work is custom. We can adapt modules, dashboards, approval flows, user roles, reports, integrations, and deployment choices around the way your team actually works.',
       },
     ],
   },
@@ -116,27 +68,15 @@ const faqSections = [
     title: 'Industries & Contact',
     questions: [
       {
-        question: 'What industries does TechUniqueIIT cater to?',
-        answer: `We serve various industries including:
-          • E-commerce & Retail
-          • Healthcare & Medical
-          • Finance & Banking
-          • Education & E-learning
-          • Manufacturing
-          • Real Estate
-          • Technology & Software
-          • Startups & SMEs`,
+        question: 'What industries does TechUniqueIIT serve?',
+        answer:
+          'We work with businesses and organizations that need practical software, mobile apps, system maintenance, or digital growth support. Past and current product focus areas include education platforms, HR workflows, sales commission management, business operations, and digital marketing.',
       },
       {
         question:
-          'How can I get in touch with TechUniqueIIT for further inquiries or collaboration?',
-        answer: `You can reach us through multiple channels:
-          • Contact Form on our Website
-          • Email: info@techuniqueiit.com
-          • Phone: +91 7838758293
-          • Schedule a Consultation
-          • Visit our Office
-          • Social Media Platforms`,
+          'How can I get in touch with TechUniqueIIT for a project or collaboration?',
+        answer:
+          'You can contact TechUniqueIIT through the website contact form, email us at info@techuniqueiit.com, or call +91 7838758293. Share your requirement, timeline, and any existing system details so the team can respond with the right next step.',
       },
     ],
   },

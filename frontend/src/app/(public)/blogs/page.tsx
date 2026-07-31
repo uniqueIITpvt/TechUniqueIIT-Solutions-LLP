@@ -1,8 +1,6 @@
 import { BlogHero } from '@/components/Blogs/BlogHero';
-import { BlogCategories } from '@/components/Blogs/BlogCategories';
 import FeaturedBlogs from '@/components/Blogs/FeaturedBlogs';
 import BlogList from '@/components/Blogs/BlogList';
-import { NewsletterCTA } from '@/components/Blogs/NewsletterCTA';
 
 export default function BlogsPage() {
   return (
@@ -10,7 +8,12 @@ export default function BlogsPage() {
       <BlogHero />
       <FeaturedBlogs />
       <BlogList />
-      <NewsletterCTA />
     </div>
   );
 }
+
+export const metadata = {
+  title: 'Blogs | TechUniqueIIT Solutions',
+  description:
+    'Read TechUniqueIIT insights on software development, mobile apps, digital marketing, application maintenance, and practical technology delivery.',
+};

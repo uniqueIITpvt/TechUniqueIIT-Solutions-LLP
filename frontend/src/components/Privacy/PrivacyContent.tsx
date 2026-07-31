@@ -6,103 +6,81 @@ const privacySections = [
   {
     title: 'Information We Collect',
     content: [
-      'Personal information such as name, email address, and contact details when you create an account or contact us.',
-      'Usage data including IP address, browser type, device information, and interaction with our services.',
-      'Cookies and similar tracking technologies to enhance your experience and analyze service usage.',
-      'Payment information when you make purchases (processed securely through our payment providers).',
-      'Communications data including your interactions with our support team.',
-      'Technical data such as login information, time zone setting, and platform preferences.',
+      'Contact details such as your name, email address, phone number, company name, and project requirements when you submit an inquiry or request a consultation.',
+      'Career application details such as resume files, role preferences, work experience, education, portfolio links, and interview communication when you apply for a position.',
+      'Project and support details that you choose to share with us during software development, maintenance, mobile app, or digital marketing discussions.',
+      'Basic website usage and technical data such as IP address, browser, device type, pages visited, timestamps, and form activity for security, diagnostics, analytics, and service improvement.',
+      'Account or dashboard information only when an authorized user is given access to a protected area of our website or services.',
     ],
   },
   {
     title: 'How We Use Your Information',
     content: [
-      'To provide and maintain our services',
-      'To notify you about changes to our services',
-      'To provide customer support and respond to your requests',
-      'To gather analysis or valuable information to improve our services',
-      'To monitor the usage of our services',
-      'To detect, prevent and address technical issues',
-      'To process your transactions and send related information',
-      'To send you technical notices, updates, and security alerts',
-      'To provide news, special offers, and general information about our services',
+      'To respond to project inquiries, job applications, support requests, and other messages sent through our website or official contact channels.',
+      'To understand your requirements, prepare proposals, schedule discussions, and deliver agreed services.',
+      'To build, maintain, deploy, and support software products, websites, mobile applications, and digital marketing work requested by clients.',
+      'To secure our website, diagnose technical issues, prevent misuse, improve performance, and maintain business records.',
+      'To send service-related updates, follow-ups, or information you requested from TechUniqueIIT.',
     ],
   },
   {
-    title: 'Information Sharing and Disclosure',
+    title: 'Sharing and Disclosure',
     content: [
-      'We do not sell or rent your personal information to third parties.',
-      'We may share your information with service providers who assist in delivering our services.',
-      'We may disclose information if required by law or to protect our rights and safety.',
-      'Business transfers: If we are involved in a merger or acquisition, your information may be transferred.',
-      'With your consent: We may share your information with third parties when you explicitly consent.',
-      'Aggregated data: We may share anonymized, aggregated information for business purposes.',
+      'We do not sell or rent your personal information.',
+      'We may share limited information with trusted service providers such as hosting, email, analytics, file storage, communication, or security tools when needed to operate our website or deliver services.',
+      'We may disclose information if required by law, regulation, legal process, or to protect our rights, users, systems, or business operations.',
+      'When you ask us to work with a third-party platform, vendor, or integration for your project, we may share only the information required for that requested work.',
     ],
   },
   {
     title: 'Data Security',
     content: [
-      'We implement appropriate security measures to protect against unauthorized access.',
-      'We regularly review our security practices and update them as needed.',
-      'We use encryption to protect sensitive information transmitted online.',
-      'We restrict access to personal information to employees who need it.',
-      'We maintain physical, electronic, and procedural safeguards.',
-      'We conduct regular security assessments and penetration testing.',
-      'We have incident response procedures in place for potential data breaches.',
+      'We use reasonable technical and organizational safeguards to protect information submitted through our website and service channels.',
+      'Access to personal information is limited to team members or service providers who need it for a legitimate business purpose.',
+      'We use secure infrastructure practices for forms, dashboards, file uploads, and hosted services under our control.',
+      'No online system is completely risk-free, so we encourage users not to submit unnecessary sensitive information through general website forms.',
     ],
   },
   {
     title: 'Your Rights and Choices',
     content: [
-      'Access, update, or delete your personal information',
-      'Opt-out of marketing communications',
-      'Set your browser to refuse cookies',
-      'Request data portability',
-      'Withdraw consent where applicable',
-      'Object to processing of your personal data',
-      'Request restriction of processing your personal data',
-      'Right to be informed about your data collection and use',
-      'Right to lodge a complaint with a supervisory authority',
+      'You may request access, correction, update, or deletion of personal information you have shared with us, subject to applicable law and business record requirements.',
+      'You may opt out of non-essential communications by contacting us or using the unsubscribe option where available.',
+      'You can control cookies through your browser settings.',
+      'Where consent is the basis for processing, you may withdraw consent for future processing by contacting us.',
+      'For India-based users, we handle privacy requests in line with applicable Indian data protection requirements, including the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025 where applicable.',
     ],
   },
   {
-    title: 'Childrens Privacy',
+    title: 'Children Privacy',
     content: [
-      'Our services are not intended for children under 13 years of age.',
-      'We do not knowingly collect personal information from children.',
-      'If we discover we have collected childrens personal information, we will delete it.',
-      'Parents can review, delete, or refuse further collection of their childrens information.',
-      'We encourage parents to supervise their childrens online activities.',
+      'Our website and business services are intended for companies, professionals, applicants, and users who contact us for legitimate service inquiries.',
+      'We do not knowingly collect personal information from children for marketing or sales purposes.',
+      'If a parent or guardian believes a child has submitted personal information to us, they can contact us and request review or deletion.',
     ],
   },
   {
-    title: 'International Data Transfers',
+    title: 'Data Retention',
     content: [
-      'Your information may be transferred to and processed in countries other than your residence.',
-      'We ensure appropriate safeguards are in place for international transfers.',
-      'We comply with applicable laws regarding international data transfers.',
-      'We implement standard contractual clauses where necessary.',
-      'You consent to these transfers by using our services.',
+      'We keep inquiry, support, and project communication records only for as long as needed for business, service, legal, or operational purposes.',
+      'Career application data may be retained for recruitment review and future suitable openings unless deletion is requested.',
+      'Analytics and technical logs may be retained for a limited period to maintain security, debug issues, and improve the website.',
+    ],
+  },
+  {
+    title: 'Cookies and Analytics',
+    content: [
+      'We may use essential cookies or similar technologies to keep the website working correctly.',
+      'We may use analytics tools to understand traffic, page performance, and visitor behavior at an aggregated level.',
+      'You can restrict or block cookies in your browser, but some website features may not work as expected.',
     ],
   },
   {
     title: 'Changes to This Policy',
     content: [
-      'We may update our Privacy Policy from time to time.',
-      'We will notify you of any changes by posting the new Privacy Policy on this page.',
-      'You are advised to review this Privacy Policy periodically for any changes.',
-      'Material changes will be communicated directly to users when possible.',
-      'Continued use of our services after changes constitutes acceptance.',
-    ],
-  },
-  {
-    title: 'Cookie Policy',
-    content: [
-      'We use essential cookies to ensure basic functionality of our website.',
-      'Analytics cookies help us understand how you use our services.',
-      'Marketing cookies are used to provide you with relevant advertising.',
-      'You can control cookie preferences through your browser settings.',
-      'Third-party cookies may be placed by our partners and service providers.',
+      'We may update this Privacy Policy when our services, website features, legal obligations, or operating practices change.',
+      'The updated version will be posted on this page with a revised last-updated date.',
+      'Please review this page periodically if you use our website or services.',
     ],
   },
   {
@@ -112,8 +90,8 @@ const privacySections = [
       'By email: info@techuniqueiit.com',
       'By phone: +91 7838758293',
       'By mail: South Delhi, Delhi, India',
-      'For privacy-related requests, contact the TechUniqueIIT team at info@techuniqueiit.com',
-      'Response time: We aim to respond to all privacy-related inquiries within 48 hours.',
+      'For privacy-related requests, contact the TechUniqueIIT team at info@techuniqueiit.com.',
+      'We aim to respond to privacy-related inquiries within a reasonable time based on the nature of the request.',
     ],
   },
 ];
@@ -156,10 +134,9 @@ export const PrivacyContent = () => {
             className='mt-16 p-6 bg-gray-50 rounded-xl'
           >
             <p className='text-gray-600 text-sm'>
-              This privacy policy is intended to help you understand how we
-              collect, use, and safeguard your information. By using our
-              services, you agree to the collection and use of information in
-              accordance with this policy.
+              This Privacy Policy explains how TechUniqueIIT collects, uses,
+              shares, and protects information submitted through this website
+              and related service communication channels.
             </p>
           </motion.div>
         </div>

@@ -93,9 +93,6 @@ const services = [
 ];
 
 export const ServicesList = () => {
-  const handleDownloadBrochure = () => {
-    alert('TechUniqueIIT Brochure download will start shortly. Thank you for your interest!');
-  };
 
   return (
     <section className='relative overflow-hidden pt-12 pb-10 sm:pt-16 sm:pb-14 bg-gradient-to-b from-white via-indigo-50/30 to-white'>
@@ -159,7 +156,7 @@ export const ServicesList = () => {
                   </div>
                 ))}
                 
-                {/* Action Buttons: Request Consultation & Download Brochure */}
+                {/* Action Buttons */}
                 <div className='pt-3 flex flex-wrap items-center gap-2 sm:gap-3 border-t border-gray-200/60 mt-3'>
                   <Link
                     href='/contact'
@@ -170,16 +167,16 @@ export const ServicesList = () => {
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
                     </svg>
                   </Link>
-
-                  <button
-                    onClick={handleDownloadBrochure}
+                  <a
+                    href='/brochures/techuniqueiit-brochure.pdf'
+                    download
                     className='inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition-colors'
                   >
                     <svg className='w-3.5 h-3.5 mr-1 text-indigo-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
                     </svg>
                     <span>Download Brochure</span>
-                  </button>
+                  </a>
                 </div>
               </div>
             </motion.div>

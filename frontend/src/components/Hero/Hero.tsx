@@ -131,26 +131,25 @@ export const Hero = () => {
                     </Link>
                   </motion.div>
                 </div>
-
-                {/* Stats with enhanced styling */}
-                <div className='grid grid-cols-3 gap-4 sm:gap-8'>
+                {/* Delivery highlights */}
+                <div className='grid gap-3 sm:grid-cols-3'>
                   {[
-                    ['17+', 'Years IT Experience'],
-                    ['4+', 'Years Company Journey'],
-                    ['20+', 'Team Members'],
-                  ].map(([value, label], index) => (
+                    ['Plan', 'Workflow-first discovery'],
+                    ['Build', 'Production-ready delivery'],
+                    ['Support', 'Post-launch ownership'],
+                  ].map(([label, description], index) => (
                     <motion.div
                       key={label}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
-                      className='text-center lg:text-left'
+                      className='rounded-xl border border-indigo-100 bg-white/80 p-3 text-left shadow-sm'
                     >
-                      <div className='text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 text-transparent bg-clip-text mb-1'>
-                        {value}
-                      </div>
-                      <div className='text-sm sm:text-base text-gray-600'>
+                      <div className='text-xs font-bold uppercase tracking-wider text-indigo-600'>
                         {label}
+                      </div>
+                      <div className='mt-1 text-sm text-gray-600'>
+                        {description}
                       </div>
                     </motion.div>
                   ))}
