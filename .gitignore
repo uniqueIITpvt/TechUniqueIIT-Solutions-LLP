@@ -102,3 +102,12 @@ yarn.lock
 .node_repl_history
 .yarn-integrity
 *.tgz
+
+# Audit & Documentation Reports
+*audit_report*
+*AUDIT_REPORT*
+*audit-report*
+*ui_audit_report*
+*REDESIGN_AND_CONTENT_CHANGE_REPORT*
+seo_audit_verified_report.md
+
