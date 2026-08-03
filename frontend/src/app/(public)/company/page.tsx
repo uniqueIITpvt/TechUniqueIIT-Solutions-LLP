@@ -1,3 +1,4 @@
+import { JsonLd, buildBreadcrumbJsonLd } from '@/components/SEO/JsonLd';
 import { CompanyHero } from '@/components/Company/CompanyHero';
 import { CompanyMission } from '@/components/Company/CompanyMission';
 import { CompanyOffices } from '@/components/Company/CompanyOffices';
@@ -8,15 +9,23 @@ import { Testimonials } from '@/components/Home/Testimonials';
 
 export default function CompanyPage() {
   return (
-    <div className='pt-16'>
-      <CompanyHero />
-      <CompanyMission />
-      <CompanyExpertise />
-      <CompanyJourney />
-      <CompanyTeam />
-      <CompanyOffices />
-      <Testimonials />
-    </div>
+    <>
+      <JsonLd
+        data={buildBreadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Company', path: '/company' },
+        ])}
+      />
+      <div className='pt-16'>
+        <CompanyHero />
+        <CompanyMission />
+        <CompanyExpertise />
+        <CompanyJourney />
+        <CompanyTeam />
+        <CompanyOffices />
+        <Testimonials />
+      </div>
+    </>
   );
 }
 
@@ -24,4 +33,10 @@ export const metadata = {
   title: 'Company',
   description:
     'Learn about TechUniqueIIT Solutions, our Delhi-based team, practical delivery approach, leadership, and software development expertise.',
+  alternates: {
+    canonical: '/company',
+  },
+  openGraph: {
+    url: '/company',
+  },
 };

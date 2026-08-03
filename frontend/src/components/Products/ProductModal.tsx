@@ -211,6 +211,7 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
               alt={selectedImage.caption}
               width={1400}
               height={900}
+              sizes='(max-width: 1024px) 100vw, 1024px'
               className='w-full h-auto max-h-[85vh] object-contain rounded-lg'
             />
             <p className='text-white text-center text-sm font-medium mt-3'>{selectedImage.caption}</p>

@@ -1,7 +1,30 @@
+import type { Metadata } from 'next';
+import { JsonLd, buildBreadcrumbJsonLd } from '@/components/SEO/JsonLd';
 import { FaqHero } from '@/components/Faq/FaqHero';
 import { FaqContent } from '@/components/Faq/FaqContent';
 
 import { ServiceCTA } from '@/components/Services/ServiceCTA';
+
+const title = 'FAQ';
+const description =
+  'Find answers about TechUniqueIIT Solutions LLP services, software development process, mobile app work, digital marketing support, maintenance, and project collaboration.';
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: '/company/faq',
+  },
+  openGraph: {
+    title,
+    description,
+    url: '/company/faq',
+  },
+  twitter: {
+    title,
+    description,
+  },
+};
 
 const faqSections = [
   {
@@ -82,12 +105,39 @@ const faqSections = [
   },
 ];
 
+const faqPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqSections.flatMap((section) =>
+    section.questions.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    }))
+  ),
+};
+
 export default function FaqPage() {
   return (
-    <main className='min-h-screen bg-gradient-to-b from-white via-indigo-50/30 to-white pt-16 pb-16 md:pb-0'>
-      <FaqHero />
-      <FaqContent sections={faqSections} />
-      <ServiceCTA />
-    </main>
+    <>
+      <JsonLd
+        data={[
+          faqPageJsonLd,
+          buildBreadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Company', path: '/company' },
+            { name: 'FAQ', path: '/company/faq' },
+          ]),
+        ]}
+      />
+      <main className='min-h-screen bg-gradient-to-b from-white via-indigo-50/30 to-white pt-16 pb-16 md:pb-0'>
+        <FaqHero />
+        <FaqContent sections={faqSections} />
+        <ServiceCTA />
+      </main>
+    </>
   );
 }

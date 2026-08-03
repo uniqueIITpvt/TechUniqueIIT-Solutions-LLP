@@ -53,6 +53,7 @@ export const CompanyOffices = () => {
                     src={office.image}
                     alt={office.city + ' office location'}
                     fill
+                    sizes='(max-width: 640px) 100vw, 576px'
                     className='object-cover group-hover:scale-105 transition-transform duration-500'
                   />
                 </div>

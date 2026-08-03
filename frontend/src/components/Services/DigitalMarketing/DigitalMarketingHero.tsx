@@ -54,6 +54,7 @@ export const DigitalMarketingHero = () => {
               alt='Digital Marketing'
               width={600}
               height={400}
+              sizes='(max-width: 1024px) 100vw, 600px'
               className='rounded-2xl shadow-2xl'
               priority
             />

@@ -77,7 +77,6 @@ const FeaturedBlogs = () => {
                     alt={blog.title || 'Blog post'}
                     fill
                     sizes='(min-width: 768px) 33vw, 100vw'
-                    unoptimized
                     className='object-cover'
                     onError={(e) => {
                       applyBlogImageFallback(e.currentTarget);

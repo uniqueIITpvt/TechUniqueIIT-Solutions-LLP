@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Hero } from '@/components/Hero/Hero';
 import { Features } from '@/components/Home/Features';
 import { Stats } from '@/components/Home/Stats';
@@ -32,9 +33,26 @@ export default function HomePage() {
   );
 }
 
-// Add metadata for SEO
-export const metadata = {
-  title: 'TechUniqueIIT',
-  description:
-    "Get in touch with TechUniqueIIT. We'd love to hear from you and discuss how we can help with your project.",
+const homeTitle =
+  'TechUniqueIIT Solutions LLP | Custom Software, Mobile Apps & Digital Marketing';
+const homeDescription =
+  'TechUniqueIIT Solutions LLP builds custom software, web applications, mobile apps, maintenance solutions, and digital marketing support for businesses in India.';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: homeTitle,
+  },
+  description: homeDescription,
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: homeTitle,
+    description: homeDescription,
+    url: '/',
+  },
+  twitter: {
+    title: homeTitle,
+    description: homeDescription,
+  },
 };

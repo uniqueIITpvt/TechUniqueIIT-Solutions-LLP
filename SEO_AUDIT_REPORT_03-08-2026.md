@@ -1,8 +1,8 @@
-﻿# TechUniqueIIT Website SEO Audit Report
+# TechUniqueIIT Website SEO Audit Report
 
-**Audit Date:** August 3, 2026  
-**Project:** TechUniqueIIT Solutions LLP  
-**Scope:** Local Next.js frontend + Express/Mongo backend SEO readiness audit  
+**Audit Date:** August 3, 2026
+**Project:** TechUniqueIIT Solutions LLP
+**Scope:** Local Next.js frontend + Express/Mongo backend SEO readiness audit
 **Method:** Static source scan, route review, metadata review, asset size scan, and official Google/Next.js documentation cross-check
 
 ---
@@ -13,14 +13,10 @@ The website has a solid public route structure and several key pages already hav
 
 The biggest gaps are:
 
-1. No canonical URL strategy.
-2. Blog detail pages are client-rendered and do not generate server-side SEO metadata.
-3. Careers, FAQ, and Privacy pages are missing page-level metadata.
-4. No structured data for Organization, LocalBusiness, FAQ, BlogPosting, Product, or breadcrumbs.
-5. Several large public images can hurt Core Web Vitals.
-6. Admin/dashboard/login routes are not explicitly marked `noindex`.
+1. Service-specific SEO landing pages are still needed for competitive keywords.
+2. HRMS and SCMS product galleries still need stronger content/screenshots.
 
-Overall status: **SEO foundation partially present, but not production-complete.**
+Overall status: **SEO technical foundation implemented for current priority items; content expansion remains.**
 
 ---
 
@@ -29,17 +25,17 @@ Overall status: **SEO foundation partially present, but not production-complete.
 | Check | Result |
 |---|---|
 | Public Next.js routes exist | Passed |
-| Basic metadata on Home, Services, Products, Blogs, Company, Contact | Partial |
-| Metadata on Careers | Missing |
-| Metadata on FAQ | Missing |
-| Metadata on Privacy | Missing |
-| Dynamic blog metadata | Missing |
+| Basic metadata on Home, Services, Products, Blogs, Company, Contact | Implemented |
+| Metadata on Careers | Implemented |
+| Metadata on FAQ | Implemented |
+| Metadata on Privacy | Implemented |
+| Dynamic blog metadata | Implemented |
 | `robots.txt` | Implemented |
 | `sitemap.xml` | Implemented |
-| Canonical URLs | Missing |
-| Structured data / JSON-LD | Missing |
-| Social Open Graph/Twitter metadata | Default site-wide metadata implemented |
-| Large image assets | Present |
+| Canonical URLs | Implemented for current indexable routes |
+| Structured data / JSON-LD | Implemented for current priority schemas |
+| Social Open Graph/Twitter metadata | Implemented with dedicated Open Graph image route |
+| Large image assets | Optimized and verified |
 | TypeScript check after cleanup | Passed |
 
 ---
@@ -48,7 +44,7 @@ Overall status: **SEO foundation partially present, but not production-complete.
 
 ### SEO-01: Sitemap
 
-**Status:** Implemented  
+**Status:** Implemented
 **Location:** `frontend/src/app/sitemap.ts`
 
 **Why this matters:** Google recommends a sitemap to tell search engines which URLs are important and which URLs are preferred canonicals.
@@ -88,7 +84,7 @@ Exclude:
 
 ### SEO-02: Robots File
 
-**Status:** Implemented  
+**Status:** Implemented
 **Location:** `frontend/src/app/robots.ts`
 
 **Implementation:**
@@ -114,7 +110,7 @@ Host: https://www.techuniqueiit.com
 
 ### SEO-03: Root Metadata
 
-**Status:** Implemented  
+**Status:** Implemented
 **Location:** `frontend/src/app/layout.tsx`
 
 **Implementation:**
@@ -140,192 +136,170 @@ Canonical URLs are still tracked separately under the canonical strategy item, b
 
 ---
 
-### SEO-04: Home Page Metadata Description Is Wrong
+### SEO-04: Home Page Metadata
 
-**Status:** Needs fix  
+**Status:** Implemented
 **Location:** `frontend/src/app/page.tsx`
 
-Current home description is contact-focused:
+**Implementation:**
 
-```ts
-"Get in touch with TechUniqueIIT. We'd love to hear from you..."
-```
+Homepage metadata now uses page-specific SEO copy instead of contact-page text.
 
-This does not describe the homepage. It duplicates the contact-page intent.
+Updated metadata includes:
 
-**Recommendation:**
-
-Use homepage-specific copy, for example:
-
-```txt
-TechUniqueIIT Solutions LLP builds custom software, web applications, mobile apps, maintenance solutions, and digital marketing support for growing businesses.
-```
-
-Also consider adding Delhi/India context if local search is important.
+- Absolute homepage title: `TechUniqueIIT Solutions LLP | Custom Software, Mobile Apps & Digital Marketing`
+- Homepage-specific description for software, web apps, mobile apps, maintenance, and digital marketing
+- Matching Open Graph title/description
+- Matching Twitter title/description
 
 ---
 
-### SEO-05: Blog Detail Pages Do Not Have Server-Side SEO Metadata
+### SEO-05: Blog Detail Server Metadata
 
-**Status:** Major SEO gap  
+**Status:** Implemented
 **Location:** `frontend/src/app/(public)/blogs/[slug]/page.tsx`
 
-Current issue:
+**Implementation:**
 
-- File starts with `'use client'`.
-- Blog data is fetched inside `useEffect`.
-- No `generateMetadata`.
-- No server-rendered title/description for each blog post.
-- No canonical per blog.
-- No BlogPosting schema.
-- Search engines may receive weak initial HTML before blog content loads.
+Blog detail SEO has been moved from client-only loading to a server-rendered route with a client display component.
 
-**Recommendation:**
+Updated files:
 
-Refactor into:
+- `frontend/src/app/(public)/blogs/[slug]/page.tsx`
+- `frontend/src/app/(public)/blogs/[slug]/BlogDetailClient.tsx`
 
-- Server page: `page.tsx`
-- Client UI component: `BlogDetailClient.tsx`
-- `generateMetadata({ params })` to fetch blog by slug and return:
-  - `title`
-  - `description`
-  - `alternates.canonical`
-  - `openGraph`
-  - `twitter`
+Implemented:
 
-Also add JSON-LD:
-
-- `BlogPosting`
-- author
-- datePublished
-- dateModified
-- image
-- headline
-- description
+- Server-side blog fetch by slug
+- `generateMetadata({ params })` for dynamic blog title and description
+- Per-blog canonical URL through `alternates.canonical`
+- Per-blog Open Graph article metadata
+- Per-blog Twitter large image metadata
+- `BlogPosting` JSON-LD in the server-rendered HTML
+- `notFound()` handling with `noindex` metadata for missing blogs
+- React `cache()` memoization so metadata and page render share the same fetch result during a request
 
 ---
 
-### SEO-06: Missing Metadata on Careers, FAQ, and Privacy
+### SEO-06: Careers, FAQ, and Privacy Metadata
 
-**Status:** Missing  
+**Status:** Implemented
 **Locations:**
 
 - `frontend/src/app/(public)/careers/page.tsx`
 - `frontend/src/app/(public)/company/faq/page.tsx`
 - `frontend/src/app/(public)/company/privacy/page.tsx`
 
-**Recommendation:**
+**Implementation:**
 
-Add page-specific metadata.
+Added page-specific metadata for each page:
 
-Suggested intent:
-
-| Page | Suggested title |
-|---|---|
-| Careers | `Careers | TechUniqueIIT Solutions` |
-| FAQ | `FAQ | TechUniqueIIT Solutions` |
-| Privacy | `Privacy Policy | TechUniqueIIT Solutions` |
-
-Descriptions should be unique and accurately summarize each page.
+- `title`
+- unique `description`
+- self-referencing canonical URL through `alternates.canonical`
+- Open Graph title, description, and URL
+- Twitter title and description
 
 ---
 
-### SEO-07: Admin and Login Routes Need Explicit Noindex
+### SEO-09: Structured Data
 
-**Status:** Needs fix  
-**Locations:**
+**Status:** Implemented
 
-- `frontend/src/app/dashboard/*`
-- `frontend/src/app/(auth)/login/page.tsx`
-
-Current issue:
-
-- Dashboard and login routes may inherit default metadata.
-- They should not appear in search results.
-
-**Recommendation:**
-
-Add `robots: { index: false, follow: false }` to:
-
-- `frontend/src/app/dashboard/layout.tsx`
-- `frontend/src/app/(auth)/login/page.tsx` or auth layout
-
-Also disallow these paths in `robots.ts`.
-
----
-
-## Medium Priority Issues
-
-### SEO-08: No Canonical URL Strategy
-
-**Status:** Missing
-
-Google treats canonical tags, redirects, and sitemap inclusion as canonicalization signals. Current code does not define canonical links through Next metadata.
-
-**Recommendation:**
-
-Add self-referencing canonical URLs for all indexable pages.
-
-Examples:
-
-- `/` -> `https://www.techuniqueiit.com/`
-- `/services` -> `https://www.techuniqueiit.com/services`
-- `/blogs/[slug]` -> `https://www.techuniqueiit.com/blogs/{slug}`
-
----
-
-### SEO-09: No Structured Data
-
-**Status:** Missing
-
-Recommended schema:
+Implemented JSON-LD coverage:
 
 | Page/Area | Schema type |
 |---|---|
 | Site-wide | `Organization` |
-| Contact/company | `LocalBusiness` or `ProfessionalService` |
+| Site-wide business profile | `ProfessionalService` |
 | FAQ | `FAQPage` |
-| Blogs list/detail | `Blog`, `BlogPosting` |
-| Products | `SoftwareApplication` or `Product` |
-| Navigation hierarchy | `BreadcrumbList` |
+| Blog detail | `BlogPosting` |
+| Products | `ItemList` with `SoftwareApplication` items |
+| Navigation hierarchy | `BreadcrumbList` on current public indexable routes |
 
-**Recommendation:**
+Updated files:
 
-Add JSON-LD through small reusable components. Keep content accurate and avoid adding fake ratings/reviews.
+- `frontend/src/components/SEO/JsonLd.tsx`
+- `frontend/src/app/layout.tsx`
+- `frontend/src/app/(public)/products/page.tsx`
+- `frontend/src/app/(public)/company/faq/page.tsx`
+- `frontend/src/app/(public)/blogs/[slug]/page.tsx`
+- Current public static pages for breadcrumb JSON-LD
+
+Notes:
+
+- Fake ratings, review counts, prices, and addresses were not added.
+- `ProfessionalService` is used for the business profile with public contact details and South Delhi/India location context.
+- JSON-LD serialization escapes `<` to protect script output when dynamic blog data is used.
 
 ---
+### SEO-10: Open Graph and Twitter Metadata
 
-### SEO-10: Open Graph and Twitter Metadata Are Not Centralized
+**Status:** Implemented
 
-**Status:** Missing/incomplete
+Implemented:
 
-The site needs share previews for social platforms.
+- Added `frontend/src/app/opengraph-image.tsx`.
+- Generates a 1200x630 PNG Open Graph image using Next.js `ImageResponse`.
+- Root Open Graph metadata now uses `/opengraph-image` with explicit `width: 1200` and `height: 630`.
+- Root Twitter metadata now uses `/opengraph-image` with `summary_large_image`.
+- Blog detail pages still override title, description, and image dynamically when a blog has its own featured image.
 
-**Recommendation:**
-
-Add a real `og-image` asset and default Open Graph metadata in `layout.tsx`.
-
-Suggested defaults:
-
-- `siteName: TechUniqueIIT Solutions LLP`
-- `type: website`
-- `locale: en_IN`
-- `url: canonical site URL`
-- `images: [{ url: '/og-image.jpg', width: 1200, height: 630 }]`
-
-Blog detail pages should override image/title/description dynamically.
+Build verification shows `/opengraph-image` is generated as an app route.
 
 ---
 
 ### SEO-11: Large Public Images May Hurt Core Web Vitals
 
-**Status:** Needs optimization  
-**Location:** `frontend/public`
+**Status:** Implemented
+**Location:** `frontend/public`, public blog/product/service image components
 
-Largest assets found:
+**Implementation:**
 
-| Asset | Approx size |
-|---|---:|
+Optimized the current large public image set and removed unused heavy assets.
+
+Used image assets now reduced to:
+
+| Asset | Previous approx size | Current size | Current dimensions |
+|---|---:|---:|---:|
+| `ai/ai-solutions-hero.jpg` | 3,362 KB | 96.6 KB | 1600x1067 |
+| `digital-marketing-hero/digital-marketing-hero.jpg` | 2,969 KB | 122.4 KB | 1600x1600 |
+| `company/company-1.jpg` | 1,415 KB | 177.2 KB | 1600x1068 |
+| `hero-image.jpg` | 1,289 KB | 173.5 KB | 1600x961 |
+| `images/products/ebook-catalog.jpg` | 1,041 KB | 165.2 KB | 1440x900 |
+| `images/products/ebook-portfolio.jpg` | 943 KB | 123.3 KB | 1440x900 |
+| `images/products/ebook-hero.jpg` | 943 KB | 123.3 KB | 1440x900 |
+| `images/products/ebook-audiobook-player.jpg` | 913 KB | 154.6 KB | 1440x900 |
+| `blogs/blogs-1.jpg` | 809 KB | 156.0 KB | 1536x1024 |
+
+Removed unused large public files after confirming no local source references:
+
+- `winter-holidays-people-emotions-concept-cheerful-lovely-romantic-redhead-woman-came-home-war.jpg`
+- `careers/careers-1.jpg`
+- `careers/careers-2.jpg`
+- `careers/careers-3.jpg`
+- `careers/careers-4.jpg`
+- `about/about-1.jpg`
+- `about/about-2.jpg`
+- `about/about-3.jpg`
+- `company/company-2.jpg`
+- `company/company-4.jpg`
+- `testimonials/testimonial-2.jpg`
+- `testimonials/testimonial-4.jpg`
+- `testimonials/testimonial-5.jpg`
+- `testimonials/testimonial-6.jpg`
+
+Image component improvements:
+
+- Removed `unoptimized` from public blog listing/detail images so Next.js can optimize configured local/remote images.
+- Added missing `sizes` values for AI hero, digital marketing hero, company office image, and product lightbox image.
+
+Post-cleanup result:
+
+- Largest remaining public asset is approximately 571 KB.
+- No current public blog component still has `unoptimized`.
+
+---|---:|
 | `winter-holidays-people-emotions...jpg` | 10,173 KB |
 | `ai/ai-solutions-hero.jpg` | 3,362 KB |
 | `careers/careers-4.jpg` | 3,213 KB |
@@ -344,7 +318,7 @@ Largest assets found:
 
 ### SEO-12: Blog API Fetching Uses Client-Side Anti-Cache Timestamp
 
-**Status:** Needs review  
+**Status:** Needs review
 **Location:** `frontend/src/services/api.ts`
 
 The Axios interceptor appends `_t={timestamp}` to requests. This may be fine for admin freshness, but for public SEO content it prevents effective caching patterns.
@@ -429,8 +403,8 @@ Recommendation:
 2. Fix root metadata typo and defaults.
 3. Add `frontend/src/app/sitemap.ts`. **Done**
 4. Add `frontend/src/app/robots.ts`.
-5. Add canonical URLs to all indexable pages.
-6. Add `noindex` to `/dashboard/*` and `/login`.
+5. Add canonical URLs to all indexable pages. **Done**
+6. Add `noindex` to `/dashboard/*` and `/login`. **Done**
 
 ### Phase 2: Page Metadata
 
@@ -442,18 +416,18 @@ Recommendation:
 
 ### Phase 3: Blog SEO
 
-1. Refactor blog detail route into server page + client component.
-2. Add `generateMetadata` for blog details.
-3. Add BlogPosting JSON-LD.
+1. Refactor blog detail route into server page + client component. **Done**
+2. Add `generateMetadata` for blog details. **Done**
+3. Add BlogPosting JSON-LD. **Done**
 4. Include published blog slugs in sitemap.
 
 ### Phase 4: Structured Data
 
-1. Add Organization schema.
-2. Add LocalBusiness/ProfessionalService schema.
-3. Add FAQPage schema.
-4. Add Product/SoftwareApplication schema.
-5. Add BreadcrumbList schema.
+1. Add Organization schema. **Done**
+2. Add LocalBusiness/ProfessionalService schema. **Done**
+3. Add FAQPage schema. **Done**
+4. Add Product/SoftwareApplication schema. **Done**
+5. Add BreadcrumbList schema. **Done**
 
 ### Phase 5: Performance and Content
 
@@ -469,14 +443,14 @@ Recommendation:
 
 | Priority | Item | Impact |
 |---|---|---|
-| P0 | Add canonical metadata + `noindex` handling | Crawl/indexing and duplicate-control foundation |
+| P0 | Add canonical metadata for current indexable pages | Done |
 | P0 | Fix root/home metadata | Brand and snippet quality |
-| P0 | Add noindex for dashboard/login | Prevent private/admin pages in search |
+| P0 | Add noindex for dashboard/login | Done |
 | P1 | Refactor blog detail SEO | Blog discoverability and sharing |
-| P1 | Add canonical URLs and a dedicated OG image asset | Duplicate control and social previews |
+| P1 | Add canonical URLs and a dedicated OG image asset | Done |
 | P1 | Add missing Careers/FAQ/Privacy metadata | Page-level search clarity |
 | P2 | Add structured data | Rich result eligibility and entity clarity |
-| P2 | Optimize large images | Core Web Vitals |
+| P2 | Optimize large images | Done |
 | P3 | Build service-specific SEO pages | Organic keyword growth |
 
 ---
@@ -494,7 +468,4 @@ Recommendation:
 
 ## Final Status
 
-The site is ready for the next SEO implementation pass, but not yet fully SEO-ready. Sitemap, robots, and root metadata have been implemented. The next implementation pass should focus on canonical metadata and `noindex` handling. After that, blog detail server metadata and structured data should be handled.
-
-
-
+The current technical SEO foundation is implemented through SEO-11. Sitemap, robots, root metadata, homepage metadata, blog detail SEO metadata, Careers/FAQ/Privacy metadata, admin/login `noindex` handling, canonical URLs, current priority structured data, dedicated Open Graph image metadata, and large image optimization have been completed. The next implementation pass should focus on public caching behavior, service-specific SEO landing pages, and deeper product content.

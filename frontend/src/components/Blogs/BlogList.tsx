@@ -192,7 +192,6 @@ const BlogList = () => {
                         alt={blog.title || 'Blog post'}
                         fill
                         sizes='(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
-                        unoptimized
                         className='object-cover'
                         onError={(e) => {
                           applyBlogImageFallback(e.currentTarget);
