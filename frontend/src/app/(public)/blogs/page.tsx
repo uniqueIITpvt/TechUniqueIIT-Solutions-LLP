@@ -13,7 +13,7 @@ export default function BlogsPage() {
 }
 
 export const metadata = {
-  title: 'Blogs | TechUniqueIIT Solutions',
+  title: 'Blogs',
   description:
     'Read TechUniqueIIT insights on software development, mobile apps, digital marketing, application maintenance, and practical technology delivery.',
 };

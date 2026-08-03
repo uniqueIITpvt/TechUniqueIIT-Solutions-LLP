@@ -9,7 +9,7 @@ export default function ProductsPage() {
 }
 
 export const metadata = {
-  title: 'Our Products | TechUniqueIIT Solutions',
+  title: 'Our Products',
   description:
     'Explore ready-to-deploy enterprise software products by TechUniqueIIT: HRMS, LMS (Learning Management System), and Tour & Travel Management ERP.',
 };

@@ -20,7 +20,7 @@ export default function ServicesPage() {
 }
 
 export const metadata = {
-  title: 'Services | TechUniqueIIT Solutions',
+  title: 'Services',
   description:
     'Custom software development, Angular, React, Next.js, Node.js, Python, .NET, SQL, Cloud (AWS, Azure, Docker, Kubernetes), software maintenance, and YouTube/Digital Marketing.',
 };

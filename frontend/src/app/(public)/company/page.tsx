@@ -21,7 +21,7 @@ export default function CompanyPage() {
 }
 
 export const metadata = {
-  title: 'Company | TechUniqueIIT Solutions',
+  title: 'Company',
   description:
     'Learn about TechUniqueIIT Solutions, our Delhi-based team, practical delivery approach, leadership, and software development expertise.',
 };
