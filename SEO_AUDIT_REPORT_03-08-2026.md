@@ -14,7 +14,7 @@ The website has a solid public route structure and several key pages already hav
 The biggest gaps are:
 
 1. Service-specific SEO landing pages are still needed for competitive keywords.
-2. HRMS and SCMS product galleries still need stronger content/screenshots.
+2. Real HRMS and SCMS screenshots can still be added when available.
 
 Overall status: **SEO technical foundation implemented for current priority items; content expansion remains.**
 
@@ -318,19 +318,27 @@ Post-cleanup result:
 
 ### SEO-12: Blog API Fetching Uses Client-Side Anti-Cache Timestamp
 
-**Status:** Needs review
-**Location:** `frontend/src/services/api.ts`
+**Status:** Implemented
+**Location:** `frontend/src/app/(public)/blogs/page.tsx`, `frontend/src/components/Blogs/BlogList.tsx`, `frontend/src/components/Blogs/FeaturedBlogs.tsx`
 
-The Axios interceptor appends `_t={timestamp}` to requests. This may be fine for admin freshness, but for public SEO content it prevents effective caching patterns.
+**Issue:**
 
-**Recommendation:**
+The public blog listing previously fetched posts in the browser with `cache: 'no-store'`, and featured blogs used the shared Axios API client. That shared client appends `_t={timestamp}` to requests, which is useful for admin freshness but prevents cache-friendly public SEO fetches.
 
-For server-rendered public SEO pages, use `fetch` directly with:
+**Implementation:**
 
-- `next: { revalidate: 300 }` for blog lists/details, or
-- `cache: 'no-store'` only when freshness is critical
+- Converted `/blogs` to an async server page with `export const revalidate = 300`.
+- Added server-side public blog fetching with `fetch(..., { next: { revalidate: 300 } })`.
+- Passed server-fetched blog data into `FeaturedBlogs` and `BlogList` as initial props.
+- Removed client-side `no-store` blog list fetching.
+- Removed public featured-blog usage of the shared Axios client, so `_t={timestamp}` is no longer used for public blog SEO rendering.
+- Kept client-side filtering and pagination in `BlogList` for UX without re-fetching.
 
-Do not use the browser Axios interceptor for metadata generation or sitemap generation.
+Result:
+
+- Public blog index content is available during server render.
+- Blog list/detail/sitemap public SEO fetches now use Next.js revalidation instead of anti-cache timestamps.
+- Admin/dashboard API freshness behavior remains untouched.
 
 ---
 
@@ -338,11 +346,15 @@ Do not use the browser Axios interceptor for metadata generation or sitemap gene
 
 ### SEO-13: Service Pages Are Too Broad for Competitive Keywords
 
-**Status:** Opportunity
+**Status:** Implemented
 
-Current site has one `/services` page covering many offerings. For SEO, separate focused pages usually perform better.
+**Issue:**
 
-Recommended future pages:
+The site previously had one broad `/services` page covering multiple offerings. That structure is useful as an overview, but it is too broad for competitive service keywords where each search intent needs a focused landing page.
+
+**Implementation:**
+
+Added focused service landing pages:
 
 - `/services/custom-software-development`
 - `/services/web-application-development`
@@ -351,47 +363,103 @@ Recommended future pages:
 - `/services/digital-marketing`
 - `/services/seo-services`
 
-Each page should include:
+Updated files:
 
-- Unique H1
-- Use-case-specific copy
-- Process
-- Technologies
-- FAQs
-- CTA
-- internal links to related services/products/blogs
+- `frontend/src/data/servicePages.ts`
+- `frontend/src/components/Services/ServiceLandingPage.tsx`
+- `frontend/src/app/(public)/services/[slug]/page.tsx`
+- `frontend/src/components/Services/ServicesList.tsx`
+- `frontend/src/components/Home/Features.tsx`
+- `frontend/src/app/sitemap.ts`
+
+Each service page now includes:
+
+- Unique H1 and page copy
+- Page-specific metadata and canonical URL
+- Keyword-focused descriptions
+- Service-specific capabilities, deliverables, process, FAQs, technologies, and related service links
+- `Service` JSON-LD
+- `FAQPage` JSON-LD
+- `BreadcrumbList` JSON-LD
+- Inclusion in `sitemap.xml`
+
+Additional improvement:
+
+- `robots.txt` and `sitemap.xml` site URL fallback now uses `https://www.techuniqueiit.com` instead of falling back to a Vercel deployment URL when production env is missing.
 
 ---
 
 ### SEO-14: Local SEO Can Be Stronger
 
-**Status:** Opportunity
+**Status:** Implemented with verified public details
 
-The site mentions South Delhi/India contact details, but local SEO can be improved.
+**Issue:**
 
-Recommendation:
+The site mentioned South Delhi/India contact details, but local SEO signals were scattered across components and the contact page did not have a dedicated local business/NAP section.
 
-- Add `LocalBusiness` or `ProfessionalService` schema.
-- Keep NAP consistent:
-  - Name: TechUniqueIIT Solutions LLP
-  - Email: `info@techuniqueiit.com`
-  - Phone: `+91 7838758293`
-  - Location: South Delhi, India
-- Add a Google Business Profile link if available.
-- Add map/business address only if it is accurate and intended to be public.
+**Implementation:**
+
+Added a shared business profile source for consistent NAP and service-area details:
+
+- `frontend/src/data/businessProfile.ts`
+
+Updated local SEO coverage:
+
+- Added visible local business/NAP panel on `/contact`.
+- Added service-area coverage for South Delhi, New Delhi, Delhi NCR, and India.
+- Added supported languages: English and Hindi.
+- Added `ContactPage` JSON-LD on `/contact`.
+- Enhanced `ProfessionalService` JSON-LD with stable `@id`, service areas, available languages, service types, and SEO services offer.
+- Updated contact metadata with South Delhi and service intent.
+- Centralized NAP usage in contact, company office, and privacy contact content.
+- Added local-intent keywords such as Delhi NCR software company and South Delhi web application development.
+
+NAP used consistently:
+
+- Name: `TechUniqueIIT Solutions LLP`
+- Email: `info@techuniqueiit.com`
+- Phone: `+91 7838758293`
+- Location: `South Delhi, Delhi, India`
+
+Not added:
+
+- Google Business Profile link, because no verified public profile URL was provided.
+- Embedded map or full street address, because only South Delhi/Delhi/India is currently verified and intended to be public.
+- Fake opening hours, ratings, reviews, coordinates, or street address.
 
 ---
 
 ### SEO-15: Product Content Has an Existing Content Gap
 
-**Status:** Existing non-SEO content gap with SEO impact
+**Status:** Implemented with current verified assets
 
-HRMS and SCMS product galleries are still empty. This reduces product-page depth and conversion value.
+**Issue:**
 
-Recommendation:
+HRMS and SCMS product galleries were empty. This reduced product-page depth and made the product modal feel incomplete compared with LMS and Ebook/Audiobook products.
 
-- Add real screenshots for HRMS and SCMS, or
-- Add a polished no-gallery state and stronger product copy.
+**Implementation:**
+
+Updated product content and UX without inventing fake screenshots:
+
+- Added stronger HRMS product copy covering employee records, attendance, leave approvals, payroll inputs, performance reviews, HR reports, and role-based workflows.
+- Added stronger SCMS product copy covering commission rules, agent tracking, payout calculations, approvals, exports, and audit trails.
+- Added `previewHighlights` content for HRMS and SCMS.
+- Added a polished `Product Workflow Preview` state in the product modal when a real screenshot gallery is not available.
+- Added `Workflow Preview` badge on HRMS/SCMS product cards.
+- Reused the verified HRMS/SCMS portfolio images instead of creating fake application screenshots.
+- Updated products JSON-LD descriptions for HRMS and SCMS.
+- Added missing Ebook/Audiobook product image in products JSON-LD.
+- Fixed products metadata so it reflects LMS, Ebook/Audiobook, HRMS, and SCMS instead of unrelated product wording.
+
+Updated files:
+
+- `frontend/src/components/Products/ProductsList.tsx`
+- `frontend/src/components/Products/ProductModal.tsx`
+- `frontend/src/app/(public)/products/page.tsx`
+
+Remaining future improvement:
+
+- Replace workflow-preview state with real HRMS and SCMS screenshots when production screenshots are available.
 
 ---
 
@@ -434,8 +502,8 @@ Recommendation:
 1. Compress large public images.
 2. Remove unused large assets.
 3. Avoid `unoptimized` on important images where possible.
-4. Create focused service landing pages.
-5. Add HRMS/SCMS screenshots or better no-gallery UX.
+4. Create focused service landing pages. **Done**
+5. Add HRMS/SCMS screenshots or better no-gallery UX. **Done with workflow preview state**
 
 ---
 
@@ -451,7 +519,7 @@ Recommendation:
 | P1 | Add missing Careers/FAQ/Privacy metadata | Page-level search clarity |
 | P2 | Add structured data | Rich result eligibility and entity clarity |
 | P2 | Optimize large images | Done |
-| P3 | Build service-specific SEO pages | Organic keyword growth |
+| P3 | Build service-specific SEO pages | Done |
 
 ---
 
@@ -468,4 +536,4 @@ Recommendation:
 
 ## Final Status
 
-The current technical SEO foundation is implemented through SEO-11. Sitemap, robots, root metadata, homepage metadata, blog detail SEO metadata, Careers/FAQ/Privacy metadata, admin/login `noindex` handling, canonical URLs, current priority structured data, dedicated Open Graph image metadata, and large image optimization have been completed. The next implementation pass should focus on public caching behavior, service-specific SEO landing pages, and deeper product content.
+The current technical SEO foundation is implemented through SEO-15. Sitemap, robots, root metadata, homepage metadata, blog detail SEO metadata, Careers/FAQ/Privacy metadata, admin/login `noindex` handling, canonical URLs, current priority structured data, dedicated Open Graph image metadata, large image optimization, public blog caching, service-specific SEO landing pages, verified local SEO signals, and improved HRMS/SCMS product content have been completed. The next implementation pass should focus on adding real HRMS/SCMS screenshots and Google Business Profile linking when available.

@@ -88,19 +88,27 @@ const productsData: Product[] = [
   },
   {
     id: 'hrms',
-    title: 'HRMS — Human Resource Management System',
+    title: 'HRMS - Human Resource Management System',
     category: 'Enterprise ERP',
     shortDescription:
-      'Complete employee lifecycle management system with attendance tracking, payroll automation, leave workflows, and performance appraisals.',
+      'Complete employee lifecycle management system with attendance tracking, payroll workflows, leave approvals, performance reviews, and HR reporting.',
     fullDescription:
-      'TechUniqueIIT HRMS is an all-in-one Human Resource Management System engineered to simplify HR operations for growing teams and enterprises. From employee onboarding and biometric attendance tracking to automated monthly payroll calculations, leave request workflows, and annual performance reviews — our HRMS reduces administrative overhead significantly and empowers HR teams to focus on people, not paperwork.',
+      'TechUniqueIIT HRMS is an all-in-one Human Resource Management System engineered to simplify people operations for growing teams and enterprises. The product centralizes employee records, role-based access, attendance, leave approvals, payroll inputs, performance reviews, and HR reporting in one workflow-driven platform. It is designed for organizations that need fewer manual spreadsheets, clearer approval trails, faster monthly HR operations, and a scalable foundation for future HR automation.',
     features: [
-      'Employee Directory & Bio Profiles — Centralized team management',
-      'Biometric & Mobile Attendance Tracking — Clock-in/out logging',
-      'Automated Monthly Payroll & Tax Deduction — Salary processing',
-      'Leave Request & Approval Workflows — Manager approval chains',
-      'Performance Evaluation & KPI Tracking — Annual appraisals',
-      'Custom Role-Based Access Control — Admin, HR, Employee roles',
+      'Employee Directory & Bio Profiles - Centralized team management',
+      'Attendance Tracking - Clock-in/out logs and monthly summaries',
+      'Payroll Inputs & Salary Workflows - Faster monthly processing',
+      'Leave Request & Approval Workflows - Manager approval chains',
+      'Performance Evaluation & KPI Tracking - Review cycle support',
+      'Custom Role-Based Access Control - Admin, HR, Manager, Employee roles',
+      'HR Reports & Audit Trail - Cleaner records for operations review',
+    ],
+    previewHighlights: [
+      'Employee master records, documents, departments, and role assignments',
+      'Attendance, leave, payroll input, and approval workflow modules',
+      'Manager and HR dashboards for workforce status and pending actions',
+      'Configurable roles for Admin, HR, Manager, and Employee access',
+      'Reporting layer for monthly HR operations and compliance review',
     ],
     techStack: [
       { layer: 'Frontend', tech: 'React.js, Tailwind CSS' },
@@ -115,19 +123,27 @@ const productsData: Product[] = [
   },
   {
     id: 'scms',
-    title: 'SCMS — Sales Commission Management System',
+    title: 'SCMS - Sales Commission Management System',
     category: 'Business Intelligence',
     shortDescription:
-      'Automated sales commission calculation, agent performance tracking, and real-time payout dashboard for sales-driven organizations.',
+      'Automated sales commission calculation, agent performance tracking, payout approvals, export-ready reports, and audit-friendly incentive workflows.',
     fullDescription:
-      'TechUniqueIIT Sales Commission Management System (SCMS) automates the entire sales commission lifecycle — from defining complex commission structures and tracking individual agent sales to generating accurate payout reports. SCMS eliminates manual spreadsheet-based commission tracking, reduces calculation errors, and gives sales managers real-time visibility into team performance and commission distribution.',
+      'TechUniqueIIT Sales Commission Management System (SCMS) automates the full commission lifecycle for sales-driven teams. The product supports commission rule configuration, agent and manager workflows, sales performance tracking, payout calculations, approval checkpoints, and export-ready reports. It helps companies reduce spreadsheet dependency, avoid calculation disputes, improve payout transparency, and give leadership a clear view of sales incentives and team performance.',
     features: [
-      'Flexible Commission Structure Definition — Tiered, flat, or percentage-based',
-      'Agent Sales Tracking & Performance Dashboard — Real-time metrics',
-      'Automated Commission Calculation Engine — Error-free payouts',
-      'Payout Report Generation — Monthly/quarterly export to CSV/PDF',
-      'Manager Approval Workflow — Commission review and sign-off',
-      'Role-Based Access — Admin, Manager, Sales Agent portals',
+      'Flexible Commission Rule Builder - Tiered, flat, or percentage-based logic',
+      'Agent Sales Tracking & Performance Dashboard - Real-time metrics',
+      'Automated Commission Calculation Engine - Reduced payout errors',
+      'Payout Report Generation - Monthly or quarterly CSV/PDF exports',
+      'Manager Approval Workflow - Commission review and sign-off',
+      'Role-Based Access - Admin, Manager, Finance, Sales Agent portals',
+      'Dispute Reduction & Audit Trail - Clear calculation history',
+    ],
+    previewHighlights: [
+      'Commission rule setup for flat, tiered, percentage, and hybrid structures',
+      'Agent sales tracking with monthly performance and incentive visibility',
+      'Approval workflow for manager, finance, and admin review stages',
+      'Payout report exports for accounting and leadership review',
+      'Audit trail for commission calculations, changes, and approvals',
     ],
     techStack: [
       { layer: 'Frontend', tech: 'React.js, Tailwind CSS' },
@@ -213,6 +229,11 @@ export const ProductsList = () => {
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
                     </svg>
                     <span className='text-[10px] text-white font-semibold'>{product.gallery.length}</span>
+                  </div>
+                )}
+                {product.gallery.length === 0 && product.previewHighlights && (
+                  <div className='absolute top-3 right-3 flex items-center px-2 py-1 bg-black/50 backdrop-blur-sm rounded-full'>
+                    <span className='text-[10px] text-white font-semibold'>Workflow Preview</span>
                   </div>
                 )}
               </div>

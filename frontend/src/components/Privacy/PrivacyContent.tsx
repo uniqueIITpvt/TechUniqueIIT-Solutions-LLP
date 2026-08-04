@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { businessProfile } from '@/data/businessProfile';
 
 const privacySections = [
   {
@@ -87,10 +88,10 @@ const privacySections = [
     title: 'Contact Us',
     content: [
       'If you have any questions about this Privacy Policy, please contact us:',
-      'By email: info@techuniqueiit.com',
-      'By phone: +91 7838758293',
-      'By mail: South Delhi, Delhi, India',
-      'For privacy-related requests, contact the TechUniqueIIT team at info@techuniqueiit.com.',
+      `By email: ${businessProfile.email}`,
+      `By phone: ${businessProfile.phoneDisplay}`,
+      `By mail: ${businessProfile.locationDisplay}`,
+      `For privacy-related requests, contact the TechUniqueIIT team at ${businessProfile.email}.`,
       'We aim to respond to privacy-related inquiries within a reasonable time based on the nature of the request.',
     ],
   },

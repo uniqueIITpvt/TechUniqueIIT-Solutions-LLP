@@ -1,0 +1,28 @@
+export const businessProfile = {
+  name: 'TechUniqueIIT Solutions LLP',
+  shortName: 'TechUniqueIIT',
+  siteUrl: 'https://www.techuniqueiit.com',
+  email: 'info@techuniqueiit.com',
+  phoneDisplay: '+91 7838758293',
+  phoneHref: 'tel:+917838758293',
+  telephone: '+917838758293',
+  locationDisplay: 'South Delhi, Delhi, India',
+  addressLocality: 'South Delhi',
+  addressRegion: 'Delhi',
+  addressCountry: 'IN',
+  serviceAreas: [
+    'South Delhi',
+    'New Delhi',
+    'Delhi NCR',
+    'India',
+  ],
+  languages: ['English', 'Hindi'],
+  services: [
+    'Custom software development',
+    'Web application development',
+    'Mobile app development',
+    'Software maintenance',
+    'Digital marketing',
+    'SEO services',
+  ],
+} as const;

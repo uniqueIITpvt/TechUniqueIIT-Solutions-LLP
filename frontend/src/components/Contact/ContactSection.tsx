@@ -4,12 +4,13 @@ import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { submitContactQuery } from '@/services/contactService';
 import { countryCodes } from '@/data/countryCodes';
+import { businessProfile } from '@/data/businessProfile';
 
 const contactInfo = [
   {
     title: 'Email',
-    content: 'info@techuniqueiit.com',
-    href: 'mailto:info@techuniqueiit.com',
+    content: businessProfile.email,
+    href: `mailto:${businessProfile.email}`,
     icon: (
       <svg
         className='w-5 h-5 sm:w-6 sm:h-6'
@@ -28,8 +29,8 @@ const contactInfo = [
   },
   {
     title: 'Phone',
-    content: '+91 7838758293',
-    href: 'tel:+917838758293',
+    content: businessProfile.phoneDisplay,
+    href: businessProfile.phoneHref,
     icon: (
       <svg
         className='w-5 h-5 sm:w-6 sm:h-6'
@@ -48,7 +49,7 @@ const contactInfo = [
   },
   {
     title: 'Location',
-    content: 'South Delhi, Delhi, India',
+    content: businessProfile.locationDisplay,
     icon: (
       <svg
         className='w-5 h-5 sm:w-6 sm:h-6'

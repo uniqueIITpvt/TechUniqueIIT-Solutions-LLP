@@ -2,12 +2,15 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { businessProfile } from '@/data/businessProfile';
 
 const services = [
   {
     id: 'web-development',
     title: 'Custom Web & Software Development',
     subtitle: 'Scalable, High-Performance Web Applications',
+    schemaPath: '/services/custom-software-development',
+    schemaType: 'Custom software development',
     description:
       'We design and develop custom web applications from scratch tailored to your exact business workflow. Using modern frameworks across Frontend (React.js, Next.js, Angular), Backend (Node.js, Express, Python, .NET), Database (MongoDB, PostgreSQL, MySQL, SQL, GraphQL), and Cloud (AWS, Azure, Docker, Kubernetes, Terraform), we build fast, secure, and resilient web platforms.',
     features: [
@@ -18,7 +21,7 @@ const services = [
       'Custom SaaS & Web Application Development'
     ],
     icon: (
-      <svg className='w-7 h-7 text-indigo-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+      <svg className='w-7 h-7 text-indigo-600' viewBox='0 0 24 24' fill='none' stroke='currentColor' aria-hidden='true'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' />
       </svg>
     ),
@@ -29,6 +32,8 @@ const services = [
     id: 'software-maintenance',
     title: 'Software Maintenance & Code Management',
     subtitle: 'Existing Application Takeover, Support & Server Maintenance',
+    schemaPath: '/services/software-maintenance',
+    schemaType: 'Software maintenance services',
     description:
       'Have an existing software application built by another team? We take full ownership of maintaining, upgrading, and optimizing pre-existing software. From bug fixing, code refactoring, security audits, database backups to 24/7 cloud server uptime management, we ensure your software runs smoothly without interruptions.',
     features: [
@@ -39,7 +44,7 @@ const services = [
       '24/7 Server Monitoring & Ongoing Technical Support'
     ],
     icon: (
-      <svg className='w-7 h-7 text-blue-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+      <svg className='w-7 h-7 text-blue-600' viewBox='0 0 24 24' fill='none' stroke='currentColor' aria-hidden='true'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
       </svg>
@@ -51,6 +56,8 @@ const services = [
     id: 'mobile-development',
     title: 'Mobile App Development',
     subtitle: 'Cross-Platform iOS & Android Applications',
+    schemaPath: '/services/mobile-app-development',
+    schemaType: 'Mobile app development',
     description:
       'Empower your mobile presence with intuitive, feature-rich mobile applications built for both iOS and Android. We utilize React Native and Flutter for seamless cross-platform performance, native feel, and cost-effective development.',
     features: [
@@ -61,7 +68,7 @@ const services = [
       'App Store & Google Play Store Publishing'
     ],
     icon: (
-      <svg className='w-7 h-7 text-purple-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+      <svg className='w-7 h-7 text-purple-600' viewBox='0 0 24 24' fill='none' stroke='currentColor' aria-hidden='true'>
         <rect x='5' y='2' width='14' height='20' rx='2' strokeWidth={1.5} />
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M12 18h.01' />
       </svg>
@@ -73,6 +80,8 @@ const services = [
     id: 'digital-marketing',
     title: 'Digital Marketing & Social Media Management',
     subtitle: 'Data-Driven Brand Visibility & Lead Growth',
+    schemaPath: '/services/digital-marketing',
+    schemaType: 'Digital marketing services',
     description:
       'Scale your brand visibility and attract qualified leads through targeted digital marketing strategies. From YouTube channel growth, Instagram, LinkedIn, and Facebook campaign management to SEO and performance marketing, we build an impactful online brand presence.',
     features: [
@@ -83,7 +92,7 @@ const services = [
       'Brand Identity & Online Reputation Management'
     ],
     icon: (
-      <svg className='w-7 h-7 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+      <svg className='w-7 h-7 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor' aria-hidden='true'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
       </svg>
     ),
@@ -95,7 +104,10 @@ const services = [
 export const ServicesList = () => {
 
   return (
-    <section className='relative overflow-hidden pt-12 pb-10 sm:pt-16 sm:pb-14 bg-gradient-to-b from-white via-indigo-50/30 to-white'>
+    <section
+      className='relative overflow-hidden pt-12 pb-10 sm:pt-16 sm:pb-14 bg-gradient-to-b from-white via-indigo-50/30 to-white'
+      aria-labelledby='services-heading'
+    >
       <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section Header */}
         <motion.div
@@ -109,7 +121,7 @@ export const ServicesList = () => {
             <span className='flex h-2 w-2 rounded-full bg-indigo-600 mr-2'></span>
             What We Do
           </span>
-          <h1 className='text-3xl sm:text-4xl font-bold text-gray-900 mb-4'>
+          <h1 id='services-heading' className='text-3xl sm:text-4xl font-bold text-gray-900 mb-4'>
             Comprehensive Technology &{' '}
             <span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600'>
               Digital Services
@@ -123,63 +135,78 @@ export const ServicesList = () => {
         {/* Services Cards Container (Reduced card size by ~15%) */}
         <div className='space-y-8 mb-12'>
           {services.map((service, index) => (
-            <motion.div
+            <motion.article
               key={service.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.08 }}
               className='bg-white rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-lg border border-gray-100 transition-all duration-300 grid lg:grid-cols-12 gap-6 items-center'
+              itemScope
+              itemType='https://schema.org/Service'
+              aria-labelledby={`service-${service.id}-title`}
             >
+              <meta itemProp='serviceType' content={service.schemaType} />
+              <meta itemProp='url' content={`${businessProfile.siteUrl}${service.schemaPath}`} />
+              <meta itemProp='areaServed' content={businessProfile.serviceAreas.join(', ')} />
+              <span className='hidden' itemProp='provider' itemScope itemType='https://schema.org/Organization'>
+                <meta itemProp='name' content={businessProfile.name} />
+                <meta itemProp='url' content={businessProfile.siteUrl} />
+              </span>
+
               {/* Service Info (7 Cols) */}
               <div className='lg:col-span-7 space-y-3'>
                 <div className='flex items-center space-x-3'>
-                  <div className='p-2.5 bg-gray-50 rounded-xl border border-gray-100'>{service.icon}</div>
+                  <div className='p-2.5 bg-gray-50 rounded-xl border border-gray-100' aria-hidden='true'>{service.icon}</div>
                   <span className='text-xs font-semibold px-2.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-full uppercase tracking-wider'>
                     {service.badge}
                   </span>
                 </div>
-                <h2 className='text-xl sm:text-2xl font-bold text-gray-900'>{service.title}</h2>
+                <h2 id={`service-${service.id}-title`} itemProp='name' className='text-xl sm:text-2xl font-bold text-gray-900'>{service.title}</h2>
                 <p className='text-indigo-600 font-medium text-xs sm:text-sm'>{service.subtitle}</p>
-                <p className='text-gray-600 leading-relaxed text-xs sm:text-sm'>{service.description}</p>
+                <p itemProp='description' className='text-gray-600 leading-relaxed text-xs sm:text-sm'>{service.description}</p>
               </div>
 
               {/* Capabilities & Action Buttons (5 Cols) */}
               <div className='lg:col-span-5 bg-gray-50/80 rounded-xl p-5 border border-gray-100 space-y-2.5'>
                 <h3 className='text-xs font-bold text-gray-900 uppercase tracking-wider mb-2'>Core Capabilities & Stack</h3>
-                {service.features.map((feat, idx) => (
-                  <div key={idx} className='flex items-start text-xs text-gray-700 font-medium leading-snug'>
-                    <svg className='w-3.5 h-3.5 text-indigo-600 mr-2 flex-shrink-0 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
-                    </svg>
-                    <span>{feat}</span>
-                  </div>
-                ))}
-                
+                <ul className='space-y-2.5' aria-label={`${service.title} capabilities`}>
+                  {service.features.map((feat, idx) => (
+                    <li key={idx} className='flex items-start text-xs text-gray-700 font-medium leading-snug'>
+                      <svg className='w-3.5 h-3.5 text-indigo-600 mr-2 flex-shrink-0 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
+                      </svg>
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+
                 {/* Action Buttons */}
                 <div className='pt-3 flex flex-wrap items-center gap-2 sm:gap-3 border-t border-gray-200/60 mt-3'>
                   <Link
                     href='/contact'
+                    aria-label={`Request consultation for ${service.title}`}
                     className='inline-flex items-center justify-center px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm'
                   >
                     <span>Request Consultation</span>
-                    <svg className='w-3.5 h-3.5 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <svg className='w-3.5 h-3.5 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
                     </svg>
                   </Link>
                   <a
                     href='/brochures/techuniqueiit-brochure.pdf'
                     download
+                    aria-label={`Download brochure for ${service.title}`}
                     className='inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition-colors'
                   >
-                    <svg className='w-3.5 h-3.5 mr-1 text-indigo-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <svg className='w-3.5 h-3.5 mr-1 text-indigo-600' fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' />
                     </svg>
                     <span>Download Brochure</span>
                   </a>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </div>

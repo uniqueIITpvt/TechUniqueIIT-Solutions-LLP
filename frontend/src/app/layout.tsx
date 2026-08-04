@@ -3,6 +3,7 @@ import '@/app/globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import { JsonLd } from '@/components/SEO/JsonLd';
+import { businessProfile } from '@/data/businessProfile';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -17,47 +18,45 @@ const defaultDescription =
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'TechUniqueIIT Solutions LLP',
+  name: businessProfile.name,
   url: siteUrl,
   logo: new URL('/techuniqueiit-new-logo.svg', siteUrl).toString(),
-  email: 'info@techuniqueiit.com',
-  telephone: '+91 7838758293',
+  email: businessProfile.email,
+  telephone: businessProfile.telephone,
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+91 7838758293',
-    email: 'info@techuniqueiit.com',
+    telephone: businessProfile.telephone,
+    email: businessProfile.email,
     contactType: 'customer support',
-    areaServed: 'IN',
-    availableLanguage: ['en', 'hi'],
+    areaServed: businessProfile.addressCountry,
+    availableLanguage: businessProfile.languages,
   },
 };
 
 const professionalServiceJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'TechUniqueIIT Solutions LLP',
+  '@id': `${siteUrl}/#local-business`,
+  name: businessProfile.name,
   url: siteUrl,
   image: new URL('/hero-image.jpg', siteUrl).toString(),
   logo: new URL('/techuniqueiit-new-logo.svg', siteUrl).toString(),
-  email: 'info@techuniqueiit.com',
-  telephone: '+91 7838758293',
+  email: businessProfile.email,
+  telephone: businessProfile.telephone,
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'South Delhi',
-    addressRegion: 'Delhi',
-    addressCountry: 'IN',
+    addressLocality: businessProfile.addressLocality,
+    addressRegion: businessProfile.addressRegion,
+    addressCountry: businessProfile.addressCountry,
   },
-  areaServed: {
-    '@type': 'Country',
-    name: 'India',
-  },
-  serviceType: [
-    'Custom software development',
-    'Web application development',
-    'Mobile app development',
-    'Software maintenance',
-    'Digital marketing',
-  ],
+  areaServed: businessProfile.serviceAreas.map((area) => ({
+    '@type': area === 'India' ? 'Country' : 'Place',
+    name: area,
+  })),
+  availableLanguage: businessProfile.languages,
+  serviceType: businessProfile.services,
+
+  knowsAbout: businessProfile.services,
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Technology Services',
@@ -90,6 +89,13 @@ const professionalServiceJsonLd = {
           name: 'Digital Marketing & Social Media Management',
         },
       },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'SEO Services',
+        },
+      },
     ],
   },
 };
@@ -110,10 +116,13 @@ export const metadata: Metadata = {
     'software maintenance',
     'digital marketing services',
     'South Delhi IT company',
+    'software development company Delhi NCR',
+    'web application development South Delhi',
+    'SEO services Delhi',
   ],
-  authors: [{ name: 'TechUniqueIIT Solutions LLP', url: siteUrl }],
-  creator: 'TechUniqueIIT Solutions LLP',
-  publisher: 'TechUniqueIIT Solutions LLP',
+  authors: [{ name: businessProfile.name, url: siteUrl }],
+  creator: businessProfile.name,
+  publisher: businessProfile.name,
   openGraph: {
     type: 'website',
     locale: 'en_IN',

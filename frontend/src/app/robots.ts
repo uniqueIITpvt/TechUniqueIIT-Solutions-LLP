@@ -5,14 +5,9 @@ const DEFAULT_SITE_URL = 'https://www.techuniqueiit.com';
 const trimTrailingSlash = (url: string) => url.replace(/\/+$/, '');
 
 const getSiteUrl = () => {
-  const vercelUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : '';
-
   return trimTrailingSlash(
     process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.SITE_URL ||
-      vercelUrl ||
       DEFAULT_SITE_URL
   );
 };

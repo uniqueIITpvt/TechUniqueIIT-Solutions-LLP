@@ -2,15 +2,16 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { businessProfile } from '@/data/businessProfile';
 
 const offices = [
   {
     city: 'New Delhi',
     country: 'India',
-    address: 'South Delhi, Delhi, India',
+    address: businessProfile.locationDisplay,
     image: '/company/company-1.jpg',
-    phone: '+91 7838758293',
-    email: 'info@techuniqueiit.com',
+    phone: businessProfile.phoneDisplay,
+    email: businessProfile.email,
   },
 ];
 

@@ -1,4 +1,5 @@
-﻿import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
+import { servicePages } from '@/data/servicePages';
 
 const DEFAULT_SITE_URL = 'https://www.techuniqueiit.com';
 
@@ -14,6 +15,8 @@ const staticRoutes = [
   '/contact',
 ] as const;
 
+const serviceRoutes = servicePages.map((service) => `/services/${service.slug}`);
+
 type BlogSitemapItem = {
   slug?: string;
   createdAt?: string;
@@ -28,14 +31,9 @@ type BlogsApiResponse = {
 const trimTrailingSlash = (url: string) => url.replace(/\/+$/, '');
 
 const getSiteUrl = () => {
-  const vercelUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : '';
-
   return trimTrailingSlash(
     process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.SITE_URL ||
-      vercelUrl ||
       DEFAULT_SITE_URL
   );
 };
@@ -80,7 +78,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const blogs = await fetchPublishedBlogs();
 
-  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
+  const staticEntries: MetadataRoute.Sitemap = [
+    ...staticRoutes,
+    ...serviceRoutes,
+  ].map((route) => ({
     url: new URL(route, siteUrl).toString(),
     lastModified: now,
     changeFrequency: route === '/' ? 'weekly' : 'monthly',

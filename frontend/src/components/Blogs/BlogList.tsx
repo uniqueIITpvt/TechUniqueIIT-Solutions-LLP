@@ -1,82 +1,23 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCalendarAlt, FaClock, FaTag } from 'react-icons/fa';
-import LoadingSpinner from '../LoadingSpinner';
 import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
-
-interface Blog {
-  _id: string;
-  title: string;
-  slug: string;
-  summary: string;
-  content: string;
-  featuredImage: string;
-  category: string;
-  tags: string[];
-  readTime: number;
-  createdAt: string;
-  updatedAt: string;
-  viewCount: number;
-  author: any;
-}
+import type { Blog } from '@/types/blog';
 
 const BLOGS_PER_PAGE = 6;
 const ALL_CATEGORY = 'All';
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
-
-const normalizeBlogsResponse = (response: any): Blog[] => {
-  const possibleBlogs =
-    response?.data?.data ??
-    response?.data?.blogs ??
-    response?.data ??
-    response?.blogs ??
-    response;
-
-  return Array.isArray(possibleBlogs)
-    ? possibleBlogs.filter((blog: Blog) => blog && blog._id)
-    : [];
+type BlogListProps = {
+  initialBlogs: Blog[];
 };
 
-const BlogList = () => {
-  const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+const BlogList = ({ initialBlogs }: BlogListProps) => {
+  const [allBlogs] = useState<Blog[]>(initialBlogs);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORY);
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setIsLoading(true);
-        setError('');
-
-        const response = await fetch(`${API_BASE_URL}/api/blogs?page=1&limit=100`, {
-          cache: 'no-store',
-          headers: {
-            Accept: 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch blogs: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setAllBlogs(normalizeBlogsResponse(data));
-      } catch (err) {
-        console.error('Error fetching blogs from API:', err);
-        setAllBlogs([]);
-        setError('Blogs are currently unavailable. Please check back soon.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, []);
 
   const categoriesList = useMemo(() => {
     const dynamicCategories = Array.from(
@@ -115,24 +56,6 @@ const BlogList = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (isLoading) {
-    return (
-      <div className='py-10 text-center'>
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className='bg-white py-12 sm:py-16'>
-        <div className='mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8'>
-          <h2 className='text-2xl font-bold text-gray-900'>Blogs unavailable</h2>
-          <p className='mt-3 text-gray-600'>{error}</p>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className='bg-white py-12 sm:py-16'>

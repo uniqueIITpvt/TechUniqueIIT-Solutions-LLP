@@ -1,60 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
-import { blogApi } from '@/services/api';
-import LoadingSpinner from '../LoadingSpinner';
 import { applyBlogImageFallback, getImageUrl } from '@/utils/imageHelper';
+import type { Blog } from '@/types/blog';
 
-interface Blog {
-  _id: string;
-  title: string;
-  slug: string;
-  summary: string;
-  featuredImage: string;
-  readTime: number;
-  createdAt: string;
-}
+type FeaturedBlogsProps = {
+  initialBlogs: Blog[];
+};
 
-const FeaturedBlogs = () => {
-  const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFeaturedBlogs = async () => {
-      try {
-        setIsLoading(true);
-        const response = await blogApi.getFeaturedBlogs();
-
-        if (response.success && Array.isArray(response.data)) {
-          setFeaturedBlogs(response.data);
-        } else if (Array.isArray(response)) {
-          setFeaturedBlogs(response);
-        } else if (response && Array.isArray(response.blogs)) {
-          setFeaturedBlogs(response.blogs);
-        } else {
-          throw new Error('Unexpected response format');
-        }
-      } catch (err) {
-        console.error('Error fetching featured blogs from API:', err);
-        setFeaturedBlogs([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFeaturedBlogs();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className='py-10 text-center'>
-        <LoadingSpinner />
-      </div>
-    );
-  }
+const FeaturedBlogs = ({ initialBlogs }: FeaturedBlogsProps) => {
+  const featuredBlogs = initialBlogs;
 
   if (!featuredBlogs || !Array.isArray(featuredBlogs) || featuredBlogs.length === 0) {
     return null;

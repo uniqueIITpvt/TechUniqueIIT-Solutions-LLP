@@ -33,6 +33,7 @@ const productsJsonLd = {
         applicationCategory: 'EducationalApplication',
         operatingSystem: 'Web',
         url: 'https://www.techuniqueiit.com/products',
+        image: 'https://www.techuniqueiit.com/images/products/ebook-portfolio.jpg',
         description:
           'A digital content platform for ebooks, audiobooks, summaries, subscriptions, purchases, and cross-device progress sync.',
         provider: {
@@ -52,7 +53,7 @@ const productsJsonLd = {
         url: 'https://www.techuniqueiit.com/products',
         image: 'https://www.techuniqueiit.com/images/products/HRMS-portfolio.jpg',
         description:
-          'A human resource management system for employee lifecycle management, attendance, payroll, leave workflows, and performance reviews.',
+          'A human resource management system for employee records, attendance, leave approvals, payroll inputs, performance reviews, HR reports, and role-based access workflows.',
         provider: {
           '@type': 'Organization',
           name: 'TechUniqueIIT Solutions LLP',
@@ -70,7 +71,7 @@ const productsJsonLd = {
         url: 'https://www.techuniqueiit.com/products',
         image: 'https://www.techuniqueiit.com/images/products/SCMS-portfolio.jpg',
         description:
-          'A sales commission management system for commission structures, agent performance tracking, payout reports, and approval workflows.',
+          'A sales commission management system for commission rules, agent performance tracking, payout calculations, approval workflows, export-ready reports, and audit trails.',
         provider: {
           '@type': 'Organization',
           name: 'TechUniqueIIT Solutions LLP',
@@ -102,7 +103,7 @@ export default function ProductsPage() {
 export const metadata = {
   title: 'Our Products',
   description:
-    'Explore ready-to-deploy enterprise software products by TechUniqueIIT: HRMS, LMS (Learning Management System), and Tour & Travel Management ERP.',
+    'Explore TechUniqueIIT software products for learning management, ebook and audiobook publishing, HRMS operations, and sales commission management workflows.',
   alternates: {
     canonical: '/products',
   },

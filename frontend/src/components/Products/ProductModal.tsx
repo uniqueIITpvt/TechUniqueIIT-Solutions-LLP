@@ -22,6 +22,7 @@ export interface Product {
   shortDescription: string;
   fullDescription: string;
   features: string[];
+  previewHighlights?: string[];
   techStack: TechStackItem[];
   thumbnail: string;
   gallery: GalleryImage[];
@@ -160,6 +161,38 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                     </button>
                   ))}
                 </div>
+              </div>
+            )}
+            {product.gallery.length === 0 && product.previewHighlights && (
+              <div className='pt-3 border-t border-gray-100'>
+                <h3 className='text-base font-bold text-gray-900 mb-3'>Product Workflow Preview</h3>
+                <div className='grid gap-4 sm:grid-cols-[0.9fr_1.1fr]'>
+                  <div className='relative aspect-video overflow-hidden rounded-xl border border-gray-100 bg-gray-50'>
+                    <Image
+                      src={product.thumbnail}
+                      alt={`${product.title} overview`}
+                      fill
+                      className='object-cover'
+                      sizes='(max-width: 768px) 100vw, 360px'
+                    />
+                  </div>
+                  <div className='grid gap-2'>
+                    {product.previewHighlights.map((highlight) => (
+                      <div
+                        key={highlight}
+                        className='flex items-start rounded-xl border border-gray-100 bg-gray-50 p-3'
+                      >
+                        <svg className='mt-0.5 h-4 w-4 flex-shrink-0 text-indigo-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
+                        </svg>
+                        <span className='ml-2 text-xs font-medium leading-snug text-gray-700'>{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <p className='mt-3 text-xs leading-5 text-gray-500'>
+                  Detailed screens can be reviewed during a product walkthrough and customized to match your organization workflow.
+                </p>
               </div>
             )}
           </div>
