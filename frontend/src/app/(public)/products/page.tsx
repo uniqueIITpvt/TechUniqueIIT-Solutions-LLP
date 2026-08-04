@@ -1,5 +1,6 @@
 import { JsonLd, buildBreadcrumbJsonLd } from '@/components/SEO/JsonLd';
 import { ProductsList } from '@/components/Products/ProductsList';
+import { businessProfile } from '@/data/businessProfile';
 
 const productsJsonLd = {
   '@context': 'https://schema.org',
@@ -17,7 +18,7 @@ const productsJsonLd = {
         url: 'https://www.techuniqueiit.com/products',
         image: 'https://www.techuniqueiit.com/images/products/lms-portfolio.jpg',
         description:
-          'A full-stack learning management system for courses, student access, purchases, reviews, and progress tracking.',
+          'LMS development company India product example: a full-stack learning management system for courses, student access, purchases, reviews, and progress tracking.',
         provider: {
           '@type': 'Organization',
           name: 'TechUniqueIIT Solutions LLP',
@@ -53,7 +54,7 @@ const productsJsonLd = {
         url: 'https://www.techuniqueiit.com/products',
         image: 'https://www.techuniqueiit.com/images/products/HRMS-portfolio.jpg',
         description:
-          'A human resource management system for employee records, attendance, leave approvals, payroll inputs, performance reviews, HR reports, and role-based access workflows.',
+          'HRMS software development company product example for employee records, attendance, leave approvals, payroll inputs, performance reviews, HR reports, and role-based access workflows.',
         provider: {
           '@type': 'Organization',
           name: 'TechUniqueIIT Solutions LLP',
@@ -101,13 +102,23 @@ export default function ProductsPage() {
 }
 
 export const metadata = {
-  title: 'Our Products',
+  title: 'HRMS & LMS Software Products | TechUniqueIIT Solutions',
   description:
-    'Explore TechUniqueIIT software products for learning management, ebook and audiobook publishing, HRMS operations, and sales commission management workflows.',
+    'Explore TechUniqueIIT software products including HRMS software development company workflows, LMS development company India examples, ebook publishing, and sales commission management systems.',
+  keywords: [
+    ...businessProfile.priorityKeywords,
+    'HRMS software development company',
+    'LMS development company India',
+    'learning management system development',
+    'human resource management software development',
+  ],
   alternates: {
     canonical: '/products',
   },
   openGraph: {
+    title: 'HRMS & LMS Software Products | TechUniqueIIT Solutions',
+    description:
+      'Explore HRMS and LMS software product examples from TechUniqueIIT Solutions LLP.',
     url: '/products',
   },
 };

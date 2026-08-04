@@ -21,7 +21,7 @@ const features = [
       'AWS',
       'Azure',
     ],
-    href: '/services/custom-software-development',
+    href: '/services',
     icon: (
       <svg className='w-6 h-6 text-indigo-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' />
@@ -44,7 +44,7 @@ const features = [
       'Docker',
       'Cloud Ops',
     ],
-    href: '/services/software-maintenance',
+    href: '/services',
     icon: (
       <svg className='w-6 h-6 text-blue-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
@@ -68,7 +68,7 @@ const features = [
       'Push Notifications',
       'Store Launch',
     ],
-    href: '/services/mobile-app-development',
+    href: '/services',
     icon: (
       <svg className='w-6 h-6 text-purple-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
         <rect x='5' y='2' width='14' height='20' rx='2' strokeWidth={1.5} />
@@ -92,7 +92,7 @@ const features = [
       'Analytics',
       'Lead Generation',
     ],
-    href: '/services/digital-marketing',
+    href: '/services',
     icon: (
       <svg className='w-6 h-6 text-emerald-600' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' />
@@ -179,7 +179,7 @@ export const Features = () => {
                 </div>
 
                 <span className='mt-auto inline-flex items-center border-t border-gray-100 pt-4 text-xs font-bold text-indigo-600'>
-                  Explore service
+                  View services
                   <svg className='ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1' fill='none' stroke='currentColor' viewBox='0 0 24 24' aria-hidden='true'>
                     <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
                   </svg>

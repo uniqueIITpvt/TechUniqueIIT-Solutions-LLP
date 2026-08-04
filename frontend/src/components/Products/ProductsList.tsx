@@ -14,7 +14,7 @@ const productsData: Product[] = [
     shortDescription:
       'A feature-rich full-stack web application designed to empower students to access, purchase, and engage with courses seamlessly.',
     fullDescription:
-      'UniqueIIT Learning Management System (LMS) is a feature-rich full-stack web application designed to empower students to access, purchase, and engage with courses seamlessly. Leveraging the power of React.js, Node.js, Express.js, MongoDB, and Tailwind CSS, we have developed a platform that facilitates learning in an intuitive and user-friendly manner. Students can browse courses, purchase them, leave ratings & reviews, and track progress — while instructors can upload and manage course content through a streamlined admin interface.',
+      'UniqueIIT Learning Management System (LMS) reflects our LMS development company India experience, built as a feature-rich full-stack web application designed to empower students to access, purchase, and engage with courses seamlessly. Leveraging the power of React.js, Node.js, Express.js, MongoDB, and Tailwind CSS, we have developed a platform that facilitates learning in an intuitive and user-friendly manner. Students can browse courses, purchase them, leave ratings & reviews, and track progress — while instructors can upload and manage course content through a streamlined admin interface.',
     features: [
       'User Authentication — Secure sign up, sign in, and account management',
       'Course Marketplace — Browse, search, and purchase courses across categories',
@@ -93,7 +93,7 @@ const productsData: Product[] = [
     shortDescription:
       'Complete employee lifecycle management system with attendance tracking, payroll workflows, leave approvals, performance reviews, and HR reporting.',
     fullDescription:
-      'TechUniqueIIT HRMS is an all-in-one Human Resource Management System engineered to simplify people operations for growing teams and enterprises. The product centralizes employee records, role-based access, attendance, leave approvals, payroll inputs, performance reviews, and HR reporting in one workflow-driven platform. It is designed for organizations that need fewer manual spreadsheets, clearer approval trails, faster monthly HR operations, and a scalable foundation for future HR automation.',
+      'TechUniqueIIT HRMS reflects our HRMS software development company capability and is an all-in-one Human Resource Management System engineered to simplify people operations for growing teams and enterprises. The product centralizes employee records, role-based access, attendance, leave approvals, payroll inputs, performance reviews, and HR reporting in one workflow-driven platform. It is designed for organizations that need fewer manual spreadsheets, clearer approval trails, faster monthly HR operations, and a scalable foundation for future HR automation.',
     features: [
       'Employee Directory & Bio Profiles - Centralized team management',
       'Attendance Tracking - Clock-in/out logs and monthly summaries',
@@ -183,7 +183,7 @@ export const ProductsList = () => {
             </span>
           </h1>
           <p className='text-base text-gray-600 leading-relaxed'>
-            In addition to custom development, TechUniqueIIT builds production-grade software products for education, HR management, and sales operations. Click any product to explore features and screenshots.
+            In addition to custom development, TechUniqueIIT builds production-grade software products for education, HR management, and sales operations, including LMS and HRMS software development examples. Click any product to explore features and screenshots.
           </p>
         </motion.div>
 

@@ -9,7 +9,6 @@ const services = [
     id: 'web-development',
     title: 'Custom Web & Software Development',
     subtitle: 'Scalable, High-Performance Web Applications',
-    schemaPath: '/services/custom-software-development',
     schemaType: 'Custom software development',
     description:
       'We design and develop custom web applications from scratch tailored to your exact business workflow. Using modern frameworks across Frontend (React.js, Next.js, Angular), Backend (Node.js, Express, Python, .NET), Database (MongoDB, PostgreSQL, MySQL, SQL, GraphQL), and Cloud (AWS, Azure, Docker, Kubernetes, Terraform), we build fast, secure, and resilient web platforms.',
@@ -32,7 +31,6 @@ const services = [
     id: 'software-maintenance',
     title: 'Software Maintenance & Code Management',
     subtitle: 'Existing Application Takeover, Support & Server Maintenance',
-    schemaPath: '/services/software-maintenance',
     schemaType: 'Software maintenance services',
     description:
       'Have an existing software application built by another team? We take full ownership of maintaining, upgrading, and optimizing pre-existing software. From bug fixing, code refactoring, security audits, database backups to 24/7 cloud server uptime management, we ensure your software runs smoothly without interruptions.',
@@ -56,7 +54,6 @@ const services = [
     id: 'mobile-development',
     title: 'Mobile App Development',
     subtitle: 'Cross-Platform iOS & Android Applications',
-    schemaPath: '/services/mobile-app-development',
     schemaType: 'Mobile app development',
     description:
       'Empower your mobile presence with intuitive, feature-rich mobile applications built for both iOS and Android. We utilize React Native and Flutter for seamless cross-platform performance, native feel, and cost-effective development.',
@@ -80,7 +77,6 @@ const services = [
     id: 'digital-marketing',
     title: 'Digital Marketing & Social Media Management',
     subtitle: 'Data-Driven Brand Visibility & Lead Growth',
-    schemaPath: '/services/digital-marketing',
     schemaType: 'Digital marketing services',
     description:
       'Scale your brand visibility and attract qualified leads through targeted digital marketing strategies. From YouTube channel growth, Instagram, LinkedIn, and Facebook campaign management to SEO and performance marketing, we build an impactful online brand presence.',
@@ -147,7 +143,7 @@ export const ServicesList = () => {
               aria-labelledby={`service-${service.id}-title`}
             >
               <meta itemProp='serviceType' content={service.schemaType} />
-              <meta itemProp='url' content={`${businessProfile.siteUrl}${service.schemaPath}`} />
+              <meta itemProp='url' content={`${businessProfile.siteUrl}/services`} />
               <meta itemProp='areaServed' content={businessProfile.serviceAreas.join(', ')} />
               <span className='hidden' itemProp='provider' itemScope itemType='https://schema.org/Organization'>
                 <meta itemProp='name' content={businessProfile.name} />

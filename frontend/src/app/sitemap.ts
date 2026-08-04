@@ -1,5 +1,4 @@
 import type { MetadataRoute } from 'next';
-import { servicePages } from '@/data/servicePages';
 
 const DEFAULT_SITE_URL = 'https://www.techuniqueiit.com';
 
@@ -15,7 +14,6 @@ const staticRoutes = [
   '/contact',
 ] as const;
 
-const serviceRoutes = servicePages.map((service) => `/services/${service.slug}`);
 
 type BlogSitemapItem = {
   slug?: string;
@@ -78,10 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const blogs = await fetchPublishedBlogs();
 
-  const staticEntries: MetadataRoute.Sitemap = [
-    ...staticRoutes,
-    ...serviceRoutes,
-  ].map((route) => ({
+  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: new URL(route, siteUrl).toString(),
     lastModified: now,
     changeFrequency: route === '/' ? 'weekly' : 'monthly',

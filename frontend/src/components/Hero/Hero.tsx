@@ -73,9 +73,9 @@ export const Hero = () => {
                 </h1>
 
                 <p className='text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0'>
-                  We are a team of passionate developers and designers, crafting
-                  innovative solutions that help businesses thrive in the
-                  digital age.
+                  TechUniqueIIT Solutions LLP is a software development company in
+                  Delhi NCR helping businesses build custom software, web apps,
+                  mobile apps, MVPs, and offshore software products in India.
                 </p>
 
                 {/* Buttons with enhanced styling */}

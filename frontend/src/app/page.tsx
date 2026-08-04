@@ -9,6 +9,7 @@ import { ContactSection } from '@/components/Contact/ContactSection';
 import { Header } from '@/components/Header/Header';
 import { Footer } from '@/components/Footer/Footer';
 import { MobileNavigation } from '@/components/Header/MobileNavigation';
+import { businessProfile } from '@/data/businessProfile';
 
 export default function HomePage() {
   return (
@@ -34,15 +35,25 @@ export default function HomePage() {
 }
 
 const homeTitle =
-  'TechUniqueIIT Solutions LLP | Custom Software, Mobile Apps & Digital Marketing';
+  'Software Development Company in Delhi NCR | TechUniqueIIT';
 const homeDescription =
-  'TechUniqueIIT Solutions LLP builds custom software, web applications, mobile apps, maintenance solutions, and digital marketing support for businesses in India.';
+  'TechUniqueIIT is a software development company in Delhi NCR providing custom software, web applications, mobile apps, cloud solutions, UI/UX design and application maintenance services.';
 
 export const metadata: Metadata = {
   title: {
     absolute: homeTitle,
   },
   description: homeDescription,
+  keywords: [
+    ...businessProfile.priorityKeywords,
+    ...businessProfile.brandKeywords,
+    'software development company Delhi NCR',
+    'custom software company Delhi NCR',
+    'web and mobile app development company Delhi',
+    'cloud solutions company Delhi NCR',
+    'UI UX design services Delhi NCR',
+    'application maintenance services Delhi NCR',
+  ],
   alternates: {
     canonical: '/',
   },

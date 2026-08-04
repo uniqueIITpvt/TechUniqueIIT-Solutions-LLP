@@ -6,6 +6,7 @@ import { CompanyTeam } from '@/components/Company/CompanyTeam';
 import { CompanyExpertise } from '@/components/Company/CompanyExpertise';
 import { CompanyJourney } from '@/components/Company/CompanyJourney';
 import { Testimonials } from '@/components/Home/Testimonials';
+import { businessProfile } from '@/data/businessProfile';
 
 export default function CompanyPage() {
   return (
@@ -30,13 +31,22 @@ export default function CompanyPage() {
 }
 
 export const metadata = {
-  title: 'Company',
+  title: 'TechUniqueIIT Company | Software Company in Delhi',
   description:
-    'Learn about TechUniqueIIT Solutions, our Delhi-based team, practical delivery approach, leadership, and software development expertise.',
+    'Learn about TechUniqueIIT Solutions LLP, also searched as Tech Unique IIT, a Delhi software company for development services, careers, and client reviews.',
+  keywords: [
+    ...businessProfile.brandKeywords,
+    'TechUniqueIIT Delhi',
+    'TechUniqueIIT software company',
+    'TechUniqueIIT reviews',
+  ],
   alternates: {
     canonical: '/company',
   },
   openGraph: {
+    title: 'TechUniqueIIT Company | Software Company in Delhi',
+    description:
+      'About TechUniqueIIT Solutions LLP, a Delhi software company for services, careers, and client reviews.',
     url: '/company',
   },
 };

@@ -11,14 +11,33 @@ const siteUrl =
   'https://www.techuniqueiit.com';
 
 const defaultTitle =
-  'TechUniqueIIT Solutions LLP | Custom Software, Mobile Apps & Digital Marketing';
+  'Software Development Company in Delhi NCR | TechUniqueIIT';
 const defaultDescription =
-  'TechUniqueIIT Solutions LLP builds custom software, web applications, mobile apps, maintenance solutions, and digital marketing support for businesses in India.';
+  'TechUniqueIIT is a software development company in Delhi NCR providing custom software, web applications, mobile apps, cloud solutions, UI/UX design and application maintenance services.';
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  url: siteUrl,
+  name: businessProfile.name,
+  alternateName: businessProfile.alternateNames,
+  inLanguage: 'en-IN',
+  publisher: {
+    '@type': 'Organization',
+    '@id': `${siteUrl}/#organization`,
+    name: businessProfile.name,
+  },
+};
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': `${siteUrl}/#organization`,
   name: businessProfile.name,
+  legalName: businessProfile.name,
+  alternateName: businessProfile.alternateNames,
+  description: defaultDescription,
   url: siteUrl,
   logo: new URL('/techuniqueiit-new-logo.svg', siteUrl).toString(),
   email: businessProfile.email,
@@ -38,6 +57,8 @@ const professionalServiceJsonLd = {
   '@type': 'ProfessionalService',
   '@id': `${siteUrl}/#local-business`,
   name: businessProfile.name,
+  alternateName: businessProfile.alternateNames,
+  description: defaultDescription,
   url: siteUrl,
   image: new URL('/hero-image.jpg', siteUrl).toString(),
   logo: new URL('/techuniqueiit-new-logo.svg', siteUrl).toString(),
@@ -56,10 +77,14 @@ const professionalServiceJsonLd = {
   availableLanguage: businessProfile.languages,
   serviceType: businessProfile.services,
 
-  knowsAbout: businessProfile.services,
+  knowsAbout: [
+    ...businessProfile.services,
+    ...businessProfile.brandKeywords,
+    ...businessProfile.priorityKeywords,
+  ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Technology Services',
+    name: 'TechUniqueIIT Services',
     itemListElement: [
       {
         '@type': 'Offer',
@@ -108,7 +133,8 @@ export const metadata: Metadata = {
   },
   description: defaultDescription,
   keywords: [
-    'TechUniqueIIT',
+    ...businessProfile.priorityKeywords,
+    ...businessProfile.brandKeywords,
     'TechUniqueIIT Solutions LLP',
     'custom software development India',
     'web application development',
@@ -119,6 +145,9 @@ export const metadata: Metadata = {
     'software development company Delhi NCR',
     'web application development South Delhi',
     'SEO services Delhi',
+    'cloud solutions company Delhi NCR',
+    'UI UX design services Delhi NCR',
+    'application maintenance services Delhi NCR',
   ],
   authors: [{ name: businessProfile.name, url: siteUrl }],
   creator: businessProfile.name,
@@ -135,7 +164,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'TechUniqueIIT Solutions LLP custom software, mobile apps, and digital marketing',
+        alt: 'TechUniqueIIT software development company in Delhi NCR for custom software, web applications, mobile apps, cloud solutions, UI UX design, and application maintenance',
       },
     ],
   },
@@ -166,7 +195,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <JsonLd data={[organizationJsonLd, professionalServiceJsonLd]} />
+        <JsonLd data={[websiteJsonLd, organizationJsonLd, professionalServiceJsonLd]} />
         <AuthProvider>{children}</AuthProvider>
         <Toaster
           position='top-center'

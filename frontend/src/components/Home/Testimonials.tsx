@@ -98,7 +98,7 @@ export const Testimonials = () => {
         >
           <span className='mb-4 inline-flex items-center rounded-full border border-indigo-50 bg-white px-4 py-1.5 text-xs sm:text-sm font-medium text-indigo-600 shadow-md shadow-indigo-100'>
             <span className='mr-2 flex h-2 w-2 rounded-full bg-indigo-600'></span>
-            Client Stories
+            TechUniqueIIT Reviews
           </span>
           <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl'>
             Trusted by{' '}
@@ -110,7 +110,7 @@ export const Testimonials = () => {
             </span>
           </h2>
           <p className='text-base text-gray-600 sm:text-lg'>
-            Real feedback from business leaders and managers who rely on TechUniqueIIT software solutions.
+            Real TechUniqueIIT reviews from business leaders and managers who rely on our software solutions.
           </p>
         </motion.div>
 
