@@ -131,26 +131,41 @@ export const Hero = () => {
                     </Link>
                   </motion.div>
                 </div>
-                {/* Delivery highlights */}
+                {/* Impact highlights */}
                 <div className='grid gap-3 sm:grid-cols-3'>
                   {[
-                    ['Plan', 'Workflow-first discovery'],
-                    ['Build', 'Production-ready delivery'],
-                    ['Support', 'Post-launch ownership'],
-                  ].map(([label, description], index) => (
+                    {
+                      value: '17+ Yrs',
+                      label: 'IT Leadership',
+                      description: 'Under expert technology leadership',
+                    },
+                    {
+                      value: '4+ Yrs',
+                      label: 'Company Journey',
+                      description: 'Delivering excellence',
+                    },
+                    {
+                      value: '20+',
+                      label: 'Team Members',
+                      description: 'Developers, designers & marketers',
+                    },
+                  ].map((stat, index) => (
                     <motion.div
-                      key={label}
+                      key={stat.label}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
                       className='rounded-xl border border-indigo-100 bg-white/80 p-3 text-left shadow-sm'
                     >
-                      <div className='text-xs font-bold uppercase tracking-wider text-indigo-600'>
-                        {label}
+                      <div className='text-base font-bold text-indigo-600'>
+                        {stat.value}
                       </div>
-                      <div className='mt-1 text-sm text-gray-600'>
-                        {description}
+                      <div className='mt-1 text-sm font-semibold text-gray-900'>
+                        {stat.label}
                       </div>
+                      <p className='mt-1 text-xs text-gray-600'>
+                        {stat.description}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
