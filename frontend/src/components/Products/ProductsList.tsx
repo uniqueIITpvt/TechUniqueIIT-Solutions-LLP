@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Product, ProductModal } from './ProductModal';
 
+const cloudinaryProductImage = (filename: string) =>
+  `https://res.cloudinary.com/techuniqueiit/image/upload/product-images/${filename}`;
+
 // ─── Static Product Data (Admin-panel ready: replace with API fetch later) ───
 const productsData: Product[] = [
   {
@@ -30,17 +33,17 @@ const productsData: Product[] = [
       { layer: 'Database', tech: 'MongoDB' },
       { layer: 'Styling', tech: 'Tailwind CSS' },
     ],
-    thumbnail: '/images/products/lms-portfolio.jpg',
+    thumbnail: cloudinaryProductImage('lms-portfolio.jpg'),
     gallery: [
-      { src: '/images/products/home-page-1.jpg', caption: 'LMS Home Page — Hero Section' },
-      { src: '/images/products/home-page-2.jpg', caption: 'LMS Home Page — Course Categories' },
-      { src: '/images/products/Course-details-page-1.png', caption: 'Course Details Page — Overview' },
-      { src: '/images/products/Course-details-page-2.png', caption: 'Course Details Page — Curriculum' },
-      { src: '/images/products/All-Course-page.jpg', caption: 'All Courses Marketplace Page' },
-      { src: '/images/products/Student-Dashboard.jpg', caption: 'Student / Teacher Dashboard' },
-      { src: '/images/products/Course-Upload-UI-1.jpg', caption: 'Course Upload UI — Step 1' },
-      { src: '/images/products/Course-Upload-UI-2.jpg', caption: 'Course Upload UI — Step 2' },
-      { src: '/images/products/Course-Upload-UI-3.jpg', caption: 'Course Upload UI — Step 3' },
+      { src: cloudinaryProductImage('home-page-1.jpg'), caption: 'LMS Home Page — Hero Section' },
+      { src: cloudinaryProductImage('home-page-2.jpg'), caption: 'LMS Home Page — Course Categories' },
+      { src: cloudinaryProductImage('Course-details-page-1.jpg'), caption: 'Course Details Page — Overview' },
+      { src: cloudinaryProductImage('Course-details-page-2.jpg'), caption: 'Course Details Page — Curriculum' },
+      { src: cloudinaryProductImage('All-Course-page.jpg'), caption: 'All Courses Marketplace Page' },
+      { src: cloudinaryProductImage('Student-Dashboard.jpg'), caption: 'Student / Teacher Dashboard' },
+      { src: cloudinaryProductImage('Course-Upload-UI-1.jpg'), caption: 'Course Upload UI — Step 1' },
+      { src: cloudinaryProductImage('Course-Upload-UI-2.jpg'), caption: 'Course Upload UI — Step 2' },
+      { src: cloudinaryProductImage('Course-Upload-UI-3.jpg'), caption: 'Course Upload UI — Step 3' },
     ],
     demoUrl: 'https://lms.uniqueiit.in/',
     badge: 'EdTech Platform',
@@ -70,21 +73,62 @@ const productsData: Product[] = [
       { layer: 'Database', tech: 'MongoDB' },
       { layer: 'Styling', tech: 'Tailwind CSS' },
     ],
-    thumbnail: '/images/products/ebook-portfolio.jpg',
+    thumbnail: cloudinaryProductImage('ebook-portfolio.jpg'),
     gallery: [
-      { src: '/images/products/ebook-hero.jpg', caption: 'Home Page — Hero Section & Header' },
-      { src: '/images/products/ebook-free-summaries.jpg', caption: 'Free Ebook Summaries & Reader' },
-      { src: '/images/products/ebook-subscription.jpg', caption: 'Subscription Plans — Basic, Premium, Pro' },
-      { src: '/images/products/ebook-catalog.jpg', caption: 'Individual Ebooks Catalog' },
-      { src: '/images/products/ebook-audiobook-player.jpg', caption: 'Audiobook Player & Audio Catalog' },
-      { src: '/images/products/ebook-login-modal.jpg', caption: 'User Authentication Modal' },
-      { src: '/images/products/ebook-checkout.jpg', caption: 'Checkout & Payment Gateway' },
-      { src: '/images/products/ebook-admin-upload-form.jpg', caption: 'Admin Upload Modal — Add New Book' },
-      { src: '/images/products/ebook-admin-dashboard.jpg', caption: 'Admin Telemetry & Revenue Dashboard' },
+      { src: cloudinaryProductImage('ebook-hero.jpg'), caption: 'Home Page — Hero Section & Header' },
+      { src: cloudinaryProductImage('ebook-free-summaries.png'), caption: 'Free Ebook Summaries & Reader' },
+      { src: cloudinaryProductImage('ebook-subscription.jpg'), caption: 'Subscription Plans — Basic, Premium, Pro' },
+      { src: cloudinaryProductImage('ebook-catalog.jpg'), caption: 'Individual Ebooks Catalog' },
+      { src: cloudinaryProductImage('ebook-audiobook-player.jpg'), caption: 'Audiobook Player & Audio Catalog' },
+      { src: cloudinaryProductImage('ebook-login-modal.jpg'), caption: 'User Authentication Modal' },
+      { src: cloudinaryProductImage('ebook-checkout.jpg'), caption: 'Checkout & Payment Gateway' },
+      { src: cloudinaryProductImage('ebook-admin-upload-form.jpg'), caption: 'Admin Upload Modal — Add New Book' },
+      { src: cloudinaryProductImage('ebook-admin-dashboard.jpg'), caption: 'Admin Telemetry & Revenue Dashboard' },
     ],
     demoUrl: 'http://localhost:3000/',
     badge: 'EdTech & Digital Content',
     color: 'from-blue-600 to-indigo-600',
+  },
+  {
+    id: 'restaurant-ordering-platform',
+    title: 'Restaurant Food Ordering & Delivery Platform',
+    category: 'FoodTech & Online Ordering',
+    shortDescription:
+      'A branded restaurant ordering website for menu discovery, dish customization, cart flow, authentication, and delivery-focused checkout.',
+    fullDescription:
+      'TechUniqueIIT Restaurant Food Ordering & Delivery Platform is a FoodTech web product built for restaurants, cloud kitchens, and catering brands that need a polished online ordering experience. The platform supports a strong branded homepage, category-based menu browsing, searchable dish cards, add-to-cart workflows, item customization with add-ons, quantity-based pricing, customer login, and a checkout-ready cart experience. It is designed to help restaurants present their menu clearly, reduce ordering friction, and create a mobile-friendly ordering journey for dine-in, pickup, and delivery use cases.',
+    features: [
+      'Branded Restaurant Storefront - Hero section, contact blocks, and social-first presentation',
+      'Menu Categories - Appetizers, chicken, beef, vegetable, rice, desserts, wraps, and more',
+      'Dish Cards - Price, ratings, category badges, short descriptions, and add-to-cart actions',
+      'Customization Modal - Optional add-ons, bread choices, spice levels, quantity, and live total',
+      'Cart & Checkout Flow - Cart summary, delivery fees, totals, and checkout-ready structure',
+      'Customer Authentication - Email and phone login interface with account creation path',
+      'Responsive Food Ordering UX - Optimized browsing and ordering across desktop and mobile',
+    ],
+    previewHighlights: [
+      'Restaurant landing page with branded navigation, ordering CTA, and contact shortcuts',
+      'Category carousel and menu filtering for faster dish discovery',
+      'Product cards for grilled dishes, biryani, bread, vegetables, and featured dishes',
+      'Item detail modal with add-ons, quantity controls, and live price calculation',
+      'Login and delivery-focused customer onboarding screens',
+    ],
+    techStack: [
+      { layer: 'Frontend', tech: 'Next.js, React.js' },
+      { layer: 'Backend', tech: 'Node.js, Express.js' },
+      { layer: 'Database', tech: 'MongoDB' },
+      { layer: 'Styling', tech: 'Tailwind CSS, Framer Motion' },
+    ],
+    thumbnail: cloudinaryProductImage('restaurant-ordering-platform.jpg'),
+    gallery: [
+      { src: cloudinaryProductImage('restaurant-home.jpg'), caption: 'Restaurant Home Page - Hero, Navigation & Ordering CTA' },
+      { src: cloudinaryProductImage('restaurant-menu.jpg'), caption: 'Menu Categories & Featured Dishes' },
+      { src: cloudinaryProductImage('restaurant-menu-grid.jpg'), caption: 'Menu Grid - Product Cards & Add to Cart Flow' },
+      { src: cloudinaryProductImage('restaurant-login.jpg'), caption: 'Customer Login & Food Delivery Screen' },
+    ],
+    demoUrl: 'https://resturant-app1frontend.vercel.app/',
+    badge: 'FoodTech Platform',
+    color: 'from-orange-600 to-rose-600',
   },
   {
     id: 'hrms',
@@ -116,7 +160,7 @@ const productsData: Product[] = [
       { layer: 'Database', tech: 'MongoDB' },
       { layer: 'Auth', tech: 'JWT, Role-Based Access' },
     ],
-    thumbnail: '/images/products/HRMS-portfolio.jpg',
+    thumbnail: cloudinaryProductImage('HRMS-portfolio.jpg'),
     gallery: [],
     badge: 'Enterprise Product',
     color: 'from-indigo-600 to-blue-600',
@@ -151,7 +195,7 @@ const productsData: Product[] = [
       { layer: 'Database', tech: 'MongoDB' },
       { layer: 'Reports', tech: 'PDF/CSV Export Engine' },
     ],
-    thumbnail: '/images/products/SCMS-portfolio.jpg',
+    thumbnail: cloudinaryProductImage('SCMS-portfolio.jpg'),
     gallery: [],
     badge: 'Business Intelligence',
     color: 'from-emerald-600 to-teal-600',
@@ -187,7 +231,7 @@ export const ProductsList = () => {
           </p>
         </motion.div>
 
-        {/* Gallery Grid — 3 Product Cards */}
+        {/* Gallery Grid */}
         <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14'>
           {productsData.map((product, index) => (
             <motion.button
