@@ -126,7 +126,7 @@ const productsData: Product[] = [
       { src: cloudinaryProductImage('restaurant-menu-grid.jpg'), caption: 'Menu Grid - Product Cards & Add to Cart Flow' },
       { src: cloudinaryProductImage('restaurant-login.jpg'), caption: 'Customer Login & Food Delivery Screen' },
     ],
-    demoUrl: 'https://resturant-app1frontend.vercel.app/',
+    demoUrl: 'https://frontend-theta-two-eh8vrf7x5c.vercel.app/',
     badge: 'FoodTech Platform',
     color: 'from-orange-600 to-rose-600',
   },
